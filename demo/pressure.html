@@ -1,0 +1,233 @@
+<html>
+
+<head>
+    <title>AxPressure Demo - Axiom Design System - https://ax-design.github.io/</title>
+
+    <style>
+        .demo-block {
+            display: flex;
+            border-bottom: #aaa dashed 1px;
+        }
+
+        .demo {
+            width: 500px;
+            margin: 10px;
+            padding-top: 1em;
+        }
+
+        .code {
+            width: 100%;
+        }
+
+        .ax-pressure-container {
+            display: flex;
+        }
+
+        .ax-pressure-container>ax-pressure {
+            margin: 5px;
+        }
+
+        ax-pressure {
+            border: 1px black solid;
+        }
+
+        .ax-pressure-button {
+            min-width: 120px;
+            padding: 15px 25px;
+            border: none;
+            background: none;
+            user-select: none;
+            background: #9F353A;
+            color: white;
+        }
+
+        .zoom-factor {
+            --pressure-zoom: 5px;
+        }
+
+        .tilt-factor {
+            --pressure-tilt-depth: 50px;
+        }
+
+        .perspective {
+            --pressure-perspective: 5px;
+        }
+    </style>
+</head>
+
+<body data-gr-c-s-loaded="true">
+    <h1>Welcome to project Axiom!</h1>
+    <p>
+        Project Axiom is a web component set which aims to combine good part of Fluent Design System and Material
+        Design to a single design language.
+    </p>
+    <p>This repo contains code of tilt effect effect of Fluent design System.</p>
+    <p>To use this package, install by one of following:</p>
+    <ul>
+        <li>
+            Load the package directly:
+            <ul>
+                <li>
+                    <pre>&lt;script src="https://unpkg.com/@ax-design/pressure" /&gt;</pre>
+                </li>
+                <li>
+                    <pre>&lt;script&gt;AxPressure.register()&lt;/script&gt;</pre>
+                </li>
+            </ul>
+        </li>
+        <li>
+            Load the package by esmodule:
+            <pre>
+&lt;script type="module"&gt;
+import { register } from 'https://unpkg.com/@ax-design/pressure/es/index.js'
+register()
+&lt;/script&gt;
+                    </pre>
+        </li>
+        <li>
+            Load the package by module loader or bundler:<br />
+            <code>yarn add @ax-design/pressure</code> or <code>npm i @ax-design/pressure</code>
+            <ul>
+                <li>
+                    CommonJS
+                    <pre>
+require('@ax-design/pressure').register()
+</pre>
+                </li>
+                <li>
+                    ESModule
+                    <pre>
+import { register } from '@ax-design/pressure'
+register()
+
+                    </pre>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <section class="demo-block">
+        <div class="demo">
+
+            <div class="ax-pressure-container">
+                <ax-pressure>
+                    <button class="ax-pressure-button">Welcome</button>
+                </ax-pressure>
+                <ax-pressure>
+                    <button class="ax-pressure-button">To</button>
+                </ax-pressure>
+            </div>
+            <div class="ax-pressure-container">
+                <ax-pressure>
+                    <button class="ax-pressure-button">Project</button>
+                </ax-pressure>
+                <ax-pressure>
+                    <button class="ax-pressure-button">Axiom!</button>
+                </ax-pressure>
+            </div>
+
+        </div>
+        <div class="code">
+            <h2>General Button</h2>
+            <p>In order to use this component, we need to prepare some HTML:</p>
+            <pre>&lt;ax-pressure&gt;
+              &lt;button class=&quot;ax-pressure-button&quot;&gt;Hello&lt;/button&gt;
+            &lt;/ax-pressure&gt;
+            &lt;ax-pressure&gt;
+              &lt;button class=&quot;ax-pressure-button&quot;&gt;World&lt;/button&gt;
+            &lt;/ax-pressure&gt;</pre>
+        </div>
+    </section>
+
+    <section class="demo-block">
+        <div class="demo">
+            <ax-pressure-bound class="zoom-factor">
+                <div class="ax-pressure-container">
+                    <ax-pressure>
+                        <button class="ax-pressure-button">Welcome</button>
+                    </ax-pressure>
+                    <ax-pressure>
+                        <button class="ax-pressure-button">To</button>
+                    </ax-pressure>
+                </div>
+                <div class="ax-pressure-container">
+                    <ax-pressure>
+                        <button class="ax-pressure-button">Project</button>
+                    </ax-pressure>
+                    <ax-pressure>
+                        <button class="ax-pressure-button">Axiom!</button>
+                    </ax-pressure>
+                </div>
+
+        </div>
+        <div class="code">
+            <h2>Zoom Factor</h2>
+            <pre>.my-tile-container{
+              --pressure-zoom: 1;
+            }</pre>
+        </div>
+    </section>
+
+    <section class="demo-block">
+        <div class="demo">
+            <ax-pressure-bound class="tilt-factor">
+                <div class="ax-pressure-container">
+                    <ax-pressure>
+                        <button class="ax-pressure-button">Welcome</button>
+                    </ax-pressure>
+                    <ax-pressure>
+                        <button class="ax-pressure-button">To</button>
+                    </ax-pressure>
+                </div>
+                <div class="ax-pressure-container">
+                    <ax-pressure>
+                        <button class="ax-pressure-button">Project</button>
+                    </ax-pressure>
+                    <ax-pressure>
+                        <button class="ax-pressure-button">Axiom!</button>
+                    </ax-pressure>
+                </div>
+
+        </div>
+        <div class="code">
+            <h2>Tilt Depth</h2>
+            <pre>.my-tile-container{
+              --pressure-tilt-depth: 50px;
+            }</pre>
+        </div>
+    </section>
+
+    <section class="demo-block">
+        <div class="demo">
+            <ax-pressure-bound class="perspective">
+                <div class="ax-pressure-container">
+                    <ax-pressure>
+                        <button class="ax-pressure-button">Welcome</button>
+                    </ax-pressure>
+                    <ax-pressure>
+                        <button class="ax-pressure-button">To</button>
+                    </ax-pressure>
+                </div>
+                <div class="ax-pressure-container">
+                    <ax-pressure>
+                        <button class="ax-pressure-button">Project</button>
+                    </ax-pressure>
+                    <ax-pressure>
+                        <button class="ax-pressure-button">Axiom!</button>
+                    </ax-pressure>
+                </div>
+
+        </div>
+        <div class="code">
+            <h2>Perspective</h2>
+            <pre>.my-tile-container{
+              --pressure-perspective: 5px;
+            }</pre>
+        </div>
+    </section>
+    <script type="module">
+        import { register } from 'https://unpkg.com/@ax-design/pressure/es/index.js'
+        register()
+    </script>
+</body>
+
+</html>
