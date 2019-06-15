@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Demo - Axiom Design System</title>
+  <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      background: url('./images/background.jpg');
+    }
+
+    ax-reveal-provider,
+    .tile-container {
+      width: 320px;
+      height: 320px;
+    }
+
+    .tile-container {
+      top: 50%;
+      left: 50%;
+      margin: -160px 0 0 -160px;
+      position: absolute;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .tile {
+      width: 150px;
+      height: 150px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: #005CAF;
+      color: white;
+      position: relative;
+      user-select: none;
+    }
+
+    .tile-icon {
+      top: 50%;
+      left: 50%;
+      width: 50px;
+      height: 50px;
+      margin: -25px 0 0 -25px;
+      position: absolute;
+    }
+
+    .tile-title {
+      left: 10px;
+      bottom: 8px;
+      margin: 0;
+      padding: 0;
+      font-size: 13px;
+      position: absolute;
+    }
+
+    ax-pressure {
+      display: block;
+      margin: 0;
+    }
+
+    ax-reveal {
+      --reveal-color: white;
+      --reveal-border-width: 2px;
+      margin: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <ax-reveal-provider>
+    <ax-reveal-bound>
+      <div class="tile-container">
+        <ax-reveal>
+          <ax-pressure>
+            <div class="tile">
+              <img class="tile-icon" src="./images/apple.svg" alt="Icon of Apple" />
+              <p class="tile-title">Apple</p>
+            </div>
+          </ax-pressure>
+        </ax-reveal>
+        <ax-reveal>
+          <ax-pressure>
+            <div class="tile">
+              <img class="tile-icon" src="./images/tea.svg" alt="Icon of Tea" />
+              <p class="tile-title">Tea</p>
+            </div>
+          </ax-pressure>
+        </ax-reveal>
+        <ax-reveal>
+          <ax-pressure>
+            <div class="tile">
+              <img class="tile-icon" src="./images/Fish.svg" alt="Icon of Fish" />
+              <p class="tile-title">Fish</p>
+            </div>
+          </ax-pressure>
+        </ax-reveal>
+        <ax-reveal>
+          <ax-pressure>
+            <div class="tile">
+              <img class="tile-icon" src="./images/donut.svg" alt="Icon of Donut" />
+              <p class="tile-title">Donut</p>
+            </div>
+          </ax-pressure>
+        </ax-reveal>
+      </div>
+    </ax-reveal-bound>
+  </ax-reveal-provider>
+
+  <!-- <script src="../../build/main.js"></script>
+  <script>AxPressure.register()</script> -->
+  <script type="module">
+    import { register } from 'https://unpkg.com/@ax-design/pressure/es/index.js';
+    register();
+  </script>
+  <script type="module">
+    import { register } from 'https://unpkg.com/@ax-design/reveal-highlight/es/index.js';
+    register();
+  </script>
+</body>
