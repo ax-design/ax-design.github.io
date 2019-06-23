@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<head>
+  <title>AxElevation Demo - Axiom Design System</title>
+  <style>
+     body {
+       --a: 100px;
+     }
+
+    .demo-block {
+      display: flex;
+      border-bottom: #aaa dashed 1px;
+    }
+
+    .demo {
+      width: 500px;
+      margin: 10px;
+      padding-top: 1em;
+      position: relative;
+    }
+
+    .code {
+      width: 100%;
+    }
+
+    ax-elevation {
+      top: 50%;
+      left: 50%;
+      width: var(--a);
+      height: var(--a);
+      margin-top: calc(-0.5 * var(--a));
+      margin-left: calc(-0.5 * var(--a));
+      position: absolute;
+      display: block;
+    }
+
+    .dp4 {
+      --elevation-depth: 4;
+    }
+
+    .dp128 {
+      --elevation-depth: 128;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Welcome to project Axiom!</h1>
+  <p>Project Axiom is a web component set which aims to combine good part of Fluent Design System and Material Design
+    to a single design language.</p>
+  <p>This repo contains code of Elevation shadow effect of Fluent design System.</p>
+    <p>To use this package, install by one of following:</p>
+    <ul>
+        <li>
+            Load the package directly:
+            <ul>
+                <li>
+                    <pre>&lt;script src="https://unpkg.com/@ax-design/elevation" /&gt;</pre>
+                </li>
+                <li>
+                    <pre>&lt;script&gt;Axelevation.register()&lt;/script&gt;</pre>
+                </li>
+            </ul>
+        </li>
+        <li>
+            Load the package by esmodule:
+            <pre>
+&lt;script type="module"&gt;
+import { register } from 'https://unpkg.com/@ax-design/elevation/es/index.js'
+register()
+&lt;/script&gt;
+                    </pre>
+        </li>
+        <li>
+            Load the package by module loader or bundler:<br />
+            <code>yarn add @ax-design/elevation</code> or <code>npm i @ax-design/elevation</code>
+            <ul>
+                <li>
+                    CommonJS
+                    <pre>
+require('@ax-design/elevation').register()
+</pre>
+                </li>
+                <li>
+                    ESModule
+                    <pre>
+import { register } from '@ax-design/elevation'
+register()
+
+                    </pre>
+                </li>
+            </ul>
+        </li>
+    </ul>
+<body>
+  <h1>Welcome to project Axiom!</h1>
+  <p>Project Axiom is a web component set which aims to combine good part of Fluent Design System and Material Design
+    to a single design language.</p>
+  <p>This repo contains code of Elevation shadow effect of Fluent design System.</p>
+  <section class="demo-block">
+    <div class="demo">
+      <div class="ax-elevation-container">
+        <ax-elevation class="dp4">
+          <p>Elevation!</p>
+        </ax-elevation>
+      </div>
+    </div>
+    <div class="code">
+      <h2>Using the element</h2>
+      <p>In order to use this component, we need to prepare some HTML:</p>
+      <pre>&lt;ax-elevation&gt;
+  Elevation!
+&lt;/ax-elevation&gt;</pre>
+      <p>And some CSS:</p>
+      <pre>.my-shadow{
+  --elevation-depth: 4;
+}</pre>
+    </div>
+  </section>
+
+  <section class="demo-block">
+    <div class="demo">
+      <div class="ax-elevation-container">
+        <ax-elevation class="dp128">
+          <p>Elevation!</p>
+        </ax-elevation>
+      </div>
+    </div>
+    </div>
+
+    <div class="code">
+      <h2>Change the depth</h2>
+      <pre>.my-shadow{
+  --elevation-depth: 128;
+}</pre>
+    </div>
+  </section>
+
+  <!-- <script src="../../build/main.js"></script>
+  <script>AxElevation.register()</script> -->
+  <script type="module">
+    import { register } from 'https://unpkg.com/@ax-design/elevation/es/index.js';
+    register();
+  </script>
+</body>
