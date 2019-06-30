@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<head>
+    <title>AxNavigation Demo - Axiom Design System</title>
+
+    <style>
+        .demo-block {
+            display: flex;
+            border-bottom: #aaa dashed 1px;
+        }
+
+        .demo {
+            width: 500px;
+            margin: 10px;
+            padding-top: 1em;
+        }
+
+        .code {
+            width: 100%;
+        }
+
+        .colored-indicator {
+            --navigation-indicator-color: red;
+        }
+
+        .indicator-width {
+            --navigation-indicator-width: 10px;
+        }
+
+        .indicator-speed {
+            --navigation-indicator-speed: 2000ms;
+        }
+    </style>
+</head>
+
+<body>
+    <ax-reveal-provider>
+        <h1>Welcome to project Axiom!</h1>
+        <p>Project Axiom is a web component set which aims to combine good part of Fluent Design System and Material
+            Design
+            to a single design language.</p>
+        <p>This repo contains code of Navigation Indicator animation of Fluent design System.</p>
+
+        <p>To use this package, install by one of following:</p>
+        <ul>
+            <li>
+                Load the package directly:
+                <ul>
+                    <li>
+                        <pre>&lt;script src="https://unpkg.com/@ax-design/navigation" /&gt;</pre>
+                    </li>
+                    <li>
+                        <pre>&lt;script&gt;AxNavigation.register()&lt;/script&gt;</pre>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Load the package by esmodule:
+                <pre>
+&lt;script type="module"&gt;
+import { register } from 'https://unpkg.com/@ax-design/navigation/es/index.js'
+register()
+&lt;/script&gt;
+                    </pre>
+            </li>
+            <li>
+                Load the package by module loader or bundler:<br />
+                <code>yarn add @ax-design/navigation</code> or <code>npm i @ax-design/navigation</code>
+                <ul>
+                    <li>
+                        CommonJS
+                        <pre>
+require('@ax-design/navigation').register()
+</pre>
+                    </li>
+                    <li>
+                        ESModule
+                        <pre>
+import { register } from '@ax-design/navigation'
+register()
+
+                    </pre>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <section class="demo-block">
+            <div class="demo">
+                <ax-navigation>
+                    <ax-navigation-item>Home</ax-navigation-item>
+                    <ax-navigation-item>Apps</ax-navigation-item>
+                    <ax-navigation-item>Games</ax-navigation-item>
+                </ax-navigation>
+            </div>
+            <div class="code">
+                <h2>General Navigation</h2>
+                <p>In order to use this component, we need to prepare some HTML:</p>
+                <pre>&lt;ax-navigation&gt;
+  &lt;ax-navigation-item&gt;Home&lt;/ax-navigation-item&gt;
+  &lt;ax-navigation-item&gt;Apps&lt;/ax-navigation-item&gt;
+  &lt;ax-navigation-item&gt;Games&lt;/ax-navigation-item&gt;
+&lt;/ax-navigation&gt;</pre>
+            </div>
+        </section>
+
+        <section class="demo-block">
+            <div class="demo">
+                <ax-navigation vertical>
+                    <ax-navigation-item>Home</ax-navigation-item>
+                    <ax-navigation-item>Apps</ax-navigation-item>
+                    <ax-navigation-item>Games</ax-navigation-item>
+                </ax-navigation>
+            </div>
+            <div class="code">
+                <h2>Vertical Navigation</h2>
+                <p>In order to use this component, we need to prepare some HTML:</p>
+                <pre>&lt;ax-navigation vertical&gt;
+  &lt;ax-navigation-item&gt;Home&lt;/ax-navigation-item&gt;
+  &lt;ax-navigation-item&gt;Apps&lt;/ax-navigation-item&gt;
+  &lt;ax-navigation-item&gt;Games&lt;/ax-navigation-item&gt;
+&lt;/ax-navigation&gt;</pre>
+            </div>
+        </section>
+
+        <section class="demo-block">
+            <div class="demo">
+                <ax-navigation>
+                    <ax-navigation-item>Home</ax-navigation-item>
+                    <ax-navigation-item default>Apps</ax-navigation-item>
+                    <ax-navigation-item>Games</ax-navigation-item>
+                </ax-navigation>
+            </div>
+            <div class="code">
+                <h2>Default Item</h2>
+                <p>To change the default item, just simply add a default attribute to navigation item.</p>
+                <pre>&lt;ax-navigation&gt;
+    &lt;ax-navigation-item&gt;Home&lt;/ax-navigation-item&gt;
+    &lt;ax-navigation-item default&gt;Apps&lt;/ax-navigation-item&gt;
+    &lt;ax-navigation-item&gt;Games&lt;/ax-navigation-item&gt;
+  &lt;/ax-navigation&gt;</pre>
+            </div>
+        </section>
+
+        <section class="demo-block">
+            <div class="demo">
+                <ax-navigation class="colored-indicator">
+                    <ax-navigation-item>Home</ax-navigation-item>
+                    <ax-navigation-item>Apps</ax-navigation-item>
+                    <ax-navigation-item>Games</ax-navigation-item>
+                </ax-navigation>
+            </div>
+            <div class="code">
+                <h2>Colored Indicator</h2>
+                <pre>ax-navigation{
+  --navigation-indicator-color: red;
+}</pre>
+            </div>
+        </section>
+
+        <section class="demo-block">
+            <div class="demo">
+                <ax-navigation class="indicator-width">
+                    <ax-navigation-item>Home</ax-navigation-item>
+                    <ax-navigation-item>Apps</ax-navigation-item>
+                    <ax-navigation-item>Games</ax-navigation-item>
+                </ax-navigation>
+            </div>
+            <div class="code">
+                <h2>Indicator Width</h2>
+                <pre>ax-navigation{
+  --navigation-indicator-width: 10px;
+}</pre>
+            </div>
+        </section>
+
+        <section class="demo-block">
+            <div class="demo">
+                <ax-navigation class="indicator-speed">
+                    <ax-navigation-item>Home</ax-navigation-item>
+                    <ax-navigation-item>Apps</ax-navigation-item>
+                    <ax-navigation-item>Games</ax-navigation-item>
+                </ax-navigation>
+            </div>
+            <div class="code">
+                <h2>Animation Speed</h2>
+                <pre>ax-navigation{
+  --navigation-indicator-speed: 2000ms;
+}</pre>
+            </div>
+        </section>
+
+        <section class="demo-block">
+            <div class="demo">
+                <ax-navigation class="switch-event">
+                    <ax-navigation-item>Home</ax-navigation-item>
+                    <ax-navigation-item>Apps</ax-navigation-item>
+                    <ax-navigation-item>Games</ax-navigation-item>
+                </ax-navigation>
+                <div class="switch-information">Try to click the navigation item.</div>
+            </div>
+            <div class="code">
+                <h2>Switch Event</h2>
+                <p>A `switch` event will be dispatched if you switched from one tab to another tab.</p>
+                <pre>document.querySelector('.switch-event').addEventListener('switch', (event) => {
+  document.querySelector('.switch-information').innerHTML = `You've switched from ${event.detail.from.innerText} to ${event.detail.to.innerText}`
+});</pre>
+            </div>
+        </section>
+
+        <script src="https://unpkg.com/@ax-design/navigation@0.0.1/build/main.js"></script>
+        <script>AxNavigation.register()</script>
+        <!-- <script type="module">
+      import { register } from 'https://unpkg.com/@ax-design/navigation/es/index.js?module';
+      register();
+    </script> -->
+
+        <script>
+            document.querySelector('.switch-event').addEventListener('switch', (event) => {
+                document.querySelector('.switch-information').innerHTML = `
+          You've switched from ${event.detail.from.innerText} to ${event.detail.to.innerText}
+        `
+            });
+        </script>
+</body>
