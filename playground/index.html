@@ -1,0 +1,160 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><title>Webpack App</title><meta name="viewport" content="width=device-width,initial-scale=1"/><style>html, body {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+  }</style><script>/* globals window */
+  /* eslint-disable no-underscore-dangle */
+  try {
+    if (window.top !== window) {
+      window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = window.top.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn('unable to connect to top frame for connecting dev tools');
+  }
+
+  window.onerror = function onerror(message, source, line, column, err) {
+    if (window.CONFIG_TYPE !== 'DEVELOPMENT') return;
+    // eslint-disable-next-line no-var, vars-on-top
+    var xhr = new window.XMLHttpRequest();
+    xhr.open('POST', '/runtime-error');
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.send(
+      JSON.stringify({
+        /* eslint-disable object-shorthand */
+        message: message,
+        source: source,
+        line: line,
+        column: column,
+        error: err && { message: err.message, name: err.name, stack: err.stack },
+        origin: 'manager',
+        /* eslint-enable object-shorthand */
+      })
+    );
+  };</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@200;400;700&display=swap" rel="stylesheet"><script>window['PREVIEW_URL'] = '/playground/iframe.html';</script><style>* {
+        scrollbar-width: auto;
+        scrollbar-color: #888888 #333333;
+    }
+
+    *::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: #333333;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: #3b3b3b;
+        border-radius: 4px;
+        border: 3px solid #333333;
+    }
+
+    div[role="main"] > div {
+        border-radius: 0 !important;
+    }
+
+    a#about,
+    a#release-notes,
+    a#shortcuts {
+        display: none !important;
+    }
+
+    .sidebar-header {
+        flex-direction: column;
+    }
+
+    .sidebar-header > div:first-of-type {
+        margin: 0;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .sidebar-header > div:last-of-type {
+        display: none;
+    }
+
+    .sidebar-subheading,
+    .search-result-recentlyOpened {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+        font-size: 0.85em !important;
+    }
+
+    .sidebar-subheading button,
+    .search-result-recentlyOpened {
+        letter-spacing: initial !important;
+        text-transform: capitalize !important;
+    }
+
+    .sidebar-item,
+    #downshift-1-menu li {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+        font-size: 0.8em !important;
+    }
+
+    .sidebar-item:hover {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .sidebar-item[data-selected="true"] {
+        background-color: white !important;
+        color: #2F2F2F !important;
+    }
+
+    .sidebar-item svg,
+    .search-result-item svg {
+        display: none;
+    }
+
+    #storybook-explorer-searchfield {
+        border-radius: 0;
+    }
+
+    .os-viewport button[type = "button"],
+    .os-viewport a[title="Open canvas in new tab"] {
+        border-radius: 0;
+    }
+    
+    .os-viewport button[type = "button"]:hover,
+    .os-viewport a[title="Open canvas in new tab"]:hover {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+    }
+
+    div[role="main"] .os-content a[href ^= "/?path=/story/"],
+    div[role="main"] .os-content a[href ^= "/?path=/docs/"] {
+        display: none;
+    }
+
+    button[title = "Reset controls"] {
+        border-radius: 0 !important;
+        color: white !important;
+    }</style><style>#root[hidden],
+      #docs-root[hidden] {
+        display: none !important;
+      }</style></head><body><div id="root"></div><div id="docs-root"></div><script>window['CONFIG_TYPE'] = "PRODUCTION";
+          
+      
+          
+            window['LOGLEVEL'] = "info";
+          
+      
+          
+            window['FEATURES'] = {"postcss":true,"emotionAlias":true,"warnOnLegacyHierarchySeparator":true};
+          
+      
+          
+      
+          
+      
+          
+            window['DOCS_MODE'] = false;</script><script src="/playground/runtime~main.39e3d965ed79064f8e8e.manager.bundle.js"></script><script src="/playground/vendors~main.f2e97bd71344239a02a8.manager.bundle.js"></script><script src="/playground/main.f28812c36b36ff3a873d.manager.bundle.js"></script></body></html>
