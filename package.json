@@ -1,0 +1,30 @@
+{
+  "name": "ax-design.github.io",
+  "version": "0.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ax-design/ax-design.github.io",
+  "author": "AXIOM DESIGN SYSTEM Developers",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@storybook/addon-actions": "^6.4.9",
+    "@storybook/addon-essentials": "^6.4.9",
+    "@storybook/addon-links": "^6.4.9",
+    "@storybook/addons": "^6.4.9",
+    "@storybook/theming": "^6.4.9",
+    "@storybook/web-components": "^6.4.9",
+    "babel-loader": "^8.2.3",
+    "cross-env": "^7.0.3"
+  },
+  "scripts": {
+    "storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "dependencies": {
+    "@ax-design/reveal-highlight": "^0.2.0",
+    "lit-html": "^2.0.2"
+  },
+  "resolutions": {
+    "@ax-design/reveal-highlight": "link:../reveal-highlight"
+  }
+}

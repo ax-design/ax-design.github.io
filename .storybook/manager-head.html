@@ -1,0 +1,107 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@200;400;700&display=swap" rel="stylesheet">
+<style type="text/css">
+    * {
+        scrollbar-width: auto;
+        scrollbar-color: #888888 #333333;
+    }
+
+    *::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: #333333;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: #3b3b3b;
+        border-radius: 4px;
+        border: 3px solid #333333;
+    }
+
+    div[role="main"] > div {
+        border-radius: 0 !important;
+    }
+
+    a#about,
+    a#release-notes,
+    a#shortcuts {
+        display: none !important;
+    }
+
+    .sidebar-header {
+        flex-direction: column;
+    }
+
+    .sidebar-header > div:first-of-type {
+        margin: 0;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .sidebar-header > div:last-of-type {
+        display: none;
+    }
+
+    .sidebar-subheading,
+    .search-result-recentlyOpened {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+        font-size: 0.85em !important;
+    }
+
+    .sidebar-subheading button,
+    .search-result-recentlyOpened {
+        letter-spacing: initial !important;
+        text-transform: capitalize !important;
+    }
+
+    .sidebar-item,
+    #downshift-1-menu li {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+        font-size: 0.8em !important;
+    }
+
+    .sidebar-item:hover {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .sidebar-item[data-selected="true"] {
+        background-color: white !important;
+        color: #2F2F2F !important;
+    }
+
+    .sidebar-item svg,
+    .search-result-item svg {
+        display: none;
+    }
+
+    #storybook-explorer-searchfield {
+        border-radius: 0;
+    }
+
+    .os-viewport button[type = "button"],
+    .os-viewport a[title="Open canvas in new tab"] {
+        border-radius: 0;
+    }
+    
+    .os-viewport button[type = "button"]:hover,
+    .os-viewport a[title="Open canvas in new tab"]:hover {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+    }
+
+    div[role="main"] .os-content a[href ^= "/?path=/story/"],
+    div[role="main"] .os-content a[href ^= "/?path=/docs/"] {
+        display: none;
+    }
+
+    button[title = "Reset controls"] {
+        border-radius: 0 !important;
+        color: white !important;
+    }
+</style>
