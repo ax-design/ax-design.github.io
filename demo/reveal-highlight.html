@@ -81,387 +81,980 @@
     </head>
 
     <body data-gr-c-s-loaded="true">
-        <ax-reveal-provider>
-            <h1>Welcome to project Axiom!</h1>
-            <p>
-                Project Axiom is a web component set which aims to combine good part of Fluent Design System and
-                Material Design to a single design language.
-            </p>
-            <p>This repo contains code of Reveal Highlight effect of Fluent Design System.</p>
-            <p>To use this package, install by one of following:</p>
-            <ul>
-                <li>
-                    Load the package directly:
-                    <ul>
-                        <li><pre>&lt;script src="https://unpkg.com/@ax-design/reveal-highlight" /&gt;</pre></li>
-                        <li><pre>&lt;script&gt;AxDesignRevealHighlight.register()&lt;/script&gt;</pre></li>
-                    </ul>
-                </li>
-                <li>
-                    Load the package by esmodule:
-                    <pre>
-&lt;script type="module"&gt;
-import { register } from 'https://unpkg.com/@ax-design/reveal-highlight/es/index.js'
-register()
-&lt;/script&gt;
-                    </pre>
-                </li>
-                <li>
-                    Load the package by module loader or bundler:<br />
-                    <code>yarn add @ax-design/reveal-highlight</code> or <code>npm i @ax-design/reveal-highlight</code>
-                    <ul>
-                        <li>
-                            CommonJS
-                            <pre>
-require('@ax-design/reveal-highlight').register()
-</pre
-                            >
-                        </li>
-                        <li>
-                            ESModule
-                            <pre>
-import { register } from '@ax-design/reveal-highlight'
-register()
+  <ax-reveal-provider>
+    <h1>Welcome to project Axiom!</h1>
+    <p>Project Axiom is a web component set which aims to combine good part of Fluent Design System and Material Design
+      to a single design language.</p>
+    <p>This repo contains code of Reveal Highlight effect of Fluent design System.</p>
 
-                    </pre
-                            >
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <section class="demo-block">
-                <div class="demo">
-                    <ax-reveal-bound>
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Welcome</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">To</button>
-                            </ax-reveal>
-                        </div>
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Project</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Axiom!</button>
-                            </ax-reveal>
-                        </div>
-                    </ax-reveal-bound>
-                </div>
-                <div class="code">
-                    <h2>General Button</h2>
-                    <p>In order to use this component, we need to prepare some HTML:</p>
-                    <pre>
-&lt;ax-reveal-provider&gt;
-  &lt;ax-reveal-bound class="my-reveal-container"&gt;
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <div class="code">
+        <h2>General Button</h2>
+        <p>In order to use this component, we need to prepare some HTML:</p>
+        <pre>&lt;ax-reveal-provider&gt;
+  &lt;ax-reveal-bound class=&quot;my-reveal-container&quot;&gt;
       &lt;ax-reveal&gt;
-        &lt;button class="ax-reveal-button"&gt;Reveal&lt;/button&gt;
+        &lt;button class=&quot;ax-reveal-button&quot;&gt;Reveal&lt;/button&gt;
       &lt;/ax-reveal&gt;
       &lt;ax-reveal&gt;
-        &lt;button class="ax-reveal-button"&gt;To&lt;/button&gt;
+        &lt;button class=&quot;ax-reveal-button&quot;&gt;To&lt;/button&gt;
       &lt;/ax-reveal&gt;
     &lt;/div&gt;
   &lt;/ax-reveal-bound&gt;
-&lt;/ax-reveal-provider&gt;</pre
-                    >
-                </div>
-            </section>
+&lt;/ax-reveal-provider&gt;</pre>
+      </div>
+    </section>
 
-            <section class="demo-block">
-                <div class="demo">
-                    <ax-reveal-bound class="colored-button">
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Welcome</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">To</button>
-                            </ax-reveal>
-                        </div>
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Project</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Axiom!</button>
-                            </ax-reveal>
-                        </div>
-                    </ax-reveal-bound>
-                </div>
-                <div class="code">
-                    <h2>Colored Button</h2>
-                    <pre>
-.my-reveal-container{
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="round-corner">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .round-corner {
+          --reveal-border-decoration-type: round;
+          --reveal-border-decoration-size: 8px;
+        }
+      </style>
+      <div class="code">
+        <h2>Round Corner</h2>
+        <pre>.my-reveal-container{
+  --reveal-border-decoration-type: round;
+  --reveal-border-decoration-size: 4px;
+}</pre>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="round-corner custom-radius">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .custom-radius ax-reveal {
+          --reveal-border-decoration-top-left-radius: 0;
+          --reveal-border-decoration-top-right-radius: 10px;
+          --reveal-border-decoration-bottom-left-radius: 20px;
+          --reveal-border-decoration-bottom-right-radius: 0;
+        }
+      </style>
+      <div class="code">
+        <h2>Custom border radius</h2>
+        <pre>.my-reveal-container{
+  --reveal-border-decoration-type: round;
+  --reveal-border-decoration-top-left-radius: 0;
+  --reveal-border-decoration-top-right-radius: 10px;
+  --reveal-border-decoration-bottom-left-radius: 20px;
+  --reveal-border-decoration-bottom-right-radius: 0;
+}</pre>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="bevel-corner">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .bevel-corner {
+          --reveal-border-decoration-type: bevel;
+          --reveal-border-decoration-size: 16px;
+        }
+      </style>
+      <div class="code">
+        <h2>Even more fancy</h2>
+        <pre>.my-reveal-container{
+  --reveal-border-decoration-type: bevel;
+  --reveal-border-decoration-size: 16px;
+}</pre>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="with-opacity">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .with-opacity {
+          --reveal-opacity: 1.0;
+        }
+      </style>
+      <div class="code">
+        <h2>Opacity</h2>
+        <pre>.my-reveal-container{
+  --reveal-opacity: 1.0;
+}</pre>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound>
+          <div class="ax-reveal-container">
+            <ax-reveal class="colored-button1">
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal class="colored-button2">
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal class="colored-button3">
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal class="colored-button4">
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .colored-button1 {
+          --reveal-color: red;
+        }
+        .colored-button2 {
+          --reveal-color: #7cbb00;
+        }
+        .colored-button3 {
+          --reveal-color: rgb(255, 187, 0);
+        }
+        .colored-button4 {
+          --reveal-color: #00A1F1;
+        }
+      </style>
+      <div class="code">
+        <h2>Colored Button</h2>
+        <pre>.colored-button1 {
   --reveal-color: red;
-}</pre
-                    >
-                </div>
-            </section>
+}
 
-            <section class="demo-block">
-                <div class="demo">
-                    <ax-reveal-bound class="border-width">
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Welcome</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">To</button>
-                            </ax-reveal>
-                        </div>
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Project</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Axiom!</button>
-                            </ax-reveal>
-                        </div>
-                    </ax-reveal-bound>
-                </div>
-                <div class="code">
-                    <h2>Border Width</h2>
-                    <pre>
-.my-reveal-container{
+.colored-button2 {
+  --reveal-color: #7cbb00;
+}
+
+.colored-button3 {
+  --reveal-color: rgb(255, 187, 0);
+}
+
+.colored-button4 {
+  --reveal-color: #00A1F1;
+}</pre>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="detailed-color-adjustment">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .detailed-color-adjustment {
+          --reveal-border-color: #FF00C1;
+          --reveal-hover-light-color: #00B8FF;
+          --reveal-press-animation-color: #FFFFFF;
+          --reveal-opacity: 1.0;
+        }
+      </style>
+      <div class="code">
+        <h2>Customize Every Parts</h2>
+        <pre>.my-reveal-container{
+  --reveal-border-color: #FF00C1;
+  --reveal-hover-light-color: #00B8FF;
+  --reveal-press-animation-color: #FFFFFF;
+  --reveal-opacity: 1.0;
+}</pre>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="border-width">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .border-width {
+          --reveal-border-width: 3px;
+        }
+      </style>
+      <div class="code">
+        <h2>Border Width</h2>
+        <pre>.my-reveal-container{
   --reveal-border-width: 3px;
-}</pre
-                    >
-                </div>
-            </section>
+}</pre>
+      </div>
+    </section>
 
-            <section class="demo-block">
-                <div class="demo">
-                    <ax-reveal-bound class="fill-radius">
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Welcome</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">To</button>
-                            </ax-reveal>
-                        </div>
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Project</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Axiom!</button>
-                            </ax-reveal>
-                        </div>
-                    </ax-reveal-bound>
-                </div>
-                <div class="code">
-                    <h2>Fill Radius</h2>
-                    <pre>
-.my-reveal-container{
-  --reveal-fill-radius: 0.2;
-}</pre
-                    >
-                </div>
-            </section>
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="border-fill-radius">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .border-fill-radius {
+          --reveal-border-fill-radius: 0.2;
+        }
+      </style>
+      <div class="code">
+        <h2>Border Fill Radius</h2>
+        <pre>.my-reveal-container{
+  --reveal-border-fill-radius: 0.2;
+}</pre>
+      </div>
+    </section>
 
-            <section class="demo-block">
-                <div class="demo">
-                    <ax-reveal-bound class="hold-animation">
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Welcome</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">To</button>
-                            </ax-reveal>
-                        </div>
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Project</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Axiom!</button>
-                            </ax-reveal>
-                        </div>
-                    </ax-reveal-bound>
-                </div>
-                <div class="code">
-                    <h2>Hold animation</h2>
-                    <pre>
-.my-reveal-container{
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="no-border">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .no-border {
+          --reveal-border-width: 0;
+        }
+      </style>
+      <div class="code">
+        <h2>No border</h2>
+        <pre>.my-reveal-container{
+  --reveal-border-width: 0;
+}</pre>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="different-sides">
+          <div>No Single Border</div>
+          <div class="ax-reveal-container">
+            <ax-reveal class="no-top">
+              <button class="ax-reveal-button">No Top</button>
+            </ax-reveal>
+            <ax-reveal class="no-bottom">
+              <button class="ax-reveal-button">No Bottom</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal class="no-left">
+              <button class="ax-reveal-button">No Left</button>
+            </ax-reveal>
+            <ax-reveal class="no-right">
+              <button class="ax-reveal-button">No Right</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal class="horizontal">
+              <button class="ax-reveal-button">Horizontal</button>
+            </ax-reveal>
+            <ax-reveal class="vertical">
+              <button class="ax-reveal-button">Vertical</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal class="only-top">
+              <button class="ax-reveal-button">Only Top</button>
+            </ax-reveal>
+            <ax-reveal class="only-bottom">
+              <button class="ax-reveal-button">Only Bottom</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal class="only-left">
+              <button class="ax-reveal-button">Only Left</button>
+            </ax-reveal>
+            <ax-reveal class="only-right">
+              <button class="ax-reveal-button">Only Right</button>
+            </ax-reveal>
+          </div>
+          <div>With Round Border Radius</div>
+          <div class="ax-reveal-container round-corner">
+            <ax-reveal class="no-top">
+              <button class="ax-reveal-button">No Top</button>
+            </ax-reveal>
+            <ax-reveal class="no-bottom">
+              <button class="ax-reveal-button">No Bottom</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container round-corner">
+            <ax-reveal class="no-left">
+              <button class="ax-reveal-button">No Left</button>
+            </ax-reveal>
+            <ax-reveal class="no-right">
+              <button class="ax-reveal-button">No Right</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container round-corner">
+            <ax-reveal class="horizontal">
+              <button class="ax-reveal-button">Horizontal</button>
+            </ax-reveal>
+            <ax-reveal class="vertical">
+              <button class="ax-reveal-button">Vertical</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container round-corner">
+            <ax-reveal class="only-top">
+              <button class="ax-reveal-button">Only Top</button>
+            </ax-reveal>
+            <ax-reveal class="only-bottom">
+              <button class="ax-reveal-button">Only Bottom</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container round-corner">
+            <ax-reveal class="only-left">
+              <button class="ax-reveal-button">Only Left</button>
+            </ax-reveal>
+            <ax-reveal class="only-right">
+              <button class="ax-reveal-button">Only Right</button>
+            </ax-reveal>
+          </div>
+          <div>With Bevel Border Radius</div>
+          <div class="ax-reveal-container bevel-corner">
+            <ax-reveal class="no-top">
+              <button class="ax-reveal-button">No Top</button>
+            </ax-reveal>
+            <ax-reveal class="no-bottom">
+              <button class="ax-reveal-button">No Bottom</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container bevel-corner">
+            <ax-reveal class="no-left">
+              <button class="ax-reveal-button">No Left</button>
+            </ax-reveal>
+            <ax-reveal class="no-right">
+              <button class="ax-reveal-button">No Right</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container bevel-corner">
+            <ax-reveal class="horizontal">
+              <button class="ax-reveal-button">Horizontal</button>
+            </ax-reveal>
+            <ax-reveal class="vertical">
+              <button class="ax-reveal-button">Vertical</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container bevel-corner">
+            <ax-reveal class="only-top">
+              <button class="ax-reveal-button">Only Top</button>
+            </ax-reveal>
+            <ax-reveal class="only-bottom">
+              <button class="ax-reveal-button">Only Bottom</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container bevel-corner">
+            <ax-reveal class="only-left">
+              <button class="ax-reveal-button">Only Left</button>
+            </ax-reveal>
+            <ax-reveal class="only-right">
+              <button class="ax-reveal-button">Only Right</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .no-top {
+          --reveal-border-top-type: none;
+        }
+        .no-bottom {
+          --reveal-border-bottom-type: none;
+        }
+        .no-left {
+          --reveal-border-left-type: none;
+        }
+        .no-right {
+          --reveal-border-right-type: none;
+        }
+        .horizontal {
+          --reveal-border-left-type: none;
+          --reveal-border-right-type: none;
+        }
+        .vertical {
+          --reveal-border-top-type: none;
+          --reveal-border-bottom-type: none;
+        }
+        .only-top {
+          --reveal-border-bottom-type: none;
+          --reveal-border-left-type: none;
+          --reveal-border-right-type: none;
+        }
+        .only-bottom {
+          --reveal-border-top-type: none;
+          --reveal-border-left-type: none;
+          --reveal-border-right-type: none;
+        }
+        .only-left {
+          --reveal-border-top-type: none;
+          --reveal-border-bottom-type: none;
+          --reveal-border-right-type: none;
+        }
+        .only-right {
+          --reveal-border-top-type: none;
+          --reveal-border-bottom-type: none;
+          --reveal-border-left-type: none;
+        }
+      </style>
+      <div class="code">
+        <h2>No border</h2>
+        <pre>.no-top {
+  --reveal-border-top-type: none;
+}
+
+.no-bottom {
+  --reveal-border-bottom-type: none;
+}
+
+.no-left {
+  --reveal-border-left-type: none;
+}
+
+.no-right {
+  --reveal-border-right-type: none;
+}
+
+.horizontal {
+  --reveal-border-left-type: none;
+  --reveal-border-right-type: none;
+}
+
+.vertical {
+  --reveal-border-top-type: none;
+  --reveal-border-bottom-type: none;
+}
+
+.only-top {
+  --reveal-border-bottom-type: none;
+  --reveal-border-left-type: none;
+  --reveal-border-right-type: none;
+}
+
+.only-bottom {
+  --reveal-border-top-type: none;
+  --reveal-border-left-type: none;
+  --reveal-border-right-type: none;
+}
+
+.only-left {
+  --reveal-border-top-type: none;
+  --reveal-border-bottom-type: none;
+  --reveal-border-right-type: none;
+}
+
+.only-right {
+  --reveal-border-top-type: none;
+  --reveal-border-bottom-type: none;
+  --reveal-border-right-type: none;
+}</pre>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="fill-radius">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .fill-radius {
+          --reveal-hover-light-fill-radius: 0.2;
+        }
+      </style>
+      <div class="code">
+        <h2>Fill Radius</h2>
+        <pre>.my-reveal-container{
+  --reveal-hover-light-fill-radius: 0.2;
+}</pre>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="no-fill">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .no-fill {
+          --reveal-hover-light: false;
+        }
+      </style>
+      <div class="code">
+        <h2>No Fill</h2>
+        <pre>.my-reveal-container{
+  --reveal-hover-light: false;
+}</pre>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="hold-animation">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .hold-animation {
+          --reveal-press-animation-speed: 8000;
+        }
+      </style>
+      <div class="code">
+        <h2>Hold animation</h2>
+        <pre>.my-reveal-container{
   --reveal-animate-speed: 8000;
-}</pre
-                    >
-                </div>
-            </section>
+}</pre>
+      </div>
+    </section>
 
-            <section class="demo-block">
-                <div class="demo">
-                    <ax-reveal-bound class="release-animation">
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Welcome</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">To</button>
-                            </ax-reveal>
-                        </div>
-                        <div class="ax-reveal-container">
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Project</button>
-                            </ax-reveal>
-                            <ax-reveal>
-                                <button class="ax-reveal-button">Axiom!</button>
-                            </ax-reveal>
-                        </div>
-                    </ax-reveal-bound>
-                </div>
-                <div class="code">
-                    <h2>Release animation</h2>
-                    <pre>
-.my-reveal-container{
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="release-animation">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .release-animation {
+          --reveal-release-animation-accelerate-rate: 20;
+        }
+      </style>
+      <div class="code">
+        <h2>Release animation</h2>
+        <pre>.my-reveal-container{
   --reveal-released-accelerate-rate: 20;
-}</pre
-                    >
-                </div>
-            </section>
+}</pre>
+      </div>
+    </section>
 
-            <section class="demo-block">
-                <div class="demo">
-                    <div class="long-list">
-                        <ax-reveal-bound>
-                            <div class="ax-reveal-container">
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                            </div>
-                        </ax-reveal-bound>
-                    </div>
-                </div>
-                <div class="code">
-                    <h2>List style</h2>
-                    <pre>
-.my-reveal-container{
-  --reveal-border-style: half;
-}</pre
-                    >
-                </div>
-            </section>
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="fill-mode">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .fill-mode {
+          --reveal-hover-light-fill-radius: 0.1;
+          --reveal-press-animation-radius-mode: constrained;
+        }
+      </style>
+      <div class="code">
+        <h2>Animation Fill Mode</h2>
+        <pre>.my-reveal-container{
+  --reveal-hover-light-fill-radius: 0.1;
+  --reveal-press-animation-radius-mode: constrained;
+}</pre>
+      </div>
+    </section>
 
-            <section class="demo-block">
-                <div class="demo">
-                    <div class="long-list no-diffuse">
-                        <ax-reveal-bound>
-                            <div class="ax-reveal-container">
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                                <ax-reveal>
-                                    <button class="ax-reveal-button">A lovely item</button>
-                                </ax-reveal>
-                            </div>
-                        </ax-reveal-bound>
-                    </div>
-                </div>
-                <div class="code">
-                    <h2>No diffuse</h2>
-                    <pre>
-.my-reveal-container{
-  --reveal-border-style: half;
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="no-animation">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .no-animation {
+          --reveal-press-animation: false;
+        }
+      </style>
+      <div class="code">
+        <h2>No animation</h2>
+        <pre>.my-reveal-container{
+  --reveal-press-animation: false;
+}</pre>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound>
+          <div class="ax-reveal-container" id="shadow">
+            Welcome
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <div class="code">
+        <h2>Nested ShadowRoot</h2>
+        <script>document.querySelector('#shadow').attachShadow({ mode: 'open' }).innerHTML = `
+        <style>
+          .ax-reveal-button {
+            min-width: 120px;
+            padding: 15px 25px;
+            border: none;
+            background: none;
+            user-select: none;
+          }
+        </style>
+        <ax-reveal>
+          <button class="ax-reveal-button"><slot /></button>
+        </ax-reveal>
+        `</script>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <ax-reveal-bound class="dynamic-size">
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Welcome</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">To</button>
+            </ax-reveal>
+          </div>
+          <div class="ax-reveal-container">
+            <ax-reveal>
+              <button class="ax-reveal-button">Project</button>
+            </ax-reveal>
+            <ax-reveal>
+              <button class="ax-reveal-button">Axiom!</button>
+            </ax-reveal>
+          </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .dynamic-size.large ax-reveal {
+          width: 160px;
+          height: 160px;
+        }
+
+        .dynamic-size.large .ax-reveal-button {
+          min-width: 160px;
+          height: 160px;
+        }
+      </style>
+      <div class="code">
+        <h2>Dynamic size</h2>
+        <button
+          onclick="document.querySelector('.dynamic-size')?.classList.toggle('large')"
+        >
+          Click here
+        </button>
+      </div>
+    </section>
+
+    <section class="demo-block">
+      <div class="demo">
+        <div class="long-list no-diffuse">
+          <ax-reveal-bound>
+            <div class="ax-reveal-container">
+              <ax-reveal>
+                <button class="ax-reveal-button">A lovely item</button>
+              </ax-reveal>
+              <ax-reveal>
+                <button class="ax-reveal-button">A lovely item</button>
+              </ax-reveal>
+              <ax-reveal>
+                <button class="ax-reveal-button">A lovely item</button>
+              </ax-reveal>
+              <ax-reveal>
+                <button class="ax-reveal-button">A lovely item</button>
+              </ax-reveal>
+              <ax-reveal>
+                <button class="ax-reveal-button">A lovely item</button>
+              </ax-reveal>
+            </div>
+        </div>
+        </ax-reveal-bound>
+      </div>
+      <style>
+        .no-diffuse {
+          --reveal-diffuse: false;
+          overflow-y: auto;
+          height: auto;
+        }
+      </style>
+      <div class="code">
+        <h2>No diffuse</h2>
+        <pre>.my-reveal-container{
   --reveal-diffuse: false;
-}</pre
-                    >
-                </div>
-            </section>
-        </ax-reveal-provider>
+}</pre>
+      </div>
+    </section>
+    <section class="round-corner benchmark">
+      <h2>Benchmark (100 Items)</h2>
+      <ax-reveal-bound>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+        <ax-reveal>🥩</ax-reveal><ax-reveal>🥚</ax-reveal><ax-reveal>🥛</ax-reveal><ax-reveal>👀</ax-reveal><ax-reveal>📎</ax-reveal>
+      </ax-reveal-bound>
+
+      <style>
+        .benchmark {
+          font-size: 0;
+        }
+
+        .benchmark ax-reveal {
+          width: 40px;
+          height: 40px;
+          margin: 4px;
+          padding: 8px;
+          font-size: 24px;
+          text-align: center;
+          line-height: 40px;
+          cursor: default;
+        }
+      </style>
+    </section>
+  </ax-reveal-provider>
         <script type="module">
             import { register } from 'https://unpkg.com/@ax-design/reveal-highlight/es/index.js'
-            register()
+            register({
+              compat: true,
+              borderDetectionMode: 'experimentalAutoFit',
+            })
         </script>
     </body>
 </html>
