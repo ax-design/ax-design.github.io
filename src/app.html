@@ -8,8 +8,39 @@
     <link rel="stylesheet" type="text/css" href="%sveltekit.assets%/assets/css/normalize.css">
     <link rel="stylesheet" type="text/css" href="%sveltekit.assets%/assets/css/main.css">
     %sveltekit.head%
+    <style>
+      /* Over the page until every custom element is registered (src/lib/site/register.ts lifts
+         it), so the tiles are not seen before they are drawn. It goes away by itself after ten
+         seconds, and does not show without scripts. */
+      #curtain {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #10233d;
+        color: #fff;
+        font: italic 300 64px/1 'Segoe UI', Selawik, 'IBM Plex Sans', sans-serif;
+        letter-spacing: 0.01em;
+        transition: opacity 0.4s;
+        animation: curtain-gone 0.4s 10s forwards;
+      }
+      #curtain.lifted {
+        opacity: 0;
+        pointer-events: none;
+      }
+      @keyframes curtain-gone {
+        to { opacity: 0; visibility: hidden; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #curtain { transition: none; }
+      }
+    </style>
+    <noscript><style>#curtain { display: none; }</style></noscript>
   </head>
   <body data-sveltekit-preload-data="hover">
+    <div id="curtain" aria-hidden="true">Welcome</div>
     <div style="display: contents">%sveltekit.body%</div>
   </body>
 </html>

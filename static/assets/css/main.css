@@ -1,26 +1,35 @@
+/* Base of the site. Every page is laid out sideways and scrolls sideways, like the Windows 8
+   Start screen and its apps; the wheel and the keys scroll it through @ax-design/scroll. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
   height: 100%;
-  font-family: "IBM Plex Sans Condensed", sans-serif;
+  margin: 0;
+}
+
+body {
+  font-family: "Segoe UI", "Selawik", "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 ul {
   list-style: none;
 }
 
-.h_container {
-  height: 100%;
-  display: flex;
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
+/* The title image of the home page. */
 .h_section {
   width: 95vw;
   height: 100%;
   overflow-y: auto;
   max-width: 1000px;
   min-width: 800px;
+  flex: none;
 }
 
 header.h_section {
@@ -31,6 +40,7 @@ header.h_section {
   flex-direction: column;
   justify-content: center;
   align-content: center;
+  font-family: "IBM Plex Sans Condensed", sans-serif;
 }
 
 .logo,
@@ -38,6 +48,7 @@ header.h_section {
   text-align: center;
   text-decoration: none;
   display: block;
+  color: white;
 }
 
 .logo:visited {
@@ -55,20 +66,4 @@ header.h_section {
 .slogan {
   margin-top: -2em;
   font-size: 1.2em;
-}
-
-.main_title {
-  margin: 2em 2em;
-  font-weight: 400;
-  font-size: 2.5em;
-}
-
-.team_member img {
-  width: 200px;
-  height: 200px;
-}
-
-.component_list .component_icon{
-  width: 80px;
-  height: 80px;
 }
