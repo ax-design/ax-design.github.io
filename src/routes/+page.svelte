@@ -61,7 +61,7 @@
           <StartTile href="/components/pressure" title="Pressure" icon={icon('ax-pressure')} color="#b91d47" />
           <StartTile href="/components/tile-group" title="Tile Group" icon={icon('ax-tile-group')} color="#da532c" />
           <StartTile href="/components/scroll" title="Scroll" icon={icon('ax-scroll')} color="#00aba9" />
-          <StartTile href="/components/navigation" title="Navigation" icon={icon('ax-navigation')} color="#525e75" badge="Legacy" />
+          <StartTile href="/components/navigation" title="Navigation" icon={icon('ax-navigation')} color="#525e75" />
         </ax-tile-group>
       </section>
 
