@@ -18,6 +18,15 @@ body {
   overflow-y: hidden;
 }
 
+/* Narrower than a spread of columns (see src/lib/site/layout.ts) the pages stack and scroll
+   down instead of sideways, so the axis pinned above is lifted, and the document scrolls on its
+   own. */
+@media (max-width: 919px) {
+  body {
+    overflow-y: visible;
+  }
+}
+
 ul {
   list-style: none;
 }

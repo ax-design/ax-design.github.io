@@ -115,19 +115,13 @@
     /* The columns end with their own gap. */
     padding: 24px 80px 0 120px;
   }
-  /* A column already carries its own margin at every edge of the spread (the gap of its flow),
-     so the ends of the spread add only what those margins still lack: the 120px a column leaves
-     at the left edge and the 80px at the right one, minus the 40px gap a flow holds there. */
-  .spread > :global(*:first-child) {
-    margin-inline-start: 80px;
-  }
-  .spread > :global(*:last-child) {
-    margin-inline-end: 40px;
-  }
+
   /* Narrower than a spread of columns (see #lib/site/layout.ts): one column going down, full
-     width, with a margin at both sides; every gap the columns had is a gap the page does not
-     need. The shell grows with the page instead of the viewport. */
-  @media (max-width: 999px) {
+     width, with the margin a page keeps at both sides, and the gap between the column groups
+     kept: the Getting started group and the first example are two columns of the page, and they
+     read as two columns of the page once they are stacked. The shell grows with the page instead
+     of the viewport. */
+  @media (max-width: 919px) {
     .app {
       width: auto;
       min-width: 0;
@@ -139,9 +133,18 @@
       min-height: 0;
       padding: 0;
     }
+    /* Two column groups of the page are two columns of it; stacked, they stand apart by the same
+       gap a flow leaves after a column. It is a margin rather than a gap: the last block of a
+       column brings its own bottom margin along, and a gap would come on top of it.
+       --flow-gap is set by each flow on itself, so the page falls back to the 40px the flows of
+       this site use. */
+    .spread > :global(*:not(:last-child)) {
+      margin-bottom: var(--flow-gap, 40px);
+    }
     .spread > :global(*) {
       height: auto;
-      margin: 0;
+      margin-top: 0;
+      margin-right: 0;
       padding: 0;
     }
   }

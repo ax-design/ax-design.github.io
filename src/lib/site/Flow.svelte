@@ -1,7 +1,8 @@
 <script lang="ts">
   // A run of blocks that fills a column from the top and goes on in the next column to the
   // right when the height runs out, so a page only ever scrolls sideways. Every child is a
-  // block that is never split.
+  // block that is never split. Narrower than a spread, the same blocks go down one page instead
+  // of sideways (see #lib/site/layout.ts).
   //
   // The browser lays it out by itself, with no measuring in script: the flow is written
   // vertically (writing-mode: vertical-lr), so its children are inline blocks set from top to
@@ -39,6 +40,8 @@
     line-height: 0;
   }
   .flow > :global(*) {
+    /* The flow's own writing mode is the one that sets the block off from the next one in the
+       column; a block holds text, and the text is set normally. */
     writing-mode: horizontal-tb;
     display: inline-block;
     vertical-align: top;
@@ -50,5 +53,34 @@
     font-size: 15px;
     line-height: 1.55;
     white-space: normal;
+  }
+  /* Narrower than a spread of columns (see #lib/site/layout.ts): the flow drops its sideways
+     writing mode and its blocks go down the page instead of across it, the page scrolling down
+     rather than sideways. The flow keeps the margin a column has at the two ends of the page,
+     and a block fills what is left between them: the column width a flow is given only starts a
+     spread, and the page it now stacks on is as wide as the window. */
+  @media (max-width: 919px) {
+    .flow {
+      /* Back to the normal axis, or the blocks are inline blocks set top to bottom and still
+         make columns. */
+      writing-mode: horizontal-tb;
+      display: block;
+      width: 100%;
+      height: auto;
+      padding: 0 var(--flow-gap);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+    .flow > :global(*) {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      margin: 0 auto var(--flow-space);
+    }
+    /* A block that holds to a fixed width (a 360px preview, a scroll demo) keeps its size down to
+       a column, and is capped rather than run off a narrower page. */
+    .flow > :global(*) :global(*) {
+      max-width: 100%;
+    }
   }
 </style>
