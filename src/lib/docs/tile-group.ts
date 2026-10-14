@@ -139,6 +139,7 @@ const page: DocPage = {
     { name: '--tile-gap', kind: 'property', type: '<length>', default: '10px', description: 'The space between cells.' },
     { name: '--tile-rows', kind: 'property', type: '<number> | auto', default: '6', description: 'The rows of cells in a horizontal group. With auto, the group takes as many rows as its height holds.' },
     { name: '--tile-columns', kind: 'property', type: '<number> | auto', default: '6', description: 'The columns of cells in a vertical group. With auto, the group takes as many columns as its width holds.' },
+    { name: '--tile-drag-opacity', kind: 'property', type: '<number>', default: '0.65', description: 'The opacity of a dragged tile. It is inherited, so set it on the group or on one tile. Set it to 1 for tiles with acrylic or another backdrop-filter: an element with an opacity below 1 is a backdrop root, so the filter inside it sees nothing behind the tile and the glass turns clear while the tile is dragged.' },
     { name: 'tiledragstart', kind: 'event', type: 'CustomEvent', description: 'A drag starts. Fired on the tile, bubbles. Cancel it to keep the tile in place.' },
     { name: 'tilereorder', kind: 'event', type: 'CustomEvent<{ from, to }>', description: 'A tile was dropped at a new place. Cancel it to put the tile back.' },
     { name: 'tiledragend', kind: 'event', type: 'CustomEvent<{ from, to }>', description: 'The drag is over. from and to are equal when nothing moved.' },
