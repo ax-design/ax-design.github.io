@@ -31,7 +31,7 @@
     "@ax-design/navigation": "^0.0.2",
     "@ax-design/pressure": "^0.1.1",
     "@ax-design/reveal-highlight": "^0.6.2",
-    "@ax-design/scroll": "^0.1.0",
+    "@ax-design/scroll": "^0.1.2",
     "@ax-design/surface": "^0.2.1",
     "@ax-design/tile-group": "^0.1.3",
     "@ax-design/typed-om": "^0.1.0"
