@@ -52,16 +52,16 @@
             <span class="live" aria-hidden="true"><ax-surface class="morph" layers="fill"></ax-surface></span>
           </StartTile>
           <StartTile href="/ideas" title="Ideas" columns={4} icon={icon('ax-ideas')} color="#00a300" />
-          <StartTile href="/components/reveal-highlight" title="Reveal Highlight" icon={icon('ax-reveal-highlight')} color="#1e7145" />
+          <StartTile href="/components/elevation" title="Elevation" icon={icon('ax-elevation')} color="#7e3878" />
           <StartTile href="/components/shape" title="Shape" icon={icon('ax-shape')} color="#b45309" />
           <StartTile href="/components/surface" title="Surface" icon={icon('ax-surface')} color="#2b5797" />
-          <StartTile href="/components/typed-om" title="Typed OM" icon={icon('ax-typed-om')} color="#9f00a7" />
+          <StartTile href="/components/navigation" title="Navigation" icon={icon('ax-navigation')} color="#525e75" />
           <StartTile href="/components/acrylic" title="Acrylic" icon={icon('ax-acrylic')} color="#2d89ef" />
-          <StartTile href="/components/elevation" title="Elevation" icon={icon('ax-elevation')} color="#7e3878" />
+          <StartTile href="/components/reveal-highlight" title="Reveal Highlight" icon={icon('ax-reveal-highlight')} color="#1e7145" />
           <StartTile href="/components/pressure" title="Pressure" icon={icon('ax-pressure')} color="#b91d47" />
           <StartTile href="/components/tile-group" title="Tile Group" icon={icon('ax-tile-group')} color="#da532c" />
           <StartTile href="/components/scroll" title="Scroll" icon={icon('ax-scroll')} color="#00aba9" />
-          <StartTile href="/components/navigation" title="Navigation" icon={icon('ax-navigation')} color="#525e75" />
+          <StartTile href="/components/typed-om" title="Typed OM" icon={icon('ax-typed-om')} color="#9f00a7" />
         </ax-tile-group>
       </section>
 
