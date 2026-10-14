@@ -1,5 +1,6 @@
 // Every component page, in the order of the start screen, with the color of its tile.
 import type { DocPage } from './types';
+import shape from './shape';
 import surface from './surface';
 import typedOm from './typed-om';
 import revealHighlight from './reveal-highlight';
@@ -16,6 +17,7 @@ export interface PageEntry {
 }
 
 export const pages: PageEntry[] = [
+  { page: shape, accent: '#b45309' },
   { page: surface, accent: '#2b5797' },
   { page: typedOm, accent: '#9f00a7' },
   { page: revealHighlight, accent: '#1e7145' },

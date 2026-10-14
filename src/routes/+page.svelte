@@ -53,6 +53,7 @@
           </StartTile>
           <StartTile href="/ideas" title="Ideas" columns={4} icon={icon('ax-ideas')} color="#00a300" />
           <StartTile href="/components/reveal-highlight" title="Reveal Highlight" icon={icon('ax-reveal-highlight')} color="#1e7145" />
+          <StartTile href="/components/shape" title="Shape" icon={icon('ax-shape')} color="#b45309" />
           <StartTile href="/components/surface" title="Surface" icon={icon('ax-surface')} color="#2b5797" />
           <StartTile href="/components/typed-om" title="Typed OM" icon={icon('ax-typed-om')} color="#9f00a7" />
           <StartTile href="/components/acrylic" title="Acrylic" icon={icon('ax-acrylic')} color="#2d89ef" />
