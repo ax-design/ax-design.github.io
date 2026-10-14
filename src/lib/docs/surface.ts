@@ -136,8 +136,9 @@ const page: DocPage = {
       preview: `<div class="stage"><ax-surface class="card" layers="fill"><ax-surface class="inner" layers="fill reveal"><span>Press</span></ax-surface></ax-surface></div>`,
       style: `
 .stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-.card { position: relative; display: flex; align-items: center; justify-content: center; width: 250px; height: 170px; --ax-radius: 26px; --ax-fill-color: rgba(255, 255, 255, 0.12); --ax-border-color: rgba(255, 255, 255, 0.55); --ax-border-width: 2px; --ax-tilt-mode: absolute; --ax-tilt-depth: 4px; }
-.inner { display: flex; align-items: center; justify-content: center; width: 150px; height: 52px; color: #fff; font-size: 15px; --ax-radius: 14px; --ax-fill-color: rgba(255, 255, 255, 0.22); --ax-border-color: rgba(255, 255, 255, 0.8); --ax-border-width: 2px; --ax-tilt-mode: absolute; --ax-tilt-depth: 3px; --reveal-color: rgb(255, 255, 255); --reveal-opacity: 0.4; }
+.card { width: 250px; height: 170px; --ax-radius: 26px; --ax-fill-color: rgba(255, 255, 255, 0.12); --ax-border-color: rgba(255, 255, 255, 0.55); --ax-border-width: 2px; --ax-tilt-mode: absolute; --ax-tilt-depth: 4px; }
+.inner { position: absolute; inset: 0; margin: auto; display: flex; align-items: center; justify-content: center; width: 150px; height: 52px; color: #fff; font-size: 15px; --ax-radius: 14px; --ax-fill-color: rgba(255, 255, 255, 0.22); --ax-border-color: rgba(255, 255, 255, 0.8); --ax-border-width: 2px; --ax-tilt-mode: absolute; --ax-tilt-depth: 3px; --reveal-color: rgb(255, 255, 255); --reveal-opacity: 0.4; }
+.inner span { display: flex; height: 100%; align-items: center; justify-content: center; }
 `,
       controls: [
         { key: 'depth', label: 'Outer tilt depth', type: 'range', min: 0, max: 12, step: 1, unit: '', default: 4, target: { kind: 'css', property: '--ax-tilt-depth', selector: '.card' } }
@@ -146,7 +147,7 @@ const page: DocPage = {
         { language: 'html', source: '<ax-surface class="card" layers="fill">\n  <ax-surface class="button" layers="fill reveal">\n    <button>Press</button>\n  </ax-surface>\n</ax-surface>' },
         {
           language: 'css',
-          source: '.card {\n  --ax-radius: 26px;\n  --ax-tilt-mode: absolute;\n  --ax-tilt-depth: {{depth}}px;\n}\n\n.button {\n  --ax-radius: 14px;\n  --ax-tilt-mode: absolute;\n  --ax-tilt-depth: 3px;\n}'
+          source: '.card {\n  --ax-radius: 26px;\n  --ax-tilt-mode: absolute;\n  --ax-tilt-depth: {{depth}}px;\n}\n\n.button {\n  position: absolute;\n  inset: 0;\n  margin: auto; /* centers the inner surface in the card */\n  --ax-radius: 14px;\n  --ax-tilt-mode: absolute;\n  --ax-tilt-depth: 3px;\n}'
         }
       ]
     }
