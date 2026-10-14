@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import BackButton from '#lib/site/BackButton.svelte';
 
   let {
     open = $bindable(false),
@@ -54,18 +55,7 @@
 >
   <div class="panel">
     <header class="header">
-      <button type="button" class="back" aria-label="Close" onclick={() => dialog?.close()}>
-        <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true">
-          <circle cx="20" cy="20" r="19" fill="none" stroke="currentColor" stroke-width="1.5" />
-          <path
-            d="M 23 20 H 13 M 18 15 L 13 20 L 18 25"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="square"
-          />
-        </svg>
-      </button>
+      <BackButton label="Close" onclick={() => dialog?.close()} />
       <h2 class="title" id="{uid}-title">{title}</h2>
     </header>
     <div class="body">
@@ -122,36 +112,6 @@
     align-items: center;
     gap: 12px;
     padding: 24px 40px 0 24px;
-  }
-
-  .back {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    width: 40px;
-    height: 40px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-    color: #1b1b1b;
-    cursor: pointer;
-  }
-
-  .back:hover {
-    background: rgba(0, 0, 0, 0.08);
-  }
-
-  .back:focus {
-    outline: none;
-  }
-
-  .back:focus-visible {
-    outline: 2px solid var(--ui-accent, #2b5797);
-    outline-offset: 2px;
   }
 
   .title {
