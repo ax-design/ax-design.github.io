@@ -40,6 +40,16 @@
     return Math.min(CELL, (width - 2 * MARGIN - (columns - 1) * GAP) / columns);
   }
 
+  // A stacked page can need an arrangement of its own. A grid of six cells holds a wide tile and
+  // two small ones beside it, and has no room left for the four-cell Ideas tile: in the order of
+  // the page, Ideas has nowhere to go but under Playground, and the two cells beside it stay
+  // empty. The two small tiles that do fit there come before it instead. Each entry names the
+  // tiles to move to just after the first tile of a group, for one shape of it; a shape with no
+  // entry keeps the order of the page.
+  const STACKED_ORDER: Record<string, string[]> = {
+    m3: ['/components/elevation', '/components/shape'],
+  };
+
   // Whether the page is the sideways spread of the site, or one column going down. The groups
   // follow it: a spread lays its tiles out in a strip eight rows tall and is dragged by the
   // cross-slide of a horizontal scroller; stacked, a group is a grid of cells that grows downward
@@ -74,6 +84,16 @@
     let unbindScroll = () => {};
     let gone = false;
 
+    // The order a shape falls back to: the order of the page, with the tiles of STACKED_ORDER for
+    // that shape moved to just after the first tile of the group.
+    const fallback = (group: HTMLElement, next: string): string[] => {
+      const source = start.get(group)!;
+      const moved = STACKED_ORDER[next];
+      if (!moved) return source;
+      const [first, ...rest] = source;
+      return [first, ...rest.filter((id) => moved.includes(id)), ...rest.filter((id) => !moved.includes(id))];
+    };
+
     // Puts the tiles of every group in the order dragged into this shape. The sideways spread
     // keeps the key it always had; each stacked width has an order of its own, so the same tiles
     // may sit differently at two, three and four medium tiles across.
@@ -81,7 +101,7 @@
       stops.forEach((stop) => stop());
       stops = list.map(({ key, group }) => {
         const own = next === 'wide' ? key : `${key}:${next}`;
-        if (!restoreOrder(group, own)) applyOrder(group, start.get(group)!);
+        if (!restoreOrder(group, own)) applyOrder(group, fallback(group, next));
         return keepOrder(group, own);
       });
     };
