@@ -6,7 +6,7 @@
   import { IDEAS, type Idea } from '#lib/site/ideas';
   import { watchWidth } from '#lib/site/layout';
   import { keepOrder, restoreOrder } from '#lib/site/order';
-  import { afterRipple } from '#lib/site/ripple';
+  import { pressed } from '#lib/site/press';
   import { scopeCss } from '#lib/site/scope';
   import { Flyout } from '#lib/ui/index.ts';
 
@@ -93,7 +93,7 @@
         role="button"
         tabindex="0"
         aria-label="{idea.title}: show the code"
-        onclick={(event) => afterRipple(event, () => show(idea))}
+        onclick={pressed(() => show(idea))}
         onkeydown={(event) => onkeydown(event, idea)}
       >
         {@html idea.html}

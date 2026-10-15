@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { goto } from '$app/navigation';
-  import { afterRipple } from './ripple';
+  import { pressed } from './press';
 
   // A tile of the start screen: an <ax-tile> with a link over all of it. With `image`, the
   // picture fills the tile, cut to its shape; otherwise `icon` (a monochrome SVG) is drawn
@@ -24,12 +24,8 @@
 
   // A plain click on a link to this site goes on once the ripple has played. The link stays a
   // link: a click with a modifier or the middle button, and a link that opens a new tab, keep
-  // what the browser does with them.
-  function onclick(event: MouseEvent) {
-    if (external || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    afterRipple(event, () => goto(href));
-  }
+  // what the browser does with them (see ./press).
+  const onclick = $derived(pressed(() => goto(href), { link: true, external }));
 </script>
 
 {#snippet link(content: Snippet)}
