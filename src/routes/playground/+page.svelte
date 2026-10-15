@@ -3,6 +3,7 @@
 	import AppShell from '#lib/site/AppShell.svelte';
 	import Code from '#lib/site/Code.svelte';
 	import Flow from '#lib/site/Flow.svelte';
+	import { pressed } from '#lib/site/press';
 	import { isWide } from '#lib/site/layout';
 	import { CORNERS, CORNER_LABELS, GROUPS, INITIAL, LAYERS, PRESETS, SIDES, SIDE_LABELS, cssOf, scalePx } from '#lib/site/playground';
 	import type { Control, Group, Preset } from '#lib/site/playground';
@@ -166,7 +167,8 @@
 	>
 		<ax-tile columns={COLUMNS} rows={DEMO_ROWS} class="demo">
 			<ax-surface bind:this={subject} class="demo-surface" layers={LAYERS.filter((l) => layers.includes(l)).join(' ')}>
-				<button type="button" class="show-code" onclick={() => (open = true)}>Click to show code</button>
+				<!-- The flyout covers the demo, so the press waits for its ripple; a preset does not (see the preset button). -->
+				<button type="button" class="show-code" onclick={pressed(() => (open = true))}>Click to show code</button>
 			</ax-surface>
 		</ax-tile>
 
