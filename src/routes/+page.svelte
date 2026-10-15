@@ -69,6 +69,12 @@
   let groups: HTMLElement | undefined = $state();
 
   onMount(() => {
+    // The root gets the color of the page too, as on every page the AppShell draws: nothing
+    // beyond the page box, while the page grows or on an overscroll, shows white.
+    const root = document.documentElement;
+    const background = root.style.background;
+    root.style.background = '#10233d';
+
     const list = Array.from(groups!.querySelectorAll('section.group')).map((section) => ({
       key: `ax-site:order:start:${section.getAttribute('aria-labelledby')}`,
       group: section.querySelector('ax-tile-group') as HTMLElement
@@ -147,6 +153,7 @@
       window.removeEventListener('resize', apply);
       stops.forEach((stop) => stop());
       unbindScroll();
+      root.style.background = background;
     };
   });
 </script>
