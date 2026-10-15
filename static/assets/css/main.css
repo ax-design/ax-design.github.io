@@ -43,23 +43,6 @@ ul {
   flex: none;
 }
 
-/* Narrower than a spread, the title image stands above the Start screen instead of beside it
-   (see src/routes/+page.svelte): the page is one column going down, the image is as wide as the
-   window, and it takes a band of the height rather than all of it. */
-@media (max-width: 919px) {
-  .h_section {
-    width: 100%;
-    min-width: 0;
-    max-width: none;
-  }
-  header.h_section {
-    height: 46vh;
-    min-height: 300px;
-    max-height: 420px;
-    overflow-y: hidden;
-  }
-}
-
 header.h_section {
   background: url("../img/header.jpg");
   background-size: cover;
@@ -95,3 +78,46 @@ header.h_section {
   margin-top: -2em;
   font-size: 1.2em;
 }
+
+/* Narrower than a spread, the title image stands above the Start screen instead of beside it
+   (see src/routes/+page.svelte): the page is one column going down, the image is as wide as the
+   window, and it takes a band instead of all of the height. */
+@media (max-width: 919px) {
+  .h_section {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+  header.h_section {
+    /* The band follows the window rather than the height of it: it is at least 75% of the width
+       of the page and never shorter than 200px, and it grows if the mark and the type come to
+       more than that, so nothing is cut off at the top of a phone. */
+    height: auto;
+    min-height: clamp(200px, 75vw, 420px);
+    padding: 12px 0;
+    overflow-y: hidden;
+  }
+  header.h_section h1 {
+    margin: 0;
+  }
+  /* The mark and the two lines of type keep to the band: they are as large as the page makes
+     them, up to the size they have in the spread. The mark is a block, so it brings no line of
+     text and no descender with it. */
+  .logo_img {
+    display: block;
+    margin: 0 auto;
+    width: min(200px, 45%);
+  }
+  /* The spread tucks the slogan into the leading of its wordmark: the 1em a paragraph brings
+     under the wordmark and the -2em the slogan pulls itself up by come out even at 41.6px and
+     19.2px. The smaller type of a phone keeps a gap of its own instead. */
+  .logo_text {
+    margin: 6px 0 0;
+    font-size: clamp(17px, 5vw, 1.3em);
+  }
+  .slogan {
+    margin-top: 6px;
+    font-size: clamp(12px, 3.2vw, 1.2em);
+  }
+}
+
