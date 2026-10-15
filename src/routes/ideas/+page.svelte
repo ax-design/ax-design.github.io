@@ -4,6 +4,7 @@
   import Code from '#lib/site/Code.svelte';
   import Flow from '#lib/site/Flow.svelte';
   import { IDEAS, type Idea } from '#lib/site/ideas';
+  import { watchWidth } from '#lib/site/layout';
   import { keepOrder, restoreOrder } from '#lib/site/order';
   import { afterRipple } from '#lib/site/ripple';
   import { scopeCss } from '#lib/site/scope';
@@ -32,6 +33,12 @@
   }
 
   let group: HTMLElement | undefined = $state();
+  // Wide, the ideas are a sideways spread like every other page: a strip of tiles eight rows
+  // tall, reordered by the cross-slide drag of a horizontal scroller. Narrower than a spread,
+  // the page is one column going down: the description stands above the group, the group grows
+  // downward with as many columns as its width holds, and a tile is reordered by pressing and
+  // holding it, the hold drag.
+  let wide = $state(false);
   // Temporary, for finding a Firefox bug: ?only=weather,note shows only those ideas, and
   // leaves the stored order alone.
   let only: string[] | null = $state(null);
@@ -44,7 +51,14 @@
     if (keep) restoreOrder(group!, 'ax-site:order:ideas');
     const stopKeeping = keep ? keepOrder(group!, 'ax-site:order:ideas') : () => {};
     const stops = IDEAS.filter((idea) => idea.js && (!only || only.includes(idea.id))).map((idea) => idea.js!.run(group!.querySelector(`[data-idea="${idea.id}"]`) as HTMLElement));
+    // The group lays its cells out again when the custom properties change; a change of
+    // orientation is one of those nothing reports, so the group is told to read them again.
+    const stopWidth = watchWidth((value) => {
+      wide = value;
+      (group as (HTMLElement & { refresh?: () => void }) | undefined)?.refresh?.();
+    });
     return () => {
+      stopWidth();
       stopKeeping();
       stops.forEach((stop) => stop());
     };
@@ -59,10 +73,17 @@
 <AppShell title="Ideas" accent={ACCENT} wallpaper="/demo/images/background.jpg">
   <Flow label="About" width={300}>
     <p class="lead">Small things made of Surface and its layers: corners, bites and tails, light, glass and shadow.</p>
-    <p>Point at them and press them. Drag them around to put them in another order. Click one to see the code that makes it.</p>
+    <p>Point at them and press them. Drag them around to put them in another order; on a touch screen, press and hold one first. Click one to see the code that makes it.</p>
   </Flow>
 
-  <ax-tile-group bind:this={group} drag="cross-slide" class="ideas" aria-label="Ideas">
+  <ax-tile-group
+    bind:this={group}
+    drag={wide ? 'cross-slide' : 'hold'}
+    orientation={wide ? 'horizontal' : 'vertical'}
+    class="ideas"
+    class:narrow={!wide}
+    aria-label="Ideas"
+  >
     {#each shownIdeas as idea (idea.id)}
       <div
         class="idea"
@@ -129,5 +150,15 @@
   .description {
     margin: 0 0 20px;
     color: #2b2925;
+  }
+  /* Narrower than a spread (see #lib/site/layout.ts): the group lets its height go, keeps the
+     margins a page keeps at both sides, and takes as many columns of cells as its width holds. */
+  @media (max-width: 919px) {
+    .ideas.narrow {
+      height: auto;
+      margin: 0 40px;
+      --tile-rows: auto;
+      --tile-columns: auto;
+    }
   }
 </style>
