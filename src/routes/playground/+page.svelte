@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import AppShell from '#lib/site/AppShell.svelte';
 	import Code from '#lib/site/Code.svelte';
 	import Flow from '#lib/site/Flow.svelte';
+	import { isWide } from '#lib/site/layout';
 	import { CORNERS, CORNER_LABELS, GROUPS, INITIAL, LAYERS, PRESETS, SIDES, SIDE_LABELS, cssOf, scalePx } from '#lib/site/playground';
 	import type { Control, Group, Preset } from '#lib/site/playground';
 	import { CheckBox, ColorPicker, ComboBox, Expander, Flyout, RadioGroup, Slider } from '#lib/ui/index.ts';
@@ -14,9 +16,18 @@
 	const GAP = 12;
 	const COLUMNS = 4;
 	const DEMO_ROWS = 3;
+	// The margin a page keeps at both sides once it stacks (see AppShell), and how much larger than
+	// the cell of a column a cell may grow there.
+	const MARGIN = 40;
+	const CELL_MAX = CELL * 1.5;
 	// Every shape fills 75% of its container: the demo surface inside its four-by-three tile and
 	// each preset thumb inside its one-cell tile.
 	const FILL = 0.75;
+
+	// The size of a cell: the 64px a column of the spread is built on, or what the width of a
+	// stacked page allows.
+	let cell = $state(CELL);
+	let group: HTMLElement | undefined = $state();
 
 	let layers: string[] = $state(['elevation', 'acrylic', 'reveal']);
 	// The demo shape fills 75% of its tile, so its size follows the container rather than a number
@@ -114,10 +125,24 @@
 	function thumb(p: Preset): string {
 		const [w, h] = p.size || [100, 100];
 		// The thumb fills 75% of its one-cell tile; px values scale from the reference to it.
-		const factor = (CELL * FILL) / 100;
+		const factor = (cell * FILL) / 100;
 		const style = Object.entries(p.props).map(([k, v]) => `${k}: ${scalePx(v, factor)}`);
 		return [`width: ${Math.round(w * factor)}px`, `height: ${Math.round(h * factor)}px`, ...style].join('; ');
 	}
+
+	// A stacked page gives the group the width between its margins and the four columns share it,
+	// up to half as large again as the cell of a column; the spread keeps the 64px its geometry is
+	// built on.
+	onMount(() => {
+		const apply = () => {
+			const room = document.documentElement.clientWidth - 2 * MARGIN - (COLUMNS - 1) * GAP;
+			cell = isWide() ? CELL : Math.min(CELL_MAX, room / COLUMNS);
+			(group as (HTMLElement & { refresh?: () => void }) | undefined)?.refresh?.();
+		};
+		apply();
+		window.addEventListener('resize', apply);
+		return () => window.removeEventListener('resize', apply);
+	});
 
 	const html = $derived(`<ax-surface class="my-surface" layers="${LAYERS.filter((l) => layers.includes(l)).join(' ')}">...</ax-surface>`);
 	const css = $derived(cssOf('.my-surface', size, props));
@@ -133,8 +158,9 @@
 		class="shapes"
 		orientation="vertical"
 		aria-label="Shapes"
-		style:--tile-cell-width={CELL + 'px'}
-		style:--tile-cell-height={CELL + 'px'}
+		bind:this={group}
+		style:--tile-cell-width={cell + 'px'}
+		style:--tile-cell-height={cell + 'px'}
 		style:--tile-gap={GAP + 'px'}
 		style:--tile-columns={COLUMNS}
 	>
@@ -203,6 +229,14 @@
 	.shapes {
 		flex: none;
 		margin-right: 40px;
+	}
+	/* Narrower than a spread, the page keeps its 40px margin at both sides and the group stands in
+	   the middle of what is left: the four columns share that width (see the script), so the demo
+	   and the presets follow the page instead of standing at the 292px of a column. */
+	@media (max-width: 919px) {
+		.shapes {
+			margin: 0 auto;
+		}
 	}
 	.demo {
 		/* The wallpaper fills the whole tile behind the shape. */
