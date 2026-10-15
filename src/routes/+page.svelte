@@ -8,7 +8,7 @@
   const icon = (name: string) => `/assets/img/icons/${name}.svg`;
 
   const team = [
-    { name: 'Balthild', avatar: 'https://avatars3.githubusercontent.com/u/2662758?s=460&v=4', url: 'https://github.com/Jack-Works' },
+    { name: 'Balthild', avatar: 'https://avatars3.githubusercontent.com/u/2662758?s=460&v=4', url: 'https://github.com/balthild' },
     { name: 'Jack Works', avatar: 'https://avatars3.githubusercontent.com/u/5390719?s=460&v=4', url: 'https://github.com/Jack-Works' },
     { name: 'Losses Don', avatar: 'https://avatars2.githubusercontent.com/u/1384036?s=460&v=4', url: 'https://github.com/losses' },
     { name: 'UTL_1138', avatar: 'https://avatars1.githubusercontent.com/u/8299251?s=460&v=4', url: 'https://github.com/967018' }
