@@ -31,7 +31,9 @@ ul {
   list-style: none;
 }
 
-/* The title image of the home page. */
+/* The title image of the home page. Beside the Start screen it is a column of the spread: as
+   wide as the window, no wider than 1000px, and never narrower than the 800px of the image, so
+   the page scrolls sideways rather than squashing it. */
 .h_section {
   width: 95vw;
   height: 100%;
@@ -39,6 +41,23 @@ ul {
   max-width: 1000px;
   min-width: 800px;
   flex: none;
+}
+
+/* Narrower than a spread, the title image stands above the Start screen instead of beside it
+   (see src/routes/+page.svelte): the page is one column going down, the image is as wide as the
+   window, and it takes a band of the height rather than all of it. */
+@media (max-width: 919px) {
+  .h_section {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+  header.h_section {
+    height: 46vh;
+    min-height: 300px;
+    max-height: 420px;
+    overflow-y: hidden;
+  }
 }
 
 header.h_section {

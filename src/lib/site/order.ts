@@ -55,20 +55,38 @@ function valid(value: unknown, current: string[]): string[] | null {
   return ids;
 }
 
-// Puts the tiles of `group` in the stored order. Call it before the group lays them out.
-export function restoreOrder(group: Element, key: string) {
+// Puts the tiles of `group` in this order, by id. A tile the list does not name keeps its
+// place, in its own order, after the named ones. Call it before the group lays the tiles out.
+export function applyOrder(group: Element, ids: string[]) {
   const list = tiles(group);
-  const value = read(key);
-  if (value === null) return;
-  const ids = valid(value, list.map((t) => t.id));
-  if (!ids) {
-    forget(key);
-    return;
-  }
   const byId = new Map(list.map((t) => [t.id, t.el]));
   // Tiles only: anything else in the group stays where it is, after them.
   const after = list.length ? list[list.length - 1].el.nextSibling : null;
-  for (const id of ids) group.insertBefore(byId.get(id)!, after);
+  const placed = new Set<string>();
+  for (const id of ids) {
+    const el = byId.get(id);
+    if (!el || placed.has(id)) continue;
+    placed.add(id);
+    group.insertBefore(el, after);
+  }
+}
+
+// Puts the tiles of `group` in the stored order. Answers whether an order was stored and used:
+// false leaves the tiles where they are, for the caller to fall back to its own order. Call it
+// before the group lays them out.
+export function restoreOrder(group: Element, key: string): boolean {
+  const value = read(key);
+  if (value === null) return false;
+  const ids = valid(
+    value,
+    tiles(group).map((t) => t.id),
+  );
+  if (!ids) {
+    forget(key);
+    return false;
+  }
+  applyOrder(group, ids);
+  return true;
 }
 
 // Stores the order of `group` after every drag. Returns a function that stops it.
