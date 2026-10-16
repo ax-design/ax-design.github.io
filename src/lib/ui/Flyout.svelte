@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import BackButton from '#lib/site/BackButton.svelte';
+  import { noFlyout } from '#lib/site/query';
 
   let {
     open = $bindable(false),
@@ -20,12 +21,19 @@
 
   let dialog = $state<HTMLDialogElement>();
 
-  // Keep the native dialog in sync with `open`.
+  // ?noflyout (see #lib/site/query): the switch that keeps every flyout of the site closed. The
+  // page keeps `open` as it set it; only the dialog is held back, so a press of a tile still
+  // presses and the page still knows it asked. A flyout already open when the parameter comes is
+  // closed, and one the parameter held back opens again once it is gone.
+  const suppressed = $derived(noFlyout());
+
+  // Keep the native dialog in sync with `open`, as far as the URL lets it.
   $effect(() => {
     if (!dialog) return;
-    if (open && !dialog.open) {
+    const shown = open && !suppressed;
+    if (shown && !dialog.open) {
       dialog.showModal();
-    } else if (!open && dialog.open) {
+    } else if (!shown && dialog.open) {
       dialog.close();
     }
   });
