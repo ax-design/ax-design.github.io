@@ -7,9 +7,21 @@
 
   // Stacked below 600px: the groups become columns going down, with the turnstile entrance.
   let stacked = $state(false);
+  // The groups come in once the welcome curtain of the site is gone: their entrance starts when
+  // they become visible, and under the curtain it would play unseen.
+  let shown = $state(false);
+
+  function curtainGone(): Promise<void> {
+    return new Promise((resolve) => {
+      const wait = () => (document.getElementById('curtain') ? setTimeout(wait, 50) : resolve());
+      wait();
+    });
+  }
 
   onMount(() => {
-    registerAll();
+    registerAll()
+      .then(curtainGone)
+      .then(() => (shown = true));
     const root = document.documentElement;
     const background = root.style.background;
     root.style.background = '#1d1d1d';
@@ -31,18 +43,20 @@
 <main class="screen">
   <h1>Start</h1>
   <div class="glow" aria-hidden="true"></div>
-  <div class="groups" class:stacked>
-    <ax-tile-group class="back" orientation={stacked ? 'vertical' : 'horizontal'}>
-      {#each back as t (t.slug)}
-        {@render tile(t)}
-      {/each}
-    </ax-tile-group>
-    <ax-tile-group class="front" orientation={stacked ? 'vertical' : 'horizontal'}>
-      {#each front as t (t.slug)}
-        {@render tile(t)}
-      {/each}
-    </ax-tile-group>
-  </div>
+  {#if shown}
+    <div class="groups" class:stacked>
+      <ax-tile-group class="back" orientation={stacked ? 'vertical' : 'horizontal'}>
+        {#each back as t (t.slug)}
+          {@render tile(t)}
+        {/each}
+      </ax-tile-group>
+      <ax-tile-group class="front" orientation={stacked ? 'vertical' : 'horizontal'}>
+        {#each front as t (t.slug)}
+          {@render tile(t)}
+        {/each}
+      </ax-tile-group>
+    </div>
+  {/if}
   <p class="note">Tiles open their app with the flip. <a href="/lab/">Back to the lab</a></p>
 </main>
 
