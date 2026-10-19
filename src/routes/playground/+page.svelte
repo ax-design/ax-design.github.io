@@ -3,7 +3,6 @@
 	import AppShell from '#lib/site/AppShell.svelte';
 	import Code from '#lib/site/Code.svelte';
 	import Flow from '#lib/site/Flow.svelte';
-	import { pressed } from '#lib/site/press';
 	import { isWide } from '#lib/site/layout';
 	import { CORNERS, CORNER_LABELS, GROUPS, INITIAL, LAYERS, PRESETS, SIDES, SIDE_LABELS, cssOf, scalePx } from '#lib/site/playground';
 	import type { Control, Group, Preset } from '#lib/site/playground';
@@ -166,15 +165,14 @@
 		style:--tile-columns={COLUMNS}
 	>
 		<ax-tile columns={COLUMNS} rows={DEMO_ROWS} class="demo">
-			<ax-surface bind:this={subject} class="demo-surface" layers={LAYERS.filter((l) => layers.includes(l)).join(' ')}>
-				<!-- The flyout covers the demo, so the press waits for its ripple; a preset does not (see the preset button). -->
-				<button type="button" class="show-code" onclick={pressed(() => (open = true))}>Click to show code</button>
-			</ax-surface>
+			<ax-surface bind:this={subject} class="demo-surface" layers={LAYERS.filter((l) => layers.includes(l)).join(' ')}></ax-surface>
+			<!-- The action of the demo tile: the tile holds the click for the ripple of the press, so the flyout opens after it. -->
+			<button slot="action" type="button" class="show-code" onclick={() => (open = true)}>Click to show code</button>
 		</ax-tile>
 
 		{#each PRESETS as p (p.name)}
 			<ax-tile columns="1" rows="1" layers="fill reveal" class="preset-tile">
-				<button type="button" class="preset" onclick={() => load(p)} title={p.name} aria-label="Load {p.name}">
+				<button slot="action" type="button" class="preset" onclick={() => load(p)} title={p.name} aria-label="Load {p.name}">
 					<ax-surface class="thumb" layers="fill" style={thumb(p)}></ax-surface>
 				</button>
 			</ax-tile>
