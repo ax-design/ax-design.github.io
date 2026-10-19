@@ -17,12 +17,13 @@ function lift() {
 }
 
 async function load(): Promise<void> {
-  const [reveal, acrylic, elevation, pressure, surface, tiles, scroll, navigation] = await Promise.all([
+  const [reveal, acrylic, elevation, pressure, surface, tile, tiles, scroll, navigation] = await Promise.all([
     import('@ax-design/reveal-highlight'),
     import('@ax-design/acrylic'),
     import('@ax-design/elevation'),
     import('@ax-design/pressure'),
     import('@ax-design/surface'),
+    import('@ax-design/tile'),
     import('@ax-design/tile-group'),
     import('@ax-design/scroll'),
     import('@ax-design/navigation')
@@ -36,6 +37,7 @@ async function load(): Promise<void> {
   elevation.register();
   pressure.register();
   surface.register();
+  tile.register();
   tiles.register();
   scroll.register();
   (navigation as { register?: () => void }).register?.();
