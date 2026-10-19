@@ -7,13 +7,19 @@
 
   // Stacked below 600px: the groups become columns going down, with the turnstile entrance.
   let stacked = $state(false);
-  // The groups come in once the welcome curtain of the site is gone: their entrance starts when
-  // they become visible, and under the curtain it would play unseen.
+  // The groups come in once the welcome curtain of the site has mostly faded (it lifts over
+  // 400 ms): their entrance starts when they become visible, and under the curtain it would play
+  // unseen.
   let shown = $state(false);
 
   function curtainGone(): Promise<void> {
     return new Promise((resolve) => {
-      const wait = () => (document.getElementById('curtain') ? setTimeout(wait, 50) : resolve());
+      const wait = () => {
+        const curtain = document.getElementById('curtain');
+        if (!curtain) resolve();
+        else if (curtain.classList.contains('lifted')) setTimeout(resolve, 250);
+        else setTimeout(wait, 50);
+      };
       wait();
     });
   }
@@ -148,12 +154,10 @@
   }
   .back {
     --tile-enter-delay: 120ms;
-    --tile-enter-offset: 225px;
   }
   .front {
     /* After the four columns of the first group (33 ms each). */
     --tile-enter-delay: 250ms;
-    --tile-enter-offset: 90px;
     margin-top: 60px;
   }
   ax-tile {
