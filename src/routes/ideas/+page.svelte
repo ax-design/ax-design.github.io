@@ -6,7 +6,6 @@
   import { IDEAS, type Idea } from '#lib/site/ideas';
   import { watchWidth } from '#lib/site/layout';
   import { keepOrder, restoreOrder } from '#lib/site/order';
-  import { pressed } from '#lib/site/press';
   import { scopeCss } from '#lib/site/scope';
   import { Flyout } from '#lib/ui/index.ts';
 
@@ -24,12 +23,6 @@
   function show(idea: Idea) {
     shown = idea;
     open = true;
-  }
-
-  function onkeydown(event: KeyboardEvent, idea: Idea) {
-    if (event.key !== 'Enter' && event.key !== ' ') return;
-    event.preventDefault();
-    show(idea);
   }
 
   let group: HTMLElement | undefined = $state();
@@ -85,19 +78,17 @@
     aria-label="Ideas"
   >
     {#each shownIdeas as idea (idea.id)}
-      <div
+      <ax-tile
         class="idea"
         data-idea={idea.id}
         data-id={idea.id}
         {...span(idea)}
-        role="button"
-        tabindex="0"
-        aria-label="{idea.title}: show the code"
-        onclick={pressed(() => show(idea))}
-        onkeydown={(event) => onkeydown(event, idea)}
+        layers="reveal"
+        label="hidden"
       >
-        {@html idea.html}
-      </div>
+        <div class="body">{@html idea.html}</div>
+        <button slot="action" type="button" onclick={() => show(idea)}>{idea.title}</button>
+      </ax-tile>
     {/each}
   </ax-tile-group>
 </AppShell>
@@ -136,16 +127,19 @@
     /* Glass tiles stay glass while dragged: a faded tile would be a backdrop root. */
     --tile-drag-opacity: 1;
   }
-  .idea {
+  /* The name of an idea is its button: label="hidden" keeps it as the name, and the text is hidden
+     here, as the tile's own rule for it does not match in Chromium. */
+  .idea button {
+    font-size: 0;
+    line-height: 0;
+  }
+  /* The idea's own markup, laid out as it was in a plain cell. */
+  .body {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    cursor: pointer;
-    outline: none;
-  }
-  .idea:focus-visible {
-    outline: 2px solid #fff;
-    outline-offset: 4px;
+    width: 100%;
+    height: 100%;
   }
   .description {
     margin: 0 0 20px;
