@@ -34,6 +34,7 @@
     "@ax-design/scroll": "^0.1.2",
     "@ax-design/shape": "^0.2.0",
     "@ax-design/surface": "^0.2.4",
+    "@ax-design/tile": "^0.0.0",
     "@ax-design/tile-group": "^0.1.5",
     "@ax-design/typed-om": "^0.1.0"
   }

@@ -10,7 +10,7 @@ import { defineConfig } from 'vite';
 // package's exports map that has a source condition becomes an alias of its own, matched exactly:
 // a prefix alias would also catch the subpaths (@ax-design/surface/schema) and point them inside
 // index.ts.
-const siblings = ['surface', 'shape', 'typed-om', 'reveal-highlight', 'acrylic', 'elevation', 'pressure', 'tile-group', 'scroll', 'navigation'];
+const siblings = ['surface', 'shape', 'typed-om', 'reveal-highlight', 'acrylic', 'elevation', 'pressure', 'tile', 'tile-group', 'scroll', 'navigation'];
 const here = dirname(fileURLToPath(import.meta.url));
 const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
 const alias = siblings.flatMap((name) => {
