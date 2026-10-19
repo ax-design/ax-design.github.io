@@ -70,10 +70,6 @@
     line-height: 1.2;
     -webkit-user-drag: none;
   }
-  ax-tile[rows='1'] .title {
-    font-size: 0;
-    line-height: 0;
-  }
   .icon {
     position: absolute;
     left: 50%;

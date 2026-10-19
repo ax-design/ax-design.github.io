@@ -127,12 +127,6 @@
     /* Glass tiles stay glass while dragged: a faded tile would be a backdrop root. */
     --tile-drag-opacity: 1;
   }
-  /* The name of an idea is its button: label="hidden" keeps it as the name, and the text is hidden
-     here, as the tile's own rule for it does not match in Chromium. */
-  .idea button {
-    font-size: 0;
-    line-height: 0;
-  }
   /* The idea's own markup, laid out as it was in a plain cell. */
   .body {
     display: flex;
