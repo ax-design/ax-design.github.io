@@ -30,9 +30,10 @@ const page: DocPage = {
   tagline: 'Tiles of any size on a grid, reordered by dragging while the others make room.',
   intro: [
     'Tile Group follows the Start screen of Windows 8. Tiles of any size sit on a grid of cells. You drag a tile to a new place and the other tiles move out of its way.',
-    'ax-tile is an ax-surface, so the layers, shapes and tilt of Surface work on it. Tiles tilt when pressed and have a 2px border for the reveal light out of the box; any style of yours wins over both. In the examples below the cells are small, so a group fits next to this text.'
+    'ax-tile comes from @ax-design/tile, and is an ax-surface, so the layers, shapes and tilt of Surface work on it. A tile has a 2px border for the reveal light out of the box; any style of yours wins over it. A group lays out any children and reads the columns and rows of each one.',
+    'A tile is pressed only when it has an action: a link or a button in its light DOM with slot="action". Only then does it tilt and light up, and its action runs once the press has been seen. The examples below have no action, so their tiles are static: they show the layout and the dragging, and nothing more. In the examples the cells are small, so a group fits next to this text.'
   ],
-  setup: "import { register } from '@ax-design/tile-group';\nregister();",
+  setup: "import { register } from '@ax-design/tile-group';\nimport { register as registerTile } from '@ax-design/tile';\nregister();\nregisterTile();",
   examples: [
     {
       id: 'sizes',
@@ -127,8 +128,8 @@ const page: DocPage = {
     }
   ],
   reference: [
-    { name: 'columns', kind: 'attribute', type: '<integer>', default: '2', description: 'On a tile: its width in cells. Change it and the other tiles move.' },
-    { name: 'rows', kind: 'attribute', type: '<integer>', default: '2', description: 'On a tile: its height in cells.' },
+    { name: 'columns', kind: 'attribute', type: '<integer>', default: '2', description: 'On a child of the group, usually an ax-tile: its width in cells. Change it and the other tiles move.' },
+    { name: 'rows', kind: 'attribute', type: '<integer>', default: '2', description: 'On a child of the group: its height in cells.' },
     { name: 'drag', kind: 'attribute', type: 'press | hold | cross-slide | none', default: 'none', description: 'On the group: how tiles are dragged. press follows the pointer at once, hold lifts after hold-delay, cross-slide is the Windows 8 touch gesture for a horizontal scroller.' },
     { name: 'hold-delay', kind: 'attribute', type: '<number>', default: '500', description: 'Milliseconds of a press before it counts as held.' },
     { name: 'contextmenu', kind: 'attribute', type: 'boolean', description: 'Fire tilecontextmenu on a right click, the context menu key, and a touch or pen press held for hold-delay milliseconds and released without moving. The group shows no menu.' },
