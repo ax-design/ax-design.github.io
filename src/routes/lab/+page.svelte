@@ -105,6 +105,9 @@
   const glass = `<ax-surface class="glass" layers="acrylic reveal"><span>press</span></ax-surface>`;
 </script>
 
+<!-- The start screen lab. Fixed, so the variants above keep their layout. -->
+<a class="start-link" href="/lab/start/">Start screen</a>
+
 {#if v === 1}
   <!-- As round 15, case 4 (fine there). -->
   <div class="bare">{@html glass}</div>
@@ -264,5 +267,13 @@
     --ax-tilt-mode: absolute;
     --ax-tilt-depth: 3px;
     --ax-tilt-perspective: 600px;
+  }
+  .start-link {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 1000;
+    color: #fff;
+    font-size: 14px;
   }
 </style>
