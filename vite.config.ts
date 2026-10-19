@@ -26,10 +26,22 @@ const alias = siblings.flatMap((name) => {
   });
 });
 
+// The sources of the sibling checkouts, watched as directories: the watcher of Vite follows only
+// the files it has served, and loses them when git or an editor replaces a file, so the dev
+// server would keep serving the old module.
+const watched = siblings.map((name) => resolve(here, '..', name, 'src')).filter((dir) => existsSync(dir));
+const watchSiblings = {
+  name: 'watch-siblings',
+  configureServer(server: { watcher: { add(paths: string[]): void } }) {
+    server.watcher.add(watched);
+  }
+};
+
 export default defineConfig({
   resolve: { alias },
   server: { fs: { allow: ['..'] } },
   plugins: [
+    watchSiblings,
     sveltekit({
       adapter: adapter({
         pages: 'build',

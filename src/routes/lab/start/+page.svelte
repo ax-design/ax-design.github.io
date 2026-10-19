@@ -156,8 +156,9 @@
     --tile-enter-delay: 120ms;
   }
   .front {
-    /* After the four columns of the first group (33 ms each). */
-    --tile-enter-delay: 250ms;
+    /* One stagger after the one band (four columns) of the first group: the bands of all the
+       groups follow one another 35 ms apart, as in Windows 8.1. */
+    --tile-enter-delay: 155ms;
     margin-top: 60px;
   }
   ax-tile {
