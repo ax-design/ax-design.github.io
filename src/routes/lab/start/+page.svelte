@@ -50,7 +50,9 @@
   <h1>Start</h1>
   <div class="glow" aria-hidden="true"></div>
   {#if shown}
-    <div class="groups" class:stacked>
+    <!-- The boundary runs the desktop entrances of the groups as one: the bands go on from one
+         group to the next, and grow about the middle of both. -->
+    <ax-tile-bound class="groups" class:stacked>
       <ax-tile-group class="back" orientation={stacked ? 'vertical' : 'horizontal'}>
         {#each back as t (t.slug)}
           {@render tile(t)}
@@ -61,7 +63,7 @@
           {@render tile(t)}
         {/each}
       </ax-tile-group>
-    </div>
+    </ax-tile-bound>
   {/if}
   <p class="note">Tiles open their app with the flip. <a href="/lab/">Back to the lab</a></p>
 </main>
@@ -146,19 +148,16 @@
     --tile-cell-height: 100px;
     --tile-gap: 10px;
     --tile-rows: 4;
+    /* After the background (see above); inherited by both groups, whose bands then follow one
+       another 35 ms apart across the boundary, as in Windows 8.1. */
+    --tile-enter-delay: 120ms;
   }
   ax-tile-group {
     display: block;
     --ax-tile-launch: flip;
     --tile-entrance: desktop;
   }
-  .back {
-    --tile-enter-delay: 120ms;
-  }
   .front {
-    /* One stagger after the one band (four columns) of the first group: the bands of all the
-       groups follow one another 35 ms apart, as in Windows 8.1. */
-    --tile-enter-delay: 155ms;
     margin-top: 60px;
   }
   ax-tile {
