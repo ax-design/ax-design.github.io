@@ -117,6 +117,18 @@
     opacity: 0.85;
     pointer-events: none;
   }
+  /* Background first, as Windows 8.1 does (about 120 ms in a recording), then the tiles. Only the
+     siblings of the groups fade: an opacity on an ancestor of acrylic would turn it clear. */
+  h1,
+  .glow,
+  .note {
+    animation: start-background 120ms linear both;
+  }
+  @keyframes start-background {
+    from {
+      opacity: 0;
+    }
+  }
   .groups {
     position: absolute;
     left: 40px;
@@ -135,11 +147,12 @@
     --tile-entrance: desktop;
   }
   .back {
-    --tile-enter-delay: 0ms;
+    --tile-enter-delay: 120ms;
     --tile-enter-offset: 225px;
   }
   .front {
-    --tile-enter-delay: 300ms;
+    /* After the four columns of the first group (33 ms each). */
+    --tile-enter-delay: 250ms;
     --tile-enter-offset: 90px;
     margin-top: 60px;
   }
