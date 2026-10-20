@@ -2,8 +2,8 @@ import type { DocPage } from './types';
 
 // One tile in the middle of the preview. Its action is a button, so that a click in the preview
 // runs nothing that leaves the page.
-const tile = (attributes = '', extra = '') =>
-  `<div class="stage"><ax-tile class="tile"${attributes} layers="fill reveal"><button slot="action" type="button">Mail</button>${extra}</ax-tile></div>`;
+const tile = (classes = '', extra = '') =>
+  `<div class="stage"><ax-tile class="tile${classes}" layers="fill reveal"><button slot="action" type="button">Mail</button>${extra}</ax-tile></div>`;
 
 const style = `
 .stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
@@ -50,7 +50,7 @@ const page: DocPage = {
         'With --ax-tile-launch set to flip, a click launches the app: the tile turns edge-on and grows to the whole page, and the splash of the app turns to face the viewer. The splash is the content of the splash template, on the color of the tile or the color you set.',
         'This example waits 1.2 seconds, as an app does while it loads, and then the splash goes. Click again once it is gone. The action is a button here, so nothing navigates away.'
       ],
-      preview: tile(' class="app"', splash),
+      preview: tile(' app', splash),
       style: `${style}.app { --ax-tile-launch: flip; }`,
       setup: (root) => {
         const app = root.querySelector<HTMLElement>('.app');
@@ -92,7 +92,7 @@ const page: DocPage = {
         'A launch sends the click of the link as a real click, so the router of the page handles it as it handles any link. The splash can wait for the page the link leads to: the tile holds it with hold(promise) from the tilelaunchstart or tilelaunchactivate event, and the promise settles when the page is ready.',
         'tile.launch(ready) runs the same launch from code, whatever --ax-tile-launch says. The first block is that call. The second is a sketch for SvelteKit: it is not tested with the framework, so check it against the version you use. The README has the same sketches for Next.js, React Router and Vue Router.'
       ],
-      preview: tile(' class="app"', splash),
+      preview: tile(' app', splash),
       style: `${style}.app { --ax-tile-launch: flip; }`,
       controls: [],
       code: [
