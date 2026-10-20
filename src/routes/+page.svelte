@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import Header from '#lib/components/Header.svelte';
   import StartTile from '#lib/site/StartTile.svelte';
   import { isWide } from '#lib/site/layout';
@@ -153,17 +153,22 @@
     apply();
     window.addEventListener('resize', apply);
 
-    // The entrance is played by hand, in the same task for every group so that they make one
-    // wave: shown sets --tile-entrance, which the groups read when enter() starts.
+    // The entrance plays once the stored order is in place: the groups take it while they are
+    // still hidden (a hidden group moves no tile), and are shown already in it. Two frames let
+    // the layout of that order land. Then the entrance is played by hand, in the same task for
+    // every group so that they make one wave: shown sets --tile-entrance, which the groups read
+    // when enter() starts.
+    const frame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
     registerAll()
       .then(curtainGone)
-      .then(() => {
+      .then(frame)
+      .then(frame)
+      .then(async () => {
         if (gone) return;
         shown = true;
-        requestAnimationFrame(() => {
-          if (gone) return;
-          for (const { group } of list) (group as HTMLElement & { enter?: () => Promise<void> }).enter?.();
-        });
+        await tick();
+        if (gone) return;
+        for (const { group } of list) (group as HTMLElement & { enter?: () => Promise<void> }).enter?.();
       });
     return () => {
       gone = true;
