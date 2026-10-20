@@ -5,6 +5,9 @@
   // title. With `image`, the picture fills the tile, cut to its shape; otherwise `icon` (a
   // monochrome SVG) is drawn white in the middle. The tile holds the press: the link is followed
   // once its ripple has played, and the router of the site takes the click as it takes any other.
+  // A link into the site launches with the flip of Windows 8, onto a splash of the tile's color
+  // with its picture; the root layout holds the splash until the page has arrived. A link out of
+  // the site opens a new tab, and has nothing to launch into.
   interface Props {
     href: string;
     title: string;
@@ -29,6 +32,8 @@
   layers={image ? 'fill' : 'fill reveal'}
   label={rows === 1 ? 'hidden' : undefined}
   style:--ax-fill-color={color}
+  style:--ax-tile-splash-color={external ? undefined : color}
+  style:--ax-tile-launch={external ? undefined : 'flip'}
 >
   {#if image}
     <img class="image" src={image} alt="" loading="lazy" />
@@ -41,6 +46,15 @@
     <span class="icon" style:--icon="url({icon})"></span>
   {/if}
   {#if badge}<span class="badge">{badge}</span>{/if}
+  {#if !external}
+    <template slot="splash">
+      {#if image}
+        <img class="splash-image" src={image} alt="" />
+      {:else if icon}
+        <span class="splash-icon" style:--icon="url({icon})"></span>
+      {/if}
+    </template>
+  {/if}
   <a
     slot="action"
     class="title"
@@ -104,6 +118,21 @@
     bottom: 0;
     height: 48px;
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.55));
+  }
+  /* The splash is drawn in the light DOM of the page, so its own classes are global. */
+  :global(.splash-icon) {
+    display: block;
+    width: 160px;
+    height: 160px;
+    background: #fff;
+    -webkit-mask: var(--icon) center / contain no-repeat;
+    mask: var(--icon) center / contain no-repeat;
+  }
+  :global(.splash-image) {
+    display: block;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
   }
   .badge {
     position: absolute;

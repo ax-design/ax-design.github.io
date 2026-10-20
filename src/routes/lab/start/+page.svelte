@@ -2,6 +2,7 @@
   // The start screen of the lab: two groups of tiles that launch with the flip. The launch
   // bridge of the route layout holds the splash until the app page has arrived.
   import { onMount } from 'svelte';
+  import { curtainGone } from '#lib/site/curtain';
   import { registerAll } from '#lib/site/register';
   import { back, front, type LabTile } from '#lib/site/start-lab';
 
@@ -11,18 +12,6 @@
   // 400 ms): their entrance starts when they become visible, and under the curtain it would play
   // unseen.
   let shown = $state(false);
-
-  function curtainGone(): Promise<void> {
-    return new Promise((resolve) => {
-      const wait = () => {
-        const curtain = document.getElementById('curtain');
-        if (!curtain) resolve();
-        else if (curtain.classList.contains('lifted')) setTimeout(resolve, 250);
-        else setTimeout(wait, 50);
-      };
-      wait();
-    });
-  }
 
   onMount(() => {
     registerAll()

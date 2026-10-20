@@ -3,6 +3,7 @@
   import Header from '#lib/components/Header.svelte';
   import StartTile from '#lib/site/StartTile.svelte';
   import { isWide } from '#lib/site/layout';
+  import { curtainGone } from '#lib/site/curtain';
   import { applyOrder, keepOrder, restoreOrder } from '#lib/site/order';
   import { registerAll } from '#lib/site/register';
 
@@ -67,6 +68,9 @@
 
   // The groups keep the order the visitor dragged their tiles into.
   let groups: HTMLElement | undefined = $state();
+  // The groups come in once the welcome curtain has mostly lifted, all of them as one Start
+  // screen (the <ax-tile-bound> around them): until then they are hidden.
+  let shown = $state(false);
 
   onMount(() => {
     // The root gets the color of the page too, as on every page the AppShell draws: nothing
@@ -148,6 +152,19 @@
 
     apply();
     window.addEventListener('resize', apply);
+
+    // The entrance is played by hand, in the same task for every group so that they make one
+    // wave: shown sets --tile-entrance, which the groups read when enter() starts.
+    registerAll()
+      .then(curtainGone)
+      .then(() => {
+        if (gone) return;
+        shown = true;
+        requestAnimationFrame(() => {
+          if (gone) return;
+          for (const { group } of list) (group as HTMLElement & { enter?: () => Promise<void> }).enter?.();
+        });
+      });
     return () => {
       gone = true;
       window.removeEventListener('resize', apply);
@@ -168,8 +185,9 @@
   <main class="start">
     <div class="column">
       <h1 class="start-title">Start</h1>
-      <div
+      <ax-tile-bound
         class="groups"
+        class:shown
         bind:this={groups}
         style:--tile-columns={wide ? undefined : String(columns)}
         style:--tile-cell-width={wide || cell === CELL ? undefined : `${cell}px`}
@@ -178,7 +196,7 @@
         <section class="group" aria-labelledby="g-components">
           <h2 id="g-components">Components</h2>
           <ax-tile-group {...shape}>
-            <StartTile href="/playground" title="Playground" columns={4} rows={4} color="#603cba">
+            <StartTile href="/playground" title="Playground" columns={4} rows={4} icon={icon('ax-playground')} color="#603cba">
               <span class="live" aria-hidden="true"><ax-surface class="morph" layers="fill"></ax-surface></span>
             </StartTile>
             <StartTile href="/ideas" title="Ideas" columns={4} icon={icon('ax-ideas')} color="#00a300" />
@@ -190,6 +208,7 @@
             <StartTile href="/components/reveal-highlight" title="Reveal Highlight" icon={icon('ax-reveal-highlight')} color="#1e7145" />
             <StartTile href="/components/pressure" title="Pressure" icon={icon('ax-pressure')} color="#b91d47" />
             <StartTile href="/components/tile-group" title="Tile Group" icon={icon('ax-tile-group')} color="#da532c" />
+            <StartTile href="/components/tile" title="Tile" icon={icon('ax-tile')} color="#e3a21a" />
             <StartTile href="/components/scroll" title="Scroll" icon={icon('ax-scroll')} color="#00aba9" />
             <StartTile href="/components/typed-om" title="Typed OM" icon={icon('ax-typed-om')} color="#9f00a7" />
           </ax-tile-group>
@@ -211,7 +230,7 @@
             <StartTile href="https://t.me/axiom_ds" title="Telegram" icon={icon('telegram')} color="#2a8fbd" external />
           </ax-tile-group>
         </section>
-      </div>
+      </ax-tile-bound>
     </div>
   </main>
 </div>
@@ -267,6 +286,15 @@
     flex: 1;
     min-height: 0;
     --tile-rows: auto;
+    /* The Start screen of Windows 8.1: the columns come in from the right, one after another
+       across the groups, and the next one 35 ms after. */
+    --tile-enter-delay: 0ms;
+  }
+  .groups:not(.shown) ax-tile-group {
+    visibility: hidden;
+  }
+  .groups.shown ax-tile-group {
+    --tile-entrance: desktop;
   }
 
   /* The live content of the Surface tile: a shape that keeps changing. */
@@ -340,6 +368,10 @@
     }
     ax-tile-group {
       flex: none;
+    }
+    /* Stacked, as on a phone: the turnstile of Windows Phone. */
+    .groups.shown ax-tile-group {
+      --tile-entrance: mobile;
     }
   }
 </style>
