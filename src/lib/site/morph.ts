@@ -133,16 +133,18 @@ export function startMorph(canvas: HTMLCanvasElement): () => void {
     const context = canvas.getContext('2d');
     if (!context) return () => {};
 
-    let dpr = 0;
+    // Backing store per CSS pixel: devicePixelRatio, and more while a print is being laid out.
+    let scale = 0;
+    let printScale = 1;
     let forced: string | null = null;
-    let disposes: (() => void)[] = [];
+    const disposes: (() => void)[] = [];
 
     const resize = () => {
-        const next = window.devicePixelRatio || 1;
-        if (next === dpr) return;
-        dpr = next;
-        canvas.width = Math.round(SIZE * dpr);
-        canvas.height = Math.round(SIZE * dpr);
+        const next = (window.devicePixelRatio || 1) * printScale;
+        if (next === scale) return;
+        scale = next;
+        canvas.width = Math.round(SIZE * scale);
+        canvas.height = Math.round(SIZE * scale);
         canvas.style.width = `${SIZE}px`;
         canvas.style.height = `${SIZE}px`;
     };
@@ -156,31 +158,69 @@ export function startMorph(canvas: HTMLCanvasElement): () => void {
     };
     scheme?.addEventListener('change', onScheme);
     disposes.push(() => scheme?.removeEventListener('change', onScheme));
+    // Zooming changes devicePixelRatio without a resize the canvas can count on, so the resolution
+    // the bitmap was made for is watched directly.
+    let resolution: MediaQueryList | null = null;
+    const watchResolution = () => {
+        resolution?.removeEventListener('change', onResolution);
+        resolution = window.matchMedia ? window.matchMedia(`(resolution: ${window.devicePixelRatio || 1}dppx)`) : null;
+        resolution?.addEventListener('change', onResolution);
+    };
+    const onResolution = () => {
+        resize();
+        watchResolution();
+    };
+
     const onResize = () => resize();
     window.addEventListener('resize', onResize);
     disposes.push(() => window.removeEventListener('resize', onResize));
 
     resize();
     onScheme();
+    watchResolution();
 
     let raf = 0;
-    const start = performance.now();
-    const frame = (now: number) => {
-        const t = ((now - start) % PERIOD) / PERIOD;
+    const started = performance.now();
+    let time = started;
+    const draw = (now: number) => {
+        const t = ((now - started) % PERIOD) / PERIOD;
         const shape = resolve(specAt(t), { borderWidths: [0, 0, 0, 0] });
         const path = new Path2D(toSvgPath(shape.outline));
-        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        context.setTransform(scale, 0, 0, scale, 0, 0);
         context.clearRect(0, 0, SIZE, SIZE);
         context.globalAlpha = ALPHA;
         context.fillStyle = color();
         context.fill(path);
+    };
+    const frame = (now: number) => {
+        time = now;
+        draw(now);
         raf = requestAnimationFrame(frame);
     };
+
+    // A printed page is read from much closer than a screen, and the canvas is a bitmap there: draw
+    // it again while the print layout is being made.
+    const onBeforePrint = () => {
+        printScale = 3;
+        resize();
+        draw(time);
+    };
+    const onAfterPrint = () => {
+        printScale = 1;
+        resize();
+        draw(time);
+    };
+    window.addEventListener('beforeprint', onBeforePrint);
+    window.addEventListener('afterprint', onAfterPrint);
+    disposes.push(() => {
+        window.removeEventListener('beforeprint', onBeforePrint);
+        window.removeEventListener('afterprint', onAfterPrint);
+    });
+
     raf = requestAnimationFrame(frame);
 
     return () => {
         cancelAnimationFrame(raf);
         for (const dispose of disposes) dispose();
-        disposes = [];
     };
 }
