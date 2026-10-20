@@ -7,6 +7,7 @@ import revealHighlight from './reveal-highlight';
 import acrylic from './acrylic';
 import elevation from './elevation';
 import pressure from './pressure';
+import tile from './tile';
 import tileGroup from './tile-group';
 import scroll from './scroll';
 import navigation from './navigation';
@@ -25,6 +26,7 @@ export const pages: PageEntry[] = [
   { page: elevation, accent: '#7e3878' },
   { page: pressure, accent: '#b91d47' },
   { page: tileGroup, accent: '#da532c' },
+  { page: tile, accent: '#e3a21a' },
   { page: scroll, accent: '#00aba9' },
   { page: navigation, accent: '#525e75' }
 ];
