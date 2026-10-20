@@ -97,6 +97,10 @@ function style(extra: string): string {
   return css + extra;
 }
 
+// How a reader sees the modes they are not in, on their own machine.
+const TRY_IT =
+  'Try it: in Chrome or Edge, open DevTools, then Rendering, and emulate the CSS media features prefers-reduced-motion, forced-colors or prefers-reduced-transparency. Or turn on the setting of your system: Show animations, Contrast themes and Transparency effects on Windows; Reduce motion, Increase contrast and Reduce transparency on macOS.';
+
 function example(
   description: string[],
   live: string,
@@ -107,7 +111,7 @@ function example(
   return {
     id: 'accessibility',
     title: 'Accessibility',
-    description,
+    description: [...description, TRY_IT],
     preview: preview(options.slug, live, pictures),
     style: style(extra),
     controls: options.controls ?? [],
