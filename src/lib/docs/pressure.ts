@@ -1,13 +1,15 @@
 import type { DocPage } from './types';
 
 const tile = (name: string, image: string) =>
-  `<ax-pressure class="press"><div class="tile"><img src="/demo/images/${image}" alt=""><p>${name}</p></div></ax-pressure>`;
+  `<ax-pressure class="press"><div class="tile"><span class="icon" style="--icon: url(/demo/images/${image})"></span><p>${name}</p></div></ax-pressure>`;
 
 const style = `
 .stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
 .press { display: block; --pressure-tilt-depth: 4px; }
 .tile { width: 200px; height: 200px; background: rgba(255, 255, 255, 0.16); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; }
-.tile img { width: 96px; height: 96px; }
+.tile .icon { width: 96px; height: 96px; background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+/* Forced colors drop the background of the tile: a border keeps its edge. */
+@media (forced-colors: active) { .tile { border: 1px solid CanvasText; } }
 .tile p { margin: 0; font-size: 15px; }
 `;
 

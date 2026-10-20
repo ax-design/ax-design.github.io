@@ -2,6 +2,8 @@
 // front, and `:root` or `body` become the box itself. @media and @supports blocks are scoped
 // inside, @keyframes and @font-face are left as they are.
 export function scopeCss(css: string, scope: string): string {
+  // Comments go first: one before a rule would become part of its selector.
+  css = css.replace(/\/\*[\s\S]*?\*\//g, '');
   let out = '';
   let i = 0;
   while (i < css.length) {

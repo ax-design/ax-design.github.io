@@ -1,38 +1,38 @@
 import type { DocPage } from './types';
 
-const tiles = (extra = '') => `<ax-tile columns="4" rows="2" layers="fill reveal" class="first"${extra}><img class="icon" src="/demo/images/apple.svg" alt=""><span class="label">Apple</span></ax-tile>
-  <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/tea.svg" alt=""></ax-tile>
-  <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/fish.svg" alt=""></ax-tile>
-  <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/donut.svg" alt=""></ax-tile>
+const tiles = (extra = '') => `<ax-tile columns="4" rows="2" layers="fill reveal" class="first"${extra}><span class="icon" style="--icon: url(/demo/images/apple.svg)"></span><span class="label">Apple</span></ax-tile>
+  <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/tea.svg)"></span></ax-tile>
+  <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/fish.svg)"></span></ax-tile>
+  <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/donut.svg)"></span></ax-tile>
   <ax-tile columns="1" rows="1" layers="fill reveal"></ax-tile>
   <ax-tile columns="1" rows="1" layers="fill reveal"></ax-tile>
   <ax-tile columns="1" rows="1" layers="fill reveal"></ax-tile>
   <ax-tile columns="1" rows="1" layers="fill reveal"></ax-tile>
-  <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/apple.svg" alt=""></ax-tile>`;
+  <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/apple.svg)"></span></ax-tile>`;
 
 const group = (attributes = '', extra = '') => `<div class="stage"><ax-tile-group${attributes}>
   ${tiles(extra)}
 </ax-tile-group></div>`;
 
-const entranceTiles = `<ax-tile columns="4" rows="2" layers="fill reveal" class="first"><img class="icon" src="/demo/images/apple.svg" alt=""></ax-tile>
-  <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/tea.svg" alt=""></ax-tile>
-  <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/fish.svg" alt=""></ax-tile>
-  <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/donut.svg" alt=""></ax-tile>
+const entranceTiles = `<ax-tile columns="4" rows="2" layers="fill reveal" class="first"><span class="icon" style="--icon: url(/demo/images/apple.svg)"></span></ax-tile>
+  <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/tea.svg)"></span></ax-tile>
+  <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/fish.svg)"></span></ax-tile>
+  <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/donut.svg)"></span></ax-tile>
   <ax-tile columns="1" rows="1" layers="fill reveal"></ax-tile>
   <ax-tile columns="1" rows="1" layers="fill reveal"></ax-tile>`;
 
 // Two small groups in one boundary: four cells wide each, so a band is one group.
 const smallGroup = (icons: string[]) => `<ax-tile-group>
-    <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/${icons[0]}" alt=""></ax-tile>
-    <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/${icons[1]}" alt=""></ax-tile>
+    <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/${icons[0]})"></span></ax-tile>
+    <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/${icons[1]})"></span></ax-tile>
     <ax-tile columns="1" rows="1" layers="fill reveal"></ax-tile>
     <ax-tile columns="1" rows="1" layers="fill reveal"></ax-tile>
   </ax-tile-group>`;
 
 const launchTiles = `<ax-tile columns="4" rows="2" layers="fill reveal" class="app"><button slot="action" type="button">Mail</button><template slot="splash"><img src="/demo/images/apple.svg" alt="" width="64"></template></ax-tile>
-  <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/tea.svg" alt=""></ax-tile>
-  <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/fish.svg" alt=""></ax-tile>
-  <ax-tile columns="2" rows="2" layers="fill reveal"><img class="icon" src="/demo/images/donut.svg" alt=""></ax-tile>
+  <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/tea.svg)"></span></ax-tile>
+  <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/fish.svg)"></span></ax-tile>
+  <ax-tile columns="2" rows="2" layers="fill reveal"><span class="icon" style="--icon: url(/demo/images/donut.svg)"></span></ax-tile>
   <ax-tile columns="1" rows="1" layers="fill reveal"></ax-tile>
   <ax-tile columns="1" rows="1" layers="fill reveal"></ax-tile>`;
 
@@ -40,7 +40,7 @@ const style = (extra = '') => `
 .stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 ax-tile-group { --tile-cell-width: 24px; --tile-cell-height: 24px; --tile-gap: 4px; --tile-rows: 4; ${extra} }
 ax-tile { color: #fff; --ax-fill-color: rgba(255, 255, 255, 0.2); --reveal-color: rgb(255, 255, 255); --reveal-opacity: 0.35; }
-.icon { position: absolute; left: 50%; top: 50%; width: 60%; height: 60%; transform: translate(-50%, -50%); pointer-events: none; }
+.icon { position: absolute; left: 50%; top: 50%; width: 60%; height: 60%; transform: translate(-50%, -50%); pointer-events: none; background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
 .label { position: absolute; left: 6px; bottom: 3px; font-size: 11px; }
 `;
 

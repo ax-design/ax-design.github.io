@@ -1,5 +1,5 @@
-// Takes the pictures of the Accessibility column: the main preview of each component page in
-// forced colors (dark and light), and with Surface's fallback on where the page has the switch.
+// Takes the pictures of the Accessibility column: its own live preview, in forced colors (dark
+// and light), which a page cannot turn on. The fallback needs no picture: the column shows it live.
 // Run with a dev server up: bun scripts/a11y-shots.ts [base-url] [slug ...]
 // Pictures go to static/a11y/<slug>-<mode>.png.
 import { mkdir } from 'node:fs/promises';
@@ -39,7 +39,7 @@ for (const slug of slugs) {
     console.log(`${slug}: skipped, the page answers ${response?.status() ?? 'nothing'}`);
     continue;
   }
-  const main = page.locator('div.preview[data-example]').first();
+  const main = page.locator('div.preview[data-example="accessibility"]');
   await main.waitFor({ state: 'visible' });
   await page.waitForTimeout(1200);
 
@@ -56,15 +56,6 @@ for (const slug of slugs) {
     await shoot('forced-light');
     await page.emulateMedia({ forcedColors: 'none', colorScheme: 'light' });
 
-    // The fallback switch of the Accessibility column, where the page has one.
-    // The input of the switch is covered by its label, so the label's text is clicked.
-    const fallbackSwitch = page.getByRole('switch', { name: 'Use fallback' });
-    if ((await fallbackSwitch.count()) > 0) {
-      await page.locator('label', { has: page.getByText('Use fallback', { exact: true }) }).first().click();
-      if (!(await fallbackSwitch.first().isChecked())) throw new Error('the fallback switch did not turn on');
-      await shoot('fallback');
-      await page.locator('label', { has: page.getByText('Use fallback', { exact: true }) }).first().click();
-    }
   } catch (error) {
     failed++;
     console.log(`${slug}: failed: ${error}`);
