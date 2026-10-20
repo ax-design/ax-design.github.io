@@ -10,6 +10,10 @@ const stageStyle = `
 .shape span { display: flex; height: 100%; align-items: center; justify-content: center; font-size: 15px; }
 `;
 
+// The state of the motion preview, by preview box: update() writes it, and the frame loop of
+// setup() plays it. A motion lasts one frame, so it is given again on every frame.
+const motionStates = new WeakMap<HTMLElement, { rotateY: number; opacity: number }>();
+
 const page: DocPage = {
   slug: 'surface',
   name: 'Surface',
@@ -150,6 +154,80 @@ const page: DocPage = {
           source: '.card {\n  --ax-radius: 26px;\n  --ax-tilt-mode: absolute;\n  --ax-tilt-depth: {{depth}}px;\n}\n\n.button {\n  position: absolute;\n  inset: 0;\n  margin: auto; /* centers the inner surface in the card */\n  --ax-radius: 14px;\n  --ax-tilt-mode: absolute;\n  --ax-tilt-depth: 3px;\n}'
         }
       ]
+    },
+    {
+      id: 'motion',
+      title: 'Motion',
+      description: [
+        'motion() turns the surface in 3D and fades it. It lasts one frame: call it on every frame of an animation, and with null to end it. The preview gives the surface a new state on every frame, from the two sliders: rotateY turns it about its vertical axis, opacity fades it.',
+        'The layers follow the motion: the reveal light turns with the surface, and the fade is set on the layer itself, never on an ancestor, so the backdrop of acrylic and reveal stays right.'
+      ],
+      preview: stage('Turn me'),
+      style: `${stageStyle}.shape { --ax-radius: 18px; }`,
+      setup: (root) => {
+        const surface = root.querySelector<HTMLElement & { motion(state: { rotateY: number; opacity: number } | null): void }>('.shape');
+        if (!surface) return;
+        let frame = 0;
+        const play = () => {
+          surface.motion(motionStates.get(root) ?? null);
+          frame = requestAnimationFrame(play);
+        };
+        play();
+        return () => {
+          cancelAnimationFrame(frame);
+          surface.motion(null);
+        };
+      },
+      update: (root, values) => {
+        motionStates.set(root, { rotateY: Number(values.rotate), opacity: Number(values.opacity) });
+      },
+      controls: [
+        { key: 'rotate', label: 'Rotate Y', type: 'range', min: -80, max: 80, step: 1, unit: '', default: 30, target: { kind: 'attribute', attribute: 'data-rotate', selector: '.shape' } },
+        { key: 'opacity', label: 'Opacity', type: 'range', min: 0, max: 1, step: 0.05, unit: '', default: 1, target: { kind: 'attribute', attribute: 'data-opacity', selector: '.shape' } }
+      ],
+      code: [
+        {
+          language: 'js',
+          source:
+            "const surface = document.querySelector('ax-surface');\n\n// Every frame, with the state of that frame.\nconst frame = () => {\n  surface.motion({ rotateY: {{rotate}}, opacity: {{opacity}} });\n  requestAnimationFrame(frame);\n};\nrequestAnimationFrame(frame);\n\n// Later: surface.motion(null) ends the motion."
+        }
+      ]
+    },
+    {
+      id: 'press',
+      title: 'Press from code',
+      description: [
+        'press() presses the surface as a pointer press does, for a keyboard activation: the tilt leans and the layers see a pressed pointer. release() ends the press. Use them to show a press from code, such as a button that a keyboard user has activated.',
+        'pressRemaining() tells how many milliseconds the press feedback still plays, so that an action can wait for it, as a tile does before it runs its action.'
+      ],
+      preview: `<div class="stage"><ax-surface class="shape" layers="fill reveal"><span>Press</span></ax-surface><div class="row"><button type="button" data-press>Press</button><button type="button" data-release>Release</button></div></div>`,
+      style: `${stageStyle}.shape { --ax-radius: 18px; --ax-tilt-mode: absolute; --ax-tilt-depth: 4px; }
+.stage { flex-direction: column; gap: 18px; }
+.row { display: flex; gap: 8px; }
+.stage button { padding: 6px 14px; font: inherit; font-size: 13px; color: #fff; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 4px; cursor: pointer; }`,
+      setup: (root) => {
+        const surface = root.querySelector<HTMLElement & { press(): void; release(): void }>('.shape');
+        const press = root.querySelector<HTMLButtonElement>('[data-press]');
+        const release = root.querySelector<HTMLButtonElement>('[data-release]');
+        if (!surface || !press || !release) return;
+        const onPress = () => surface.press();
+        const onRelease = () => surface.release();
+        press.addEventListener('click', onPress);
+        release.addEventListener('click', onRelease);
+        return () => {
+          press.removeEventListener('click', onPress);
+          release.removeEventListener('click', onRelease);
+        };
+      },
+      controls: [],
+      code: [
+        { language: 'html', source: '<ax-surface class="shape" layers="fill reveal">...</ax-surface>' },
+        {
+          language: 'js',
+          source:
+            "const surface = document.querySelector('.shape');\n\nsurface.press();      // the tilt leans, the layers see a pressed pointer\nsurface.release();    // the press ends\n\n// Or let an action wait for the press feedback:\nsurface.press();\nrequestAnimationFrame(() => setTimeout(activate, surface.pressRemaining()));"
+        }
+      ]
     }
   ],
   reference: [
@@ -176,7 +254,22 @@ const page: DocPage = {
     { name: 'SurfaceFrame', kind: 'property', type: '{ width, height, paint, shape, borderWidths, uniformBorder, borderInner, ringInner(), tilt, tiltTransform, pointer, values, changed, quality, now }', description: 'What write receives: the resolved shape, the border ring (as an exact stroke when uniformBorder is set, otherwise as inner points), the current tilt, the pointer and the properties, plus a quality hint from the scheduler.' },
     { name: 'AxSurface', kind: 'method', type: 'class', description: 'The element class. Subclass it to make your own element with its own property names: layerNames_() picks the layers, shapeFor() and borderWidthsFor() read the shape, tiltParams() and tiltPerspective() read the tilt, and a unique static schemaKey keeps its schema apart.' },
     { name: 'SHAPE_SCHEMA, BORDER_SCHEMA, TILT_SCHEMA', kind: 'property', type: 'PropertySpec[]', description: 'The three groups of the property contract, exported from the @ax-design/surface/schema subpath: shape, border and tilt. They carry the names, syntax and initial values without the element, for a tool that only needs the contract.' },
-    { name: 'SHAPE, BORDER, TILT', kind: 'property', type: '{ read, shared?, fallbackCss? }', description: 'The same groups with what a consumer needs to adopt one alone: the properties to read, the shared properties to register, and the CSS that lets a shared value reach each side or corner.' }
+    { name: 'SHAPE, BORDER, TILT', kind: 'property', type: '{ read, shared?, fallbackCss? }', description: 'The same groups with what a consumer needs to adopt one alone: the properties to read, the shared properties to register, and the CSS that lets a shared value reach each side or corner.' },
+    { name: 'focus', kind: 'attribute', type: 'layer name', description: 'A layer in the layers attribute: a focus ring that follows the shape, for keyboard focus only (:focus-visible; :-moz-focusring before Firefox 85). The rings are drawn outside the element, so an ancestor with overflow: hidden cuts them.' },
+    { name: '--ax-focus-ring-width, --ax-focus-ring-secondary-width', kind: 'property', type: '<length>', default: '2px, 1px', description: 'For the focus layer: the width of the outer (primary) ring and of the inner (secondary) ring.' },
+    { name: '--ax-focus-ring-offset', kind: 'property', type: '<length>', default: '0px', description: 'For the focus layer: the gap between the shape and the inner ring.' },
+    { name: '--ax-focus-ring-color, --ax-focus-ring-secondary-color', kind: 'property', type: '<color>', default: 'black, rgba(255, 255, 255, 0.6)', description: 'For the focus layer: the colors of the outer and the inner ring. In forced colors mode they are CanvasText and Canvas.' },
+    { name: 'motion(state)', kind: 'method', type: '(state: { rotateX?, rotateY?, translateZ?, perspective?, originX?, originY?, scale?, x?, y?, opacity? } | null) => void', description: 'Moves the surface in 3D and fades it, for one frame. rotateX and rotateY (degrees), translateZ (px) and perspective (px, default 1000) turn it about originX and originY (local px, default its center). scale (default 1), x and y (px) enlarge and move it outside the perspective. opacity (0 to 1) fades it. Call it on every frame; null ends the motion.' },
+    { name: 'press(point?)', kind: 'method', type: "(point?: 'center' | { x: number; y: number }) => void", description: 'Presses the surface as a pointer press does, for a keyboard activation or from code. Without an argument, or with center, it presses the center of the layout box; with { x, y }, that point in local px. A pointer press in progress wins over it.' },
+    { name: 'release()', kind: 'method', type: '() => void', description: 'Ends the press: the tilt goes back and the layers see pressed: false. It also ends a pointer press before the pointer is up, for a container that takes the gesture over.' },
+    { name: 'pressTakenOver', kind: 'property', type: 'boolean', description: 'True after release() ended a pointer press early, until the next press starts. It lets the click after a drag be swallowed.' },
+    { name: 'pressRemaining()', kind: 'method', type: '() => number', description: 'The milliseconds until the press feedback has finished: the longest of the layers and the tilt. 0 with reduced motion. Read it after a frame has drawn the press.' },
+    { name: 'appearance()', kind: 'method', type: '() => { forcedColors, reducedTransparency, reducedMotion, alwaysUseFallback }', description: 'The display preferences of the user, as the layers see them.' },
+    { name: 'setAlwaysUseFallback(on)', kind: 'method', type: '(on: boolean) => void', description: 'Makes the effects with a solid fallback (acrylic, reveal, elevation) use it, as Windows does on battery saver or slow hardware.' },
+    { name: 'windowsEasing(id)', kind: 'method', type: '(id: number) => string', description: 'The timing function of the Windows 8 and 8.1 animation theme as CSS. windowsEasing(54) is the Start screen coming in.' },
+    { name: 'WINDOWS_EASINGS', kind: 'property', type: 'table', description: 'All twenty curves of the Windows animation theme, by number.' },
+    { name: 'parseEasing(value)', kind: 'method', type: '(value: string) => curve', description: 'Reads a CSS timing function (a keyword or cubic-bezier()) for a script animation with requestAnimationFrame.' },
+    { name: 'bezierAt(curve, t)', kind: 'method', type: '(curve, t: number) => number', description: 'The progress of a curve from parseEasing() at t, from 0 to 1.' }
   ]
 };
 
