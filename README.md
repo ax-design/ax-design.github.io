@@ -22,6 +22,15 @@ bun run dev
 
 When the packages of the design system are checked out next to this repository (`../surface`, `../tile-group` and so on), the site uses their sources, so you see your changes before they are published. Without them it uses the published packages.
 
+To run against the **built** packages instead — what a release ships — build the checkouts you want and start the server with the switch:
+
+```bash
+(cd ../tile-group && bun run build)
+AX_DEBUG_PACKAGES=1 bun run dev
+```
+
+A package that has no build output falls back to the published copy, and the server warns about it on start. The switch also applies to `bun run build`, so a preview build can be measured the same way.
+
 ### Static Site Generation (SSG Build)
 
 ```bash
