@@ -26,16 +26,16 @@
     "vite": "^8.3.4"
   },
   "dependencies": {
-    "@ax-design/acrylic": "^0.2.2",
-    "@ax-design/elevation": "^0.1.4",
-    "@ax-design/navigation": "^0.0.4",
+    "@ax-design/acrylic": "^0.3.0",
+    "@ax-design/elevation": "^0.2.0",
+    "@ax-design/navigation": "^0.1.0",
     "@ax-design/pressure": "^0.1.1",
-    "@ax-design/reveal-highlight": "^0.6.2",
-    "@ax-design/scroll": "^0.1.2",
-    "@ax-design/shape": "^0.2.0",
-    "@ax-design/surface": "^0.2.4",
-    "@ax-design/tile": "^0.0.0",
-    "@ax-design/tile-group": "^0.1.5",
+    "@ax-design/reveal-highlight": "^0.7.0",
+    "@ax-design/scroll": "^0.2.0",
+    "@ax-design/shape": "^0.3.0",
+    "@ax-design/surface": "^0.3.0",
+    "@ax-design/tile": "^0.1.0",
+    "@ax-design/tile-group": "^0.2.0",
     "@ax-design/typed-om": "^0.1.0"
   }
 }
