@@ -20,7 +20,8 @@ const page: DocPage = {
   tagline: 'A shadow that tells how high an element floats above the page, and follows its shape.',
   intro: [
     'Wrap the content that should float above the page in ax-elevation and set --elevation-depth. The shadow has two layers that grow with the depth: a large, soft one and a small, darker one under the element.',
-    'Elevation runs on Surface, so the shadow follows the shape of the element, not only rectangles. It is also a layer of ax-surface. The shadows need room around the element and a light background to show.'
+    'Elevation runs on Surface, so the shadow follows the shape of the element, not only rectangles. It is also a layer of ax-surface. The shadows need room around the element and a light background to show.',
+    'Elevation follows motion() of ax-surface: the shadow fades with the opacity of the motion, and in Firefox, during a 3D motion, it follows the projected outline of the surface.'
   ],
   setup: "import { register } from '@ax-design/elevation';\nregister();",
   examples: [

@@ -18,7 +18,8 @@ const page: DocPage = {
   tagline: 'A frosted glass texture that blurs, tints and adds noise to what is behind it.',
   intro: [
     'Wrap your content with ax-acrylic and it gets a texture of frosted glass: the background behind it is blurred, tinted and covered with a little noise. It needs something behind it to blur, so place it over an image, a video or a colorful page.',
-    'Acrylic runs on Surface, so the texture follows the shape of the element. It is also a layer of ax-surface. In browsers without backdrop-filter, the texture falls back to a plain color.'
+    'Acrylic runs on Surface, so the texture follows the shape of the element. It is also a layer of ax-surface. In browsers without backdrop-filter, the texture falls back to a plain color.',
+    'Acrylic follows motion() of ax-surface: a 3D motion turns the glass with the surface, and the opacity of the motion is set on the acrylic elements themselves, never on an ancestor, so the backdrop stays right.'
   ],
   setup: "import { register } from '@ax-design/acrylic';\nregister();",
   examples: [

@@ -22,7 +22,8 @@ const page: DocPage = {
   tagline: 'A light that follows your pointer and shows which parts of the page you can interact with.',
   intro: [
     'Wrap a component with ax-reveal and it lights up when your pointer comes close: its border catches the light first, then its inside when the pointer is over it. Press it and a ripple spreads from your finger.',
-    'Reveal Highlight runs on Surface, so it only works for components on the screen, and draws much less while you move your pointer. Every look is a custom property: you style it in CSS, together with the rest of your component.'
+    'Reveal Highlight runs on Surface, so it only works for components on the screen, and draws much less while you move your pointer. Every look is a custom property: you style it in CSS, together with the rest of your component.',
+    'Reveal Highlight follows motion() of ax-surface: the fade of a motion is set on the layer\'s own canvas or SVG, never on an ancestor, and the light and the ripple turn with the shape.'
   ],
   setup: "import { register } from '@ax-design/reveal-highlight';\nregister();",
   examples: [
