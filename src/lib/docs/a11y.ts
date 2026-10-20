@@ -368,7 +368,7 @@ ax-navigation-item { cursor: pointer; }`,
       'Reduced transparency: With the fallback the reveal light is not drawn, and the click runs at once, as it does without any feedback. Use the switch below to see it.',
       'More contrast: Nothing changes by itself. The tile follows the prefers-contrast rules of Surface.'
     ],
-    '<ax-tile class="t" layers="fill reveal"><button slot="action" type="button">Shuffle</button></ax-tile>',
+    '<ax-tile class="t" layers="fill reveal"><button slot="action" type="button">Mail</button></ax-tile>',
     [forcedDark, forcedLight, fallback],
     `.live { display: flex; align-items: center; justify-content: center; }
 ax-tile.t { display: block; width: 180px; height: 120px; color: #fff; --ax-fill-color: rgba(255, 255, 255, 0.2); --reveal-color: rgb(255, 255, 255); --reveal-opacity: 0.35; }
