@@ -6,7 +6,6 @@
   import { curtainGone } from '#lib/site/curtain';
   import { applyOrder, keepOrder, restoreOrder } from '#lib/site/order';
   import { registerAll } from '#lib/site/register';
-  import { startMorph } from '#lib/site/morph';
 
   const icon = (name: string) => `/assets/img/icons/${name}.svg`;
 
@@ -72,11 +71,8 @@
   // The groups come in once the welcome curtain has mostly lifted, all of them as one Start
   // screen (the <ax-tile-bound> around them): until then they are hidden.
   let shown = $state(false);
-  // The live shape of the Playground tile: a canvas, drawn by #lib/site/morph.ts.
-  let morph: HTMLCanvasElement | undefined = $state();
 
   onMount(() => {
-    const stopMorph = morph ? startMorph(morph) : () => {};
     // The root gets the color of the page too, as on every page the AppShell draws: nothing
     // beyond the page box, while the page grows or on an overscroll, shows white.
     const root = document.documentElement;
@@ -176,7 +172,6 @@
       });
     return () => {
       gone = true;
-      stopMorph();
       window.removeEventListener('resize', apply);
       stops.forEach((stop) => stop());
       unbindScroll();
@@ -207,7 +202,7 @@
           <h2 id="g-components">Components</h2>
           <ax-tile-group {...shape}>
             <StartTile href="/playground" title="Playground" columns={4} rows={4} icon={icon('ax-playground')} color="#603cba">
-              <span class="live" aria-hidden="true"><canvas class="morph" bind:this={morph}></canvas></span>
+              <span class="live" aria-hidden="true"><ax-surface class="morph" layers="fill"></ax-surface></span>
             </StartTile>
             <StartTile href="/ideas" title="Ideas" columns={4} icon={icon('ax-ideas')} color="#00a300" />
             <StartTile href="/components/elevation" title="Elevation" icon={icon('ax-elevation')} color="#7e3878" />
@@ -316,13 +311,54 @@
     justify-content: center;
     padding-bottom: 24px;
   }
-  /* The shape, its keyframes and its fill live in #lib/site/morph.ts, which draws it on a canvas;
-     only the spin is left to the stylesheet, where the compositor carries it. */
+  /* The shape, its keyframes and its fill live in the stylesheet: @keyframes morph drives the
+     registered custom properties, and spin turns the whole surface, so the compositor carries
+     both. The shared edge properties are the values every side falls back to. */
   .morph {
     display: block;
     width: 120px;
     height: 120px;
-    animation: spin 16s linear infinite;
+    --ax-fill-color: rgba(255, 255, 255, 0.92);
+    --ax-border-width: 0px;
+    --ax-edge-kind: triangle;
+    --ax-edge-span: 44%;
+    --ax-edge-tip-radius: 5px;
+    --ax-edge-shoulder-radius: 5px;
+    animation: morph 8s cubic-bezier(0.6, 0, 0.3, 1) infinite, spin 16s linear infinite;
+  }
+  @keyframes morph {
+    0%, 100% {
+      --ax-radius: 50%;
+      --ax-corner-top-left-shift-y: 0%;
+      --ax-corner-top-right-shift-x: 0%;
+      --ax-corner-bottom-right-shift-y: 0%;
+      --ax-corner-bottom-left-shift-x: 0%;
+      --ax-edge-depth: 0px;
+    }
+    25% {
+      --ax-radius: 28%;
+      --ax-corner-top-left-shift-y: 0%;
+      --ax-corner-top-right-shift-x: 0%;
+      --ax-corner-bottom-right-shift-y: 0%;
+      --ax-corner-bottom-left-shift-x: 0%;
+      --ax-edge-depth: 0px;
+    }
+    50% {
+      --ax-radius: 14%;
+      --ax-corner-top-left-shift-y: 50%;
+      --ax-corner-top-right-shift-x: 50%;
+      --ax-corner-bottom-right-shift-y: 50%;
+      --ax-corner-bottom-left-shift-x: 50%;
+      --ax-edge-depth: 0px;
+    }
+    75% {
+      --ax-radius: 19%;
+      --ax-corner-top-left-shift-y: 0%;
+      --ax-corner-top-right-shift-x: 0%;
+      --ax-corner-bottom-right-shift-y: 0%;
+      --ax-corner-bottom-left-shift-x: 0%;
+      --ax-edge-depth: 22px;
+    }
   }
   @keyframes spin {
     to { transform: rotate(360deg); }
