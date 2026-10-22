@@ -7,15 +7,15 @@
       "dependencies": {
         "@ax-design/acrylic": "^0.3.1",
         "@ax-design/elevation": "^0.2.1",
-        "@ax-design/navigation": "^0.1.0",
+        "@ax-design/navigation": "^0.2.0",
         "@ax-design/pressure": "^0.2.1",
         "@ax-design/reveal-highlight": "^0.7.1",
         "@ax-design/scroll": "^0.2.0",
         "@ax-design/shape": "^0.3.0",
-        "@ax-design/surface": "^0.3.3",
+        "@ax-design/surface": "^0.4.0",
         "@ax-design/tile": "^0.1.1",
         "@ax-design/tile-group": "^0.2.3",
-        "@ax-design/typed-om": "^0.1.0",
+        "@ax-design/typed-om": "^0.2.1",
       },
       "devDependencies": {
         "@sveltejs/adapter-static": "^4.0.0",
@@ -34,7 +34,7 @@
 
     "@ax-design/elevation": ["@ax-design/elevation@0.2.1", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/surface": "^0.3.3", "@ax-design/typed-om": "^0.1.0" } }, "sha512-PKOBfKtCBUvzO6op4DqeQZxKpRUn1TIAgytcyFWTIuzTZWFWQVzVXJ0iXVYx7bF4v+Jbi6T69t65YVbFY6KOyQ=="],
 
-    "@ax-design/navigation": ["@ax-design/navigation@0.1.0", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/surface": "^0.3.0", "@ax-design/typed-om": "^0.1.0", "bezier-easing": "^2.1.0" } }, "sha512-gDeeuxlIHEBEF02+ersJOtTLG2Tpr/ezd7tB2+P27LuVxVrRT2omCPP1a77wEd6GU1TCXh4fthP2qzMtRs9JoA=="],
+    "@ax-design/navigation": ["@ax-design/navigation@0.2.0", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/surface": "^0.4.0", "@ax-design/typed-om": "^0.2.1", "bezier-easing": "^2.1.0" } }, "sha512-M7wb+x7SRqyuNGm11D2Pu7nzyXD3xyYautMFuuB15SVeONM9dxWgNB6fJW9Era3zkXgIWCGMkDU+p8u9u7z7zw=="],
 
     "@ax-design/pressure": ["@ax-design/pressure@0.2.1", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/surface": "^0.3.3", "@ax-design/typed-om": "^0.1.0" } }, "sha512-yoqaIlbl5VszaKl6FmAamqdzxqNnaKaSFbQfn7rMACYjgk7IQGIYA5B2iircRHOOSTWc2lF0JBRIOckC1fqdMw=="],
 
@@ -44,13 +44,13 @@
 
     "@ax-design/shape": ["@ax-design/shape@0.3.0", "", {}, "sha512-rvIpp8dSu7XI1VAFvll+Cl8IND1SALXSByGTFeCj6uY9IKdyt3uT2hnmbMp4F4t5dC0ot/Fe/WDvIUwzwYOWww=="],
 
-    "@ax-design/surface": ["@ax-design/surface@0.3.3", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/typed-om": "^0.1.0" } }, "sha512-O+q1Ayr1R4XUpHd9QCfnzve+xp6DXc7wHZO5f9Yfin0LPfHQRaJBPWSyRDOOOI6NRFwaGJylbkomJKFKYJQ92g=="],
+    "@ax-design/surface": ["@ax-design/surface@0.4.0", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/typed-om": "^0.2.1" } }, "sha512-DSVdC8D5oSHitd5MjaCNvOKd0nWHLQWI4sWOOLkDmKSGE22INiQ0DRk196YwOLw7/S5PtxBnNH62uC7F+jRlvA=="],
 
     "@ax-design/tile": ["@ax-design/tile@0.1.1", "", { "dependencies": { "@ax-design/surface": "^0.3.3" } }, "sha512-aWsmVwisftef0sBQl4CvJ5vaL1entz3dv3POuQcSLbTFPRf8RdsbOkoIah1FBcoPvhVvbmgJ9876QZtPoSjEuw=="],
 
     "@ax-design/tile-group": ["@ax-design/tile-group@0.2.3", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/surface": "^0.3.0", "@ax-design/typed-om": "^0.1.0" } }, "sha512-PWrw/mFTWxiLBLCnjRKveRxmdsNF1tS0+c8Vl3/uFWa9cTpFi5QZHo6tizDm8OnuACfBjPAmv7Uj+4s/fsMBcw=="],
 
-    "@ax-design/typed-om": ["@ax-design/typed-om@0.1.0", "", {}, "sha512-v3I8wDLMFbWDN9cZkDpy9qYonMQfqUU0DIL9DOChTO3dBRzWUk/taZZBUgmNTkA0kvn+g5NbB7pGcSuQAbz9cA=="],
+    "@ax-design/typed-om": ["@ax-design/typed-om@0.2.1", "", {}, "sha512-3JJhuEk4Pm8xW4Xmz1WBucBXZ8i/x2YQBkPLoaJgaMfyeC6p/hnhYZ1l9ZYKXdXJHO/DBaZgehXK45gNJzhgKw=="],
 
     "@jridgewell/gen-mapping": ["@jridgewell/gen-mapping@0.3.13", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA=="],
 
@@ -214,6 +214,30 @@
 
     "zimmerframe": ["zimmerframe@1.1.5", "", {}, "sha512-msJxIvYDYcoNL+PJsu+7qmpDWsYmAxTY+2TNYXXF0hzBzBk0BMecOqDOG/EckUoKCuKwObfbugIl8QpqHDXeFA=="],
 
+    "@ax-design/acrylic/@ax-design/surface": ["@ax-design/surface@0.3.3", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/typed-om": "^0.1.0" } }, "sha512-O+q1Ayr1R4XUpHd9QCfnzve+xp6DXc7wHZO5f9Yfin0LPfHQRaJBPWSyRDOOOI6NRFwaGJylbkomJKFKYJQ92g=="],
+
+    "@ax-design/acrylic/@ax-design/typed-om": ["@ax-design/typed-om@0.1.0", "", {}, "sha512-v3I8wDLMFbWDN9cZkDpy9qYonMQfqUU0DIL9DOChTO3dBRzWUk/taZZBUgmNTkA0kvn+g5NbB7pGcSuQAbz9cA=="],
+
+    "@ax-design/elevation/@ax-design/surface": ["@ax-design/surface@0.3.3", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/typed-om": "^0.1.0" } }, "sha512-O+q1Ayr1R4XUpHd9QCfnzve+xp6DXc7wHZO5f9Yfin0LPfHQRaJBPWSyRDOOOI6NRFwaGJylbkomJKFKYJQ92g=="],
+
+    "@ax-design/elevation/@ax-design/typed-om": ["@ax-design/typed-om@0.1.0", "", {}, "sha512-v3I8wDLMFbWDN9cZkDpy9qYonMQfqUU0DIL9DOChTO3dBRzWUk/taZZBUgmNTkA0kvn+g5NbB7pGcSuQAbz9cA=="],
+
+    "@ax-design/pressure/@ax-design/surface": ["@ax-design/surface@0.3.3", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/typed-om": "^0.1.0" } }, "sha512-O+q1Ayr1R4XUpHd9QCfnzve+xp6DXc7wHZO5f9Yfin0LPfHQRaJBPWSyRDOOOI6NRFwaGJylbkomJKFKYJQ92g=="],
+
+    "@ax-design/pressure/@ax-design/typed-om": ["@ax-design/typed-om@0.1.0", "", {}, "sha512-v3I8wDLMFbWDN9cZkDpy9qYonMQfqUU0DIL9DOChTO3dBRzWUk/taZZBUgmNTkA0kvn+g5NbB7pGcSuQAbz9cA=="],
+
+    "@ax-design/reveal-highlight/@ax-design/surface": ["@ax-design/surface@0.3.3", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/typed-om": "^0.1.0" } }, "sha512-O+q1Ayr1R4XUpHd9QCfnzve+xp6DXc7wHZO5f9Yfin0LPfHQRaJBPWSyRDOOOI6NRFwaGJylbkomJKFKYJQ92g=="],
+
+    "@ax-design/reveal-highlight/@ax-design/typed-om": ["@ax-design/typed-om@0.1.0", "", {}, "sha512-v3I8wDLMFbWDN9cZkDpy9qYonMQfqUU0DIL9DOChTO3dBRzWUk/taZZBUgmNTkA0kvn+g5NbB7pGcSuQAbz9cA=="],
+
+    "@ax-design/tile/@ax-design/surface": ["@ax-design/surface@0.3.3", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/typed-om": "^0.1.0" } }, "sha512-O+q1Ayr1R4XUpHd9QCfnzve+xp6DXc7wHZO5f9Yfin0LPfHQRaJBPWSyRDOOOI6NRFwaGJylbkomJKFKYJQ92g=="],
+
+    "@ax-design/tile-group/@ax-design/surface": ["@ax-design/surface@0.3.3", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/typed-om": "^0.1.0" } }, "sha512-O+q1Ayr1R4XUpHd9QCfnzve+xp6DXc7wHZO5f9Yfin0LPfHQRaJBPWSyRDOOOI6NRFwaGJylbkomJKFKYJQ92g=="],
+
+    "@ax-design/tile-group/@ax-design/typed-om": ["@ax-design/typed-om@0.1.0", "", {}, "sha512-v3I8wDLMFbWDN9cZkDpy9qYonMQfqUU0DIL9DOChTO3dBRzWUk/taZZBUgmNTkA0kvn+g5NbB7pGcSuQAbz9cA=="],
+
     "svelte/magic-string": ["magic-string@0.30.21", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.5" } }, "sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ=="],
+
+    "@ax-design/tile/@ax-design/surface/@ax-design/typed-om": ["@ax-design/typed-om@0.1.0", "", {}, "sha512-v3I8wDLMFbWDN9cZkDpy9qYonMQfqUU0DIL9DOChTO3dBRzWUk/taZZBUgmNTkA0kvn+g5NbB7pGcSuQAbz9cA=="],
   }
 }
