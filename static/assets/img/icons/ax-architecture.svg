@@ -1,2 +1,2 @@
-<!-- Fluent UI MDL2 icon "map-layers" (@iconify-json/fluent-mdl2), (c) Microsoft, MIT License: https://github.com/microsoft/fluentui -->
-<svg width="100%" height="100%" viewBox="0 0 2048 2048" xmlns="http://www.w3.org/2000/svg" fill="#000"><path fill="#000" d="m1664 832l384 192l-384 192l384 192l-1024 512L0 1408l384-192L0 1024l384-192L0 640l1024-512l1024 512zM286 640l738 369l738-369l-738-369zm1476 768l-241-120l-497 248l-497-248l-241 120l738 369zm-738-15l738-369l-241-120l-497 248l-497-248l-241 120z"/></svg>
+<!-- Fluent UI MDL2 icon "org" (@iconify-json/fluent-mdl2), (c) Microsoft, MIT License: https://github.com/microsoft/fluentui -->
+<svg width="100%" height="100%" viewBox="-260 -260 2568 2568" xmlns="http://www.w3.org/2000/svg" fill="#000"><path fill="#000" d="M1664 1280h256v640h-640v-640h256v-256H384v256h256v640H0v-640h256V896h640V640H640V0h640v640h-256v256h640zM768 128v384h384V128zM512 1792v-384H128v384zm1280 0v-384h-384v384z"/></svg>
