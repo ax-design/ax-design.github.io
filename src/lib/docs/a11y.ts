@@ -328,6 +328,32 @@ ax-navigation-item { cursor: pointer; }`,
     }
   ),
 
+  scrollbar: example(
+    [
+      'Keyboard: The viewport of ax-scroll-view takes focus with Tab, and the arrow, Page Up, Page Down, Home and End keys scroll it. The bars are not in the tab order: markers are for the pointer, so give links or buttons for the same places.',
+      'Screen readers: The bars and the cards are hidden from assistive technology. Name the view as a region, as in the code, so the content has a name when it takes focus.',
+      'High contrast (forced colors): The overlay is not drawn, and the native scrollbars of the browser come back, so the bars stay visible.',
+      'Reduced motion: The bars take their end state at once: no glide, no lag of the thumb, and the card does not move. The card closes by itself after a short delay.'
+    ],
+    '<ax-scroll-view role="region" aria-label="Article" class="sc"><div class="body">' + [1, 2, 3].map((n) => `<h2>Section ${n}</h2><p>Scrolling stays native, so the keys, the wheel and find in page work as usual.</p>`).join('') + '</div></ax-scroll-view>',
+    [forcedDark, forcedLight],
+    `.live { display: flex; align-items: center; justify-content: center; color: #fff; }
+ax-scroll-view.sc { width: 300px; height: 200px; }
+.body { padding: 12px; font: 13px/1.5 system-ui, sans-serif; }
+.body h2 { margin: 0 0 4px; font-size: 15px; font-weight: 600; }
+.body p { margin: 0 0 14px; }
+@media (forced-colors: active) { ax-scroll-view.sc { border: 1px solid CanvasText; } }`,
+    {
+      slug: 'scrollbar',
+      code: [
+        {
+          language: 'html',
+          source: '<ax-scroll-view role="region" aria-label="Article" style="height: 420px">\n  <article>...</article>\n</ax-scroll-view>'
+        }
+      ]
+    }
+  ),
+
   tile: example(
     [
       'Keyboard: Tab to the action. Enter presses a link or a button, and Space presses a button; Space does not activate a link, it scrolls the page. The press comes from the center of the tile, and the action runs after the ripple.',

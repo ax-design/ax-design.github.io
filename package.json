@@ -27,16 +27,17 @@
     "vite": "^8.3.4"
   },
   "dependencies": {
-    "@ax-design/acrylic": "^0.3.1",
-    "@ax-design/elevation": "^0.2.1",
-    "@ax-design/navigation": "^0.2.0",
-    "@ax-design/pressure": "^0.2.1",
-    "@ax-design/reveal-highlight": "^0.7.1",
-    "@ax-design/scroll": "^0.2.0",
+    "@ax-design/acrylic": "^0.3.2",
+    "@ax-design/elevation": "^0.2.3",
+    "@ax-design/navigation": "^0.2.1",
+    "@ax-design/pressure": "^0.2.2",
+    "@ax-design/reveal-highlight": "^0.7.2",
+    "@ax-design/scroll": "^0.2.1",
+    "@ax-design/scrollbar": "^0.1.0",
     "@ax-design/shape": "^0.3.0",
-    "@ax-design/surface": "^0.4.0",
-    "@ax-design/tile": "^0.1.1",
-    "@ax-design/tile-group": "^0.2.3",
-    "@ax-design/typed-om": "^0.2.1"
+    "@ax-design/surface": "^0.4.1",
+    "@ax-design/tile": "^0.1.2",
+    "@ax-design/tile-group": "^0.2.4",
+    "@ax-design/typed-om": "^0.3.0"
   }
 }

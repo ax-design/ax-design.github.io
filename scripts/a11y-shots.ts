@@ -11,7 +11,7 @@ import { chromium } from '../../tile-group/node_modules/playwright';
 const here = dirname(fileURLToPath(import.meta.url));
 const outDir = resolve(here, '..', 'static', 'a11y');
 
-const ALL = ['shape', 'surface', 'typed-om', 'reveal-highlight', 'acrylic', 'elevation', 'pressure', 'tile-group', 'scroll', 'navigation', 'tile'];
+const ALL = ['shape', 'surface', 'typed-om', 'reveal-highlight', 'acrylic', 'elevation', 'pressure', 'tile-group', 'scroll', 'scrollbar', 'navigation', 'tile'];
 // Libraries without UI: nothing to show in a picture.
 const NO_PICTURES = new Set(['shape', 'typed-om']);
 

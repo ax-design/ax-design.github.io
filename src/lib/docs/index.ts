@@ -10,6 +10,7 @@ import pressure from './pressure';
 import tile from './tile';
 import tileGroup from './tile-group';
 import scroll from './scroll';
+import scrollbar from './scrollbar';
 import navigation from './navigation';
 
 export interface PageEntry {
@@ -28,6 +29,7 @@ export const pages: PageEntry[] = [
   { page: tileGroup, accent: '#da532c' },
   { page: tile, accent: '#e3a21a' },
   { page: scroll, accent: '#00aba9' },
+  { page: scrollbar, accent: '#0078d7' },
   { page: navigation, accent: '#525e75' }
 ];
 
