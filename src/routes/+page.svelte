@@ -41,14 +41,13 @@
     return Math.min(CELL, (width - 2 * MARGIN - (columns - 1) * GAP) / columns);
   }
 
-  // A stacked page can need an arrangement of its own. A grid of six cells holds a wide tile and
-  // two small ones beside it, and has no room left for the four-cell Ideas tile: in the order of
-  // the page, Ideas has nowhere to go but under Playground, and the two cells beside it stay
-  // empty. The two small tiles that do fit there come before it instead. Each entry names the
-  // tiles to move to just after the first tile of a group, for one shape of it; a shape with no
-  // entry keeps the order of the page.
+  // A stacked page can need an arrangement of its own. A grid of six cells holds the large
+  // Playground tile and two cells beside it, so the two medium tiles of the Learn group come
+  // right after it, instead of leaving those two cells empty (in a grid of four or eight they fit
+  // as they are). Each entry names the tiles to put first, in this order, for one shape; a shape
+  // with no entry keeps the order of the page, and so does a group without those tiles.
   const STACKED_ORDER: Record<string, string[]> = {
-    m3: ['/components/elevation', '/components/shape'],
+    m3: ['/playground', '/getting-started', '/architecture'],
   };
 
   // Whether the page is the sideways spread of the site, or one column going down. The groups
@@ -95,13 +94,11 @@
     let gone = false;
 
     // The order a shape falls back to: the order of the page, with the tiles of STACKED_ORDER for
-    // that shape moved to just after the first tile of the group.
+    // that shape (those the group has) put first.
     const fallback = (group: HTMLElement, next: string): string[] => {
       const source = start.get(group)!;
-      const moved = STACKED_ORDER[next];
-      if (!moved) return source;
-      const [first, ...rest] = source;
-      return [first, ...rest.filter((id) => moved.includes(id)), ...rest.filter((id) => !moved.includes(id))];
+      const first = (STACKED_ORDER[next] ?? []).filter((id) => source.includes(id));
+      return [...first, ...source.filter((id) => !first.includes(id))];
     };
 
     // Puts the tiles of every group in the order dragged into this shape. The sideways spread
@@ -198,25 +195,39 @@
         style:--tile-cell-width={wide || cell === CELL ? undefined : `${cell}px`}
         style:--tile-cell-height={wide || cell === CELL ? undefined : `${cell}px`}
       >
-        <section class="group" aria-labelledby="g-components">
-          <h2 id="g-components">Components</h2>
+        <section class="group" aria-labelledby="g-learn">
+          <h2 id="g-learn">Learn</h2>
           <ax-tile-group {...shape}>
+            <StartTile href="/getting-started" title="Getting Started" icon={icon('ax-getting-started')} color="#6d8764" />
+            <StartTile href="/architecture" title="Architecture" icon={icon('ax-architecture')} color="#647687" />
             <StartTile href="/playground" title="Playground" columns={4} rows={4} icon={icon('ax-playground')} color="#603cba">
               <span class="live" aria-hidden="true"><ax-surface class="morph" layers="fill"></ax-surface></span>
             </StartTile>
             <StartTile href="/ideas" title="Ideas" columns={4} icon={icon('ax-ideas')} color="#00a300" />
-            <StartTile href="/components/elevation" title="Elevation" icon={icon('ax-elevation')} color="#7e3878" />
+          </ax-tile-group>
+        </section>
+
+        <section class="group" aria-labelledby="g-components">
+          <h2 id="g-components">Components</h2>
+          <ax-tile-group {...shape}>
+            <StartTile href="/components/tile" title="Tile" icon={icon('ax-tile')} color="#e3a21a" />
+            <StartTile href="/components/tile-group" title="Tile Group" icon={icon('ax-tile-group')} color="#da532c" />
+            <StartTile href="/components/navigation" title="Navigation" icon={icon('ax-navigation')} color="#525e75" />
+            <StartTile href="/components/scroll" title="Scroll" icon={icon('ax-scroll')} color="#00aba9" />
+            <StartTile href="/components/scrollbar" title="Scrollbar" icon={icon('ax-scrollbar')} color="#99b433" />
+          </ax-tile-group>
+        </section>
+
+        <section class="group" aria-labelledby="g-foundations">
+          <h2 id="g-foundations">Foundations</h2>
+          <ax-tile-group {...shape}>
+            <StartTile href="/components/typed-om" title="Typed OM" icon={icon('ax-typed-om')} color="#9f00a7" />
             <StartTile href="/components/shape" title="Shape" icon={icon('ax-shape')} color="#b45309" />
             <StartTile href="/components/surface" title="Surface" icon={icon('ax-surface')} color="#2b5797" />
-            <StartTile href="/components/navigation" title="Navigation" icon={icon('ax-navigation')} color="#525e75" />
+            <StartTile href="/components/elevation" title="Elevation" icon={icon('ax-elevation')} color="#7e3878" />
             <StartTile href="/components/acrylic" title="Acrylic" icon={icon('ax-acrylic')} color="#2d89ef" />
             <StartTile href="/components/reveal-highlight" title="Reveal Highlight" icon={icon('ax-reveal-highlight')} color="#1e7145" />
             <StartTile href="/components/pressure" title="Pressure" icon={icon('ax-pressure')} color="#b91d47" />
-            <StartTile href="/components/tile-group" title="Tile Group" icon={icon('ax-tile-group')} color="#da532c" />
-            <StartTile href="/components/tile" title="Tile" icon={icon('ax-tile')} color="#e3a21a" />
-            <StartTile href="/components/scroll" title="Scroll" icon={icon('ax-scroll')} color="#00aba9" />
-            <StartTile href="/components/scrollbar" title="Scrollbar" icon={icon('ax-scrollbar')} color="#99b433" />
-            <StartTile href="/components/typed-om" title="Typed OM" icon={icon('ax-typed-om')} color="#9f00a7" />
           </ax-tile-group>
         </section>
 
