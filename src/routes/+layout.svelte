@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import type { Snippet } from 'svelte';
   import { afterNavigate, preloadData } from '$app/navigation';
+  import PageScrollbar from '#lib/site/PageScrollbar.svelte';
   import { registerAll } from '#lib/site/register';
 
   let { children }: { children: Snippet } = $props();
@@ -39,3 +40,4 @@
 </svelte:head>
 
 {@render children()}
+<PageScrollbar />

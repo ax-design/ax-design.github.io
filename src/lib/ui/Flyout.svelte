@@ -66,9 +66,11 @@
       <BackButton label="Close" onclick={() => dialog?.close()} />
       <h2 class="title" id="{uid}-title">{title}</h2>
     </header>
-    <div class="body">
-      {@render children()}
-    </div>
+    <ax-scroll-view class="body" horizontal="hidden" snap>
+      <div class="content">
+        {@render children()}
+      </div>
+    </ax-scroll-view>
   </div>
 </dialog>
 
@@ -136,7 +138,15 @@
   .body {
     flex: 1 1 auto;
     min-height: 0;
+  }
+
+  /* Before the element is defined it is a block that scrolls by itself. */
+  .body:not(:defined) {
+    display: block;
     overflow-y: auto;
+  }
+
+  .content {
     padding: 24px 40px;
   }
 

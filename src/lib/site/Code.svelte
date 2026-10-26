@@ -1,6 +1,8 @@
 <script lang="ts">
   // A code block on the paper of a component page: set like a printed listing, with a copy
   // button.
+  import { fit } from './fit';
+
   interface Props {
     code: string;
     language?: string;
@@ -25,7 +27,11 @@
     <span class="language">{language}</span>
     <button type="button" class="copy" onclick={copy}>{copied ? 'Copied' : 'Copy'}</button>
   </figcaption>
-  <pre><code>{code}</code></pre>
+  <!-- A scroll view as tall as the listing: the sideways bar of a long line is drawn over the
+       padding under it. -->
+  <ax-scroll-view vertical="hidden" snap use:fit>
+    <pre><code>{code}</code></pre>
+  </ax-scroll-view>
 </figure>
 
 <style>
@@ -56,10 +62,19 @@
   .copy:focus-visible {
     color: #1b1b1b;
   }
+  /* Before the element is defined it is a block that scrolls by itself. */
+  ax-scroll-view {
+    display: block;
+  }
+  ax-scroll-view:not(:defined) {
+    overflow-x: auto;
+  }
   pre {
     margin: 0;
-    padding: 8px 12px 12px;
-    overflow-x: auto;
+    padding: 8px 12px 20px;
+    width: max-content;
+    min-width: 100%;
+    box-sizing: border-box;
     font: 12.5px/1.55 ui-monospace, 'Cascadia Code', Consolas, Menlo, monospace;
     color: #22201c;
   }
