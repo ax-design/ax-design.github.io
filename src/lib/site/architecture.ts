@@ -23,9 +23,9 @@ export interface Plane {
 }
 
 export const PLANES: Plane[] = [
-  { name: 'Properties and geometry', about: 'Typed custom properties, and the shapes everything is drawn on.' },
+  { name: 'Properties & geometry', about: 'Typed custom properties, and the shapes everything is drawn on.' },
   { name: 'Surface', about: 'One shape, one tilt and one frame scheduler, with a registry of layers.' },
-  { name: 'Layers and effects', about: 'What a Surface draws on its shape: shadow, glass, light and tilt.' },
+  { name: 'Effects', about: 'What a Surface draws on its shape: shadow, glass, light and tilt.' },
   { name: 'Components', about: 'What an app uses directly.' }
 ];
 

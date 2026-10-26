@@ -67,19 +67,19 @@
     </div>
   </Flow>
 
-  <Flow label="The layers, exploded" width={760}>
+  <Flow label="The packages, in bands" width={760}>
     <ArchitectureDiagram />
   </Flow>
 
   <Flow label="Layers and dependencies as text">
-    <h2 class="list-title">The layers, from the top</h2>
+    <h2 class="list-title">The bands, from the top</h2>
     <p>
-      The same diagram as a list. A package depends on the ones named after it, and a package of a layer can depend
-      on the layers below it.
+      The same diagram as a list. A package depends on the ones named after it, and a package of a band can depend
+      on the bands below it.
     </p>
-    {#each layers as { plane, index, packages } (plane.name)}
+    {#each layers as { plane, packages } (plane.name)}
       <div>
-        <h3>Layer {index + 1}: {plane.name}</h3>
+        <h3>{plane.name}</h3>
         <p class="about">{plane.about}</p>
         <ul>
           {#each packages as pkg (pkg.id)}
