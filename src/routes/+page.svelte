@@ -215,7 +215,7 @@
             <StartTile href="/components/tile-group" title="Tile Group" icon={icon('ax-tile-group')} color="#da532c" />
             <StartTile href="/components/tile" title="Tile" icon={icon('ax-tile')} color="#e3a21a" />
             <StartTile href="/components/scroll" title="Scroll" icon={icon('ax-scroll')} color="#00aba9" />
-            <StartTile href="/components/scrollbar" title="Scrollbar" icon={icon('ax-scrollbar')} color="#ff0097" />
+            <StartTile href="/components/scrollbar" title="Scrollbar" icon={icon('ax-scrollbar')} color="#99b433" />
             <StartTile href="/components/typed-om" title="Typed OM" icon={icon('ax-typed-om')} color="#9f00a7" />
           </ax-tile-group>
         </section>
