@@ -17,10 +17,10 @@
 </svelte:head>
 
 <AppShell title="Architecture" accent={ACCENT}>
-  <Flow label="How it fits together">
-    <p class="tagline">One Surface in the middle. Everything else is drawn on it, or built from it.</p>
+  <Flow label="Overview">
+    <p class="tagline">All packages are built on Surface.</p>
     <div>
-      <h2>One surface, one shape</h2>
+      <h2>Surface</h2>
       <p>
         <code>&lt;ax-surface&gt;</code> is the box every visual effect draws on. It owns the shape, the tilt and one
         frame scheduler for the whole page, and it draws its content with layers. Every layer of a surface paints on
@@ -33,7 +33,7 @@
       </p>
     </div>
     <div>
-      <h2>Layers are registered by name</h2>
+      <h2>Layers</h2>
       <p>
         A layer is an object that draws one thing. It is registered under a name, and a surface picks its layers with
         the <code>layers</code> attribute:
@@ -46,18 +46,18 @@
       </p>
     </div>
     <div>
-      <h2>Components compose them</h2>
+      <h2>Components</h2>
       <p>
         Tile, Tile Group, Navigation and Scrollbar depend on Surface and are styled the way Surface is: with CSS
         custom properties (<code>--ax-radius</code>, <code>--ax-fill-color</code>, <code>--tile-rows</code>,
         <code>--ax-scrollbar-thickness</code>), and, for the pieces inside a component, with
         <code>::part()</code>. The Scrollbar names every piece of its bars as a part: <code>thumb</code>,
-        <code>thumb-hover</code>, <code>scrollbar-vertical</code> and the others. Scroll stands alone: it depends on
+        <code>thumb-hover</code>, <code>scrollbar-vertical</code> and the others. Scroll depends on
         no other package.
       </p>
     </div>
     <div>
-      <h2>Kits replace parts</h2>
+      <h2>Kits</h2>
       <p>
         The Scrollbar takes its parts by dependency injection. Each kind of part (thumb, button, track, track piece,
         corner, marker, card) has a contract class that draws nothing, and a default class with the Windows 8 look.
@@ -67,12 +67,12 @@
     </div>
   </Flow>
 
-  <Flow label="The packages, in bands">
+  <Flow label="Diagram">
     <ArchitectureDiagram />
   </Flow>
 
-  <Flow label="Layers and dependencies as text">
-    <h2 class="list-title">The bands, from the top</h2>
+  <Flow label="Dependencies">
+    <h2 class="list-title">Packages and dependencies</h2>
     <p>
       The same diagram as a list. A package depends on the ones named after it, and a package of a band can depend
       on the bands below it.

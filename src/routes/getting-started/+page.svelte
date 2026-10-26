@@ -22,8 +22,8 @@
       later systems traded much of that away.
     </p>
     <p>
-      A good design system raises the floor of what a page looks like without lowering the ceiling. So the effects are
-      not pasted together one by one: they share one infrastructure. <a href="/components/surface/">Surface</a> draws
+      A good design system raises the floor of what a page looks like without lowering the ceiling. The effects share
+      one infrastructure. <a href="/components/surface/">Surface</a> draws
       every effect on one shape with one frame scheduler, <a href="/components/shape/">Shape</a> gives every effect the
       same outline, and <a href="/components/typed-om/">Typed OM</a> reads the design tokens you set as CSS custom
       properties. The <a href="/architecture/">Architecture</a> page shows how it fits together.
@@ -36,7 +36,7 @@
   </Flow>
 
   <Flow label="Build an app">
-    <p class="tagline">Most apps need five packages.</p>
+    <p class="tagline">Install the components your app uses.</p>
     <p>
       An app uses the components: install the ones you use. Each of them brings
       <a href="/components/surface/">Surface</a>, <a href="/components/shape/">Shape</a> and
@@ -69,8 +69,8 @@
     </div>
   </Flow>
 
-  <Flow label="Build your own">
-    <h2 class="title">When you need the foundations</h2>
+  <Flow label="Custom components">
+    <h2 class="title">Foundations</h2>
     <p>
       Install the foundations when you build a component of your own, or when you want an effect on a Surface:
       <a href="/components/elevation/">elevation</a>, <a href="/components/acrylic/">acrylic</a>,
@@ -87,7 +87,7 @@
       <Code code={text.REGISTER_FOUNDATIONS} language="js" />
     </div>
     <div>
-      <h2>A surface with layers</h2>
+      <h2>Example</h2>
       <p>
         The layers are drawn in the order you list them, and your content is always on top.
         <code>fill</code> comes with Surface; put <code>elevation</code> first, so the other layers paint over it:
@@ -102,8 +102,8 @@
     </p>
   </Flow>
 
-  <Flow label="CDN and links">
-    <h2 class="title">Without a bundler</h2>
+  <Flow label="CDN">
+    <h2 class="title">Using a CDN</h2>
     <p>
       The components, the effects and Pressure ship a script, <code>build/main.js</code>, that exposes a global with
       a <code>register()</code>. Each script carries its own copy of Surface, so load packages of the same version
