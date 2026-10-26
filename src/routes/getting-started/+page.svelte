@@ -13,6 +13,28 @@
 </svelte:head>
 
 <AppShell title="Getting Started" accent={ACCENT}>
+  <Flow label="Welcome">
+    <p class="tagline">Welcome to the Axiom Design System.</p>
+    <p>
+      Axiom is a set of web components that keeps what we loved in the first Material Design and the first Fluent
+      Design: the light that follows the pointer, real shadows, acrylic glass, a press that tilts what you touch, live
+      tiles you can drag, an indicator that stretches as it moves. They were fun, rich and still easy to read, and
+      later systems traded much of that away.
+    </p>
+    <p>
+      A good design system raises the floor of what a page looks like without lowering the ceiling. So the effects are
+      not pasted together one by one: they share one infrastructure. <a href="/components/surface/">Surface</a> draws
+      every effect on one shape with one frame scheduler, <a href="/components/shape/">Shape</a> gives every effect the
+      same outline, and <a href="/components/typed-om/">Typed OM</a> reads the design tokens you set as CSS custom
+      properties. The <a href="/architecture/">Architecture</a> page shows how it fits together.
+    </p>
+    <p>
+      The effects stay accessible: the reveal light shows borders only where the pointer is, shadows are only ever
+      black and set by one depth, and reduced motion and forced colours are respected. The story of the project is in
+      <a href="https://roriri.one/2026/10/15/ax-design">this post</a>.
+    </p>
+  </Flow>
+
   <Flow label="Build an app">
     <p class="tagline">Most apps need five packages.</p>
     <p>
