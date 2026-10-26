@@ -67,7 +67,7 @@
     </div>
   </Flow>
 
-  <Flow label="The packages, in bands" width={760}>
+  <Flow label="The packages, in bands">
     <ArchitectureDiagram />
   </Flow>
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   // The design system as a containment diagram, in the Metro look: one block that fills its
-  // column, four full-width bands inside it, and the packages as flat tiles that share the width
-  // of their band. Each band is built on the ones below it. A package that is hovered or focused
+  // column, four full-width bands inside it, and the packages as flat tiles that fill their band
+  // in a grid (five tiles: three and a wide two; four: two by two). Each band is built on the ones below it. A package that is hovered or focused
   // keeps itself and what it depends on at full color, its dependents a little lighter, and
   // dims the rest. It is HTML and CSS, so it reflows with the column.
   import { PLANES, byId, onPlane, usedBy } from './architecture';
@@ -25,11 +25,12 @@
     {#each bands as { plane, tiles } (plane.name)}
       <section class="band">
         <h3>{plane.name}</h3>
-        <div class="tiles">
-          {#each tiles as pkg (pkg.id)}
+        <div class="tiles" style:--cols={tiles.length === 5 ? 3 : tiles.length >= 2 ? 2 : 1}>
+          {#each tiles as pkg, i (pkg.id)}
             <a
               href={pkg.href}
               class="tile {level(pkg.id)}"
+              class:wide={tiles.length === 5 && i === 4}
               style:--tile={pkg.color}
               onpointerenter={() => (active = pkg.id)}
               onpointerleave={() => (active = null)}
@@ -68,17 +69,15 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 8px 8px 11px;
+    padding: 8px;
     background: #0d2238;
     color: #fff;
     font-family: 'Segoe UI', 'Segoe UI Variable', system-ui, sans-serif;
   }
-  /* A flat slab with a constant depth edge below it. */
   .band {
     min-width: 0;
-    padding: 8px 8px 10px;
+    padding: 8px;
     background: #1a3556;
-    box-shadow: 0 3px 0 #07131f;
   }
   h3 {
     margin: 0 0 8px;
@@ -90,13 +89,14 @@
     color: rgba(255, 255, 255, 0.78);
   }
   .tiles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 6px;
-    padding-bottom: 3px;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: 6px;
+  }
+  .tile.wide {
+    grid-column: span 2;
   }
   .tile {
-    flex: 1 1 88px;
     min-width: 0;
     box-sizing: border-box;
     display: flex;
@@ -104,22 +104,13 @@
     min-height: 64px;
     padding: 6px 8px;
     background: var(--tile);
-    box-shadow: 0 3px 0 color-mix(in srgb, var(--tile) 65%, #000);
     color: #fff;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     line-height: 1.2;
     text-decoration: none;
     overflow-wrap: anywhere;
-    transition:
-      transform 120ms ease-out,
-      box-shadow 120ms ease-out,
-      opacity 120ms ease-out;
-  }
-  .tile:hover,
-  .tile:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 0 color-mix(in srgb, var(--tile) 55%, #000);
+    transition: opacity 120ms ease-out;
   }
   .tile:focus-visible {
     outline: 3px solid #fff;
@@ -142,10 +133,6 @@
   @media (prefers-reduced-motion: reduce) {
     .tile {
       transition: none;
-    }
-    .tile:hover,
-    .tile:focus-visible {
-      transform: none;
     }
   }
 
