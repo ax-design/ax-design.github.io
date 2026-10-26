@@ -58,8 +58,8 @@
 </figure>
 
 <style>
+  /* The flow sets the figure's margins (the gap after the column); it keeps them. */
   .arch {
-    margin: 0;
     min-width: 0;
   }
   /* The Start screen's deep blue; the tile colors read as they do there. */
@@ -80,7 +80,7 @@
     background: #1a3556;
   }
   h3 {
-    margin: 0 0 8px;
+    margin: 0 0 6px;
     font-size: 12px;
     font-weight: 400;
     line-height: 1.2;
@@ -101,7 +101,8 @@
     box-sizing: border-box;
     display: flex;
     align-items: flex-end;
-    min-height: 64px;
+    /* Short enough that the figure fits a column of a short window (the flow's height). */
+    min-height: clamp(30px, 5vh, 64px);
     padding: 6px 8px;
     background: var(--tile);
     color: #fff;
@@ -138,7 +139,7 @@
 
   figcaption {
     margin-top: 12px;
-    min-height: 4.6em;
+    min-height: 3em;
     font-size: 15px;
     line-height: 1.5;
     color: #2b2925;
