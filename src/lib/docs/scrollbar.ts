@@ -209,40 +209,38 @@ const page: DocPage = {
         { key: 'hotzone', label: 'Hot zone', type: 'range', min: 0, max: 400, step: 25, unit: '%', default: 200, target: { kind: 'css', property: '--ax-scrollbar-hotzone', selector: 'ax-scroll-view' } }
       ],
       // The band the package uses: from the outer edge of the bar inward, max(0, px + percent / 100 *
-      // thickness) deep, along the span of the bar. It is read from the bar once the new token applies.
+      // thickness) deep, along the span of the bar. The view fills the example, so the bands are
+      // placed from the tokens alone (no layout is read); whether a bar is there is the view's own
+      // state attribute.
       update: (root, values) => {
         const view = root.querySelector('ax-scroll-view') as HTMLElement;
+        const thickness = parseFloat(values.thickness) || 0;
         const match = /^(-?[\d.]+)(px|%)$/.exec(values.hotzone);
         const px = match && match[2] === 'px' ? Number(match[1]) : 0;
         const percent = match && match[2] === '%' ? Number(match[1]) : 0;
+        const depth = Math.max(0, px + (percent / 100) * thickness);
         const place = () => {
-          const frame = root.getBoundingClientRect();
           for (const band of root.querySelectorAll<HTMLElement>('.hotzone')) {
             const axis = band.dataset.axis as 'vertical' | 'horizontal';
-            const bar = view.shadowRoot?.querySelector<HTMLElement>(`[part~="scrollbar-${axis}"]`);
-            const r = bar?.getBoundingClientRect();
-            if (!r || r.width <= 0 || r.height <= 0) {
-              band.style.display = 'none';
-              continue;
-            }
-            const depth = Math.max(0, px + (percent / 100) * (axis === 'vertical' ? r.width : r.height));
-            band.style.display = depth > 0 ? 'block' : 'none';
+            const shown = (view.getAttribute(`${axis}-state`) ?? '').split(' ').includes('visible');
+            const box = band.style;
+            box.display = shown && depth > 0 ? 'block' : 'none';
             if (axis === 'vertical') {
-              band.style.left = `${r.right - depth - frame.left}px`;
-              band.style.top = `${r.top - frame.top}px`;
-              band.style.width = `${depth}px`;
-              band.style.height = `${r.height}px`;
+              box.right = '0';
+              box.top = '0';
+              box.bottom = '0';
+              box.width = `${depth}px`;
             } else {
-              band.style.left = `${r.left - frame.left}px`;
-              band.style.top = `${r.bottom - depth - frame.top}px`;
-              band.style.width = `${r.width}px`;
-              band.style.height = `${depth}px`;
+              box.left = '0';
+              box.right = '0';
+              box.bottom = '0';
+              box.height = `${depth}px`;
             }
           }
         };
         place();
-        // The tokens reach the bars on the next frame.
-        requestAnimationFrame(() => requestAnimationFrame(place));
+        // The state of the bars is written in the next frame.
+        requestAnimationFrame(place);
       },
       code: [
         { language: 'html', source: '<ax-scroll-view class="minimal" hide="button" touch="bar" marker-selector="h2">\n  ...\n</ax-scroll-view>' },
@@ -390,7 +388,7 @@ const page: DocPage = {
         'The markers property takes elements, a NodeList, marker objects or a mix, and it wins over marker-selector while it holds a list, even an empty one. null gives control back to the selector. A marker object has an id, a label, a position in scroll coordinates (or an element, whose start edge is the position), an axis and data of your own for the card of a kit. Use it for places that are not elements, such as search hits.',
         'The component dispatches markerenter, markerleave and markeractivate on the element. They bubble, and detail has the marker of the mark and all the markers that share it. Cancel markeractivate with preventDefault() to do the jump yourself. The line under the view shows the last event.'
       ],
-      preview: `<div class="stage"><ax-scroll-view class="ruler" snap marker-selector="h2"><div class="body"><h2 style="top: 0">Heading A</h2><h2 style="top: 410px">Heading B</h2><h2 style="top: 800px">Heading C</h2></div></ax-scroll-view><output class="log">no marker event yet</output></div>`,
+      preview: `<div class="stage"><ax-scroll-view class="ruler" marker-selector="h2"><div class="body"><h2 style="top: 0">Heading A</h2><h2 style="top: 410px">Heading B</h2><h2 style="top: 800px">Heading C</h2></div></ax-scroll-view><output class="log">no marker event yet</output></div>`,
       style: `${lightStyle}
 ax-scroll-view { inset: 0 0 28px 0; }
 .body { position: relative; height: 1200px; padding: 0; background: repeating-linear-gradient(#f2f2f2 0 100px, #fff 100px 200px); }
@@ -447,7 +445,7 @@ ax-scroll-view { inset: 0 0 28px 0; }
         'With the indicator the buttons, the track and the corner are left out while it shows and while it fades out, and the page scrolls under a finger as usual. With the bar, a finger that comes down on a bar or in its hot zone belongs to the bar and decides after 5px. Steeply along the bar it drags, relative to where it is, and across it nothing more happens. A quick tap glides to the tapped place or activates the marker under it.',
         'The hovered marker and its card stay for --ax-scrollbar-touch-idle-delay after the finger lifts. Style the touch indicator on its own with the attribute the component writes, ax-scroll-view[last-indicator="touch"]::part(thumb), which stays set while the bars fade out. Try it with a finger. With a pointer this example behaves as it does with the mouse.'
       ],
-      preview: light(' touch="indicator" marker-selector="h2" indicator="auto" snap'),
+      preview: light(' touch="indicator" marker-selector="h2" indicator="auto"'),
       style: lightStyle,
       controls: [{ key: 'touch', label: 'Touch', type: 'select', options: ['indicator', 'bar'], default: 'indicator', target: { kind: 'attribute', attribute: 'touch', selector: 'ax-scroll-view' } }],
       code: [
@@ -463,7 +461,7 @@ ax-scroll-view { inset: 0 0 28px 0; }
         'The viewport is a real scroll container and takes focus (tabindex="0") only while nothing inside it can. A text-only region stays scrollable by keys, and a region with links, buttons or fields adds no tab stop of its own, because focus goes into the content and the arrow and page keys scroll from there. The choice follows changes of the content and of the attributes that decide focus. Disable the button and the second view becomes a tab stop.',
         'With forced colors (forced-colors: active) the overlay is hidden and the native scrollbars come back, and so they do when printing. With prefers-reduced-motion: reduce there is no glide and no thumb lag, parts change look at once, and the default card drops its movement and closes by itself. The Accessibility column of this page shows both.'
       ],
-      preview: `<div class="stage"><div class="pane"><ax-scroll-view snap role="region" aria-label="Text only"><div class="body"><h2>Text only</h2>${article(['A'], 3)}</div></ax-scroll-view><output class="one"></output></div><div class="pane"><ax-scroll-view snap role="region" aria-label="With a button"><div class="body"><h2>With a button</h2><p><button>Open</button></p>${article(['B'], 2)}</div></ax-scroll-view><output class="two"></output></div></div>`,
+      preview: `<div class="stage"><div class="pane"><ax-scroll-view role="region" aria-label="Text only"><div class="body"><h2>Text only</h2>${article(['A'], 3)}</div></ax-scroll-view><output class="one"></output></div><div class="pane"><ax-scroll-view role="region" aria-label="With a button"><div class="body"><h2>With a button</h2><p><button>Open</button></p>${article(['B'], 2)}</div></ax-scroll-view><output class="two"></output></div></div>`,
       style: `${lightStyle}
 .stage { display: grid; grid-template-rows: 1fr 1fr; }
 .pane { position: relative; border-bottom: 1px solid #ddd; }

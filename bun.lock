@@ -11,9 +11,9 @@
         "@ax-design/pressure": "^0.2.2",
         "@ax-design/reveal-highlight": "^0.7.2",
         "@ax-design/scroll": "^0.2.1",
-        "@ax-design/scrollbar": "^0.3.1",
+        "@ax-design/scrollbar": "^0.4.1",
         "@ax-design/shape": "^0.3.0",
-        "@ax-design/surface": "^0.4.1",
+        "@ax-design/surface": "^0.4.3",
         "@ax-design/tile": "^0.1.2",
         "@ax-design/tile-group": "^0.2.4",
         "@ax-design/typed-om": "^0.3.0",
@@ -43,11 +43,11 @@
 
     "@ax-design/scroll": ["@ax-design/scroll@0.2.1", "", {}, "sha512-Vl/R5GGSym6kJrw/cvJ/0ahaNu2iwBwDeEtx6QYyofC0ZMiNdTIe03dOFFHTVaTpgUIOr1W573ZZzLtCgcknPA=="],
 
-    "@ax-design/scrollbar": ["@ax-design/scrollbar@0.3.1", "", { "dependencies": { "@ax-design/elevation": "^0.2.3", "@ax-design/scroll": "^0.2.1", "@ax-design/shape": "^0.3.0", "@ax-design/surface": "^0.4.1", "@ax-design/typed-om": "^0.3.0" } }, "sha512-oz4p6nTEgwxNmVV4baCQ9stSzbh6DagznzHkDxqE+bKzZPAKW+ydPqdGU3ugluRYgP6NlJ87ri5fzlfbaK7Cxw=="],
+    "@ax-design/scrollbar": ["@ax-design/scrollbar@0.4.1", "", { "dependencies": { "@ax-design/elevation": "^0.2.3", "@ax-design/scroll": "^0.2.1", "@ax-design/shape": "^0.3.0", "@ax-design/surface": "^0.4.3", "@ax-design/typed-om": "^0.3.0" } }, "sha512-cmpUuUIruw5xxqqsmA69aU11a+wFbR2Z3DyPs4WE/pETo1PiczAuH8+XTON8Qyyhh2aSzvrYdvco60T+2GhJkQ=="],
 
     "@ax-design/shape": ["@ax-design/shape@0.3.0", "", {}, "sha512-rvIpp8dSu7XI1VAFvll+Cl8IND1SALXSByGTFeCj6uY9IKdyt3uT2hnmbMp4F4t5dC0ot/Fe/WDvIUwzwYOWww=="],
 
-    "@ax-design/surface": ["@ax-design/surface@0.4.1", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/typed-om": "^0.3.0" } }, "sha512-CzNUjd9VO3nXPrhre19C4BgQtyovnv0sBNRzCkNTnrQoQjaQ/fN3tUTfBj+yPwEFseQ/AC864X5GT3trzMjGcQ=="],
+    "@ax-design/surface": ["@ax-design/surface@0.4.3", "", { "dependencies": { "@ax-design/shape": "^0.3.0", "@ax-design/typed-om": "^0.3.0" } }, "sha512-v09pG1bbTuInqKyraRn6UCcs48jxE9PCsUCl+rCodk9/362Ye2Pb7SuN7SF1Jmp3w+IKzwz+4vr96aDh0tIw8g=="],
 
     "@ax-design/tile": ["@ax-design/tile@0.1.2", "", { "dependencies": { "@ax-design/surface": "^0.4.1" } }, "sha512-67UbUdvi3Zq+eKZhinNdVMW80sJ3/+D0CCAoJE3YPEKDvVz3rWfztJiDfuXZPCm0yHEFxj2ITJkFs782Zw4kbQ=="],
 
