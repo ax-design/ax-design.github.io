@@ -31,7 +31,7 @@
     <p>
       The effects stay accessible: the reveal light shows borders only where the pointer is, shadows are only ever
       black and set by one depth, and reduced motion and forced colours are respected. The story of the project is in
-      <a href="https://roriri.one/2026/10/15/ax-design">this post</a>.
+      <a href="https://im.not.ci/ax-design/">this post</a>.
     </p>
   </Flow>
 
