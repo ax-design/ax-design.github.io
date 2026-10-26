@@ -3,9 +3,8 @@
    stay on the host, the look inputs and the shape go on the part of each state, and one layer is
    added by configuration: the track has `track-layers="scrollbar-fill acrylic"`,
    because WinUI's track fill IS the in-app acrylic (ScrollBarTrackFill = AcrylicInAppFillColorDefaultBrush).
-   The elements also carry hide="button:touch track:touch corner:touch" and, by default, no touch-input (the touch
-   indicator is the panning thumb alone, and takes no input; the Minimal variant sets touch-input), and the variant
-   select in the stage sets the variant (see below).
+   By default the elements take touch="indicator" (the panning thumb alone, which takes no input; the Minimal
+   variant sets touch="bar"), and the variant select in the stage sets the variant (see below).
 
    SOURCES, all MIT, microsoft/microsoft-ui-xaml, main:
    [SB]  controls/dev/CommonStyles/ScrollBar_themeresources.xaml (the Light dictionary, the template)

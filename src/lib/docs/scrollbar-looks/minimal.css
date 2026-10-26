@@ -3,19 +3,22 @@
    hidden (hide="button") and transparent. Dark ink on a light page and light ink on a dark one.
    The default look is Windows 8, so this file says everything a part takes from it: an outer rule
    replaces the default value of what it sets in every state, and the states that differ are
-   written again, in the order of the cascade (rest, hover, pressed). */
+   written again, in the order of the cascade (rest, hover, pressed).
+   Every size is a number of --minimal-unit, a fourteenth of the bar's thickness (the numbers are those
+   of a 14px bar), so the bar of any thickness is the same drawing scaled, as the default look is. */
 
 .minimal {
     --ax-scrollbar-thickness: 14px;
-    --ax-scrollbar-padding: 2px;
-    --ax-scrollbar-thumb-min-length: 32px;
+    --minimal-unit: calc(var(--ax-scrollbar-thickness) / 14);
+    --ax-scrollbar-padding: calc(var(--minimal-unit) * 2);
+    --ax-scrollbar-thumb-min-length: calc(var(--minimal-unit) * 32);
     --ax-scrollbar-button-length: auto;
     --ax-scrollbar-hotzone: 200%;
     /* States ease in 100ms, the bars fade by a time constant of 75ms and slide in 3px. */
     --ax-scrollbar-state-smoothing: 100ms;
     --ax-scrollbar-fade-in-duration: 0s;
     --ax-scrollbar-fade-out-duration: 0s;
-    --ax-scrollbar-slide-distance: 3px;
+    --ax-scrollbar-slide-distance: calc(var(--minimal-unit) * 3);
     --ax-scrollbar-card-delay: 0s;
     --ax-scrollbar-card-slide-duration: 250ms;
     --ax-scrollbar-card-slide-distance: 8px;
@@ -33,19 +36,19 @@
 /* Thumb: thin at rest, wide while the bar is engaged, hovered or pressed. */
 .minimal::part(thumb) {
     --ax-radius: 50%;
-    --ax-scrollbar-part-size: 4px;
+    --ax-scrollbar-part-size: calc(var(--minimal-unit) * 4);
     --ax-scrollbar-part-color: rgba(0, 0, 0, 0.4);
     --ax-scrollbar-part-border-color: transparent;
 }
 .minimal::part(thumb-engaged) {
-    --ax-scrollbar-part-size: 10px;
+    --ax-scrollbar-part-size: calc(var(--minimal-unit) * 10);
 }
 .minimal::part(thumb-hover) {
-    --ax-scrollbar-part-size: 10px;
+    --ax-scrollbar-part-size: calc(var(--minimal-unit) * 10);
     --ax-scrollbar-part-color: rgba(0, 0, 0, 0.6);
 }
 .minimal::part(thumb-pressed) {
-    --ax-scrollbar-part-size: 10px;
+    --ax-scrollbar-part-size: calc(var(--minimal-unit) * 10);
     --ax-scrollbar-part-color: rgba(0, 0, 0, 0.7);
 }
 
@@ -74,7 +77,7 @@
 /* Markers: dots that grow under the pointer; white on the thumb. */
 .minimal::part(marker) {
     --ax-radius: 50%;
-    --ax-scrollbar-part-size: 4px;
+    --ax-scrollbar-part-size: calc(var(--minimal-unit) * 4);
     --ax-scrollbar-part-thickness: auto;
     --ax-scrollbar-part-color: rgba(0, 0, 0, 0.45);
 }
@@ -82,7 +85,7 @@
     --ax-scrollbar-part-color: rgba(255, 255, 255, 0.9);
 }
 .minimal::part(marker-hover) {
-    --ax-scrollbar-part-size: 7px;
+    --ax-scrollbar-part-size: calc(var(--minimal-unit) * 7);
     --ax-scrollbar-part-color: rgba(0, 0, 0, 0.8);
 }
 
@@ -103,4 +106,38 @@
 }
 .minimal::part(card-exit) {
     transition-duration: 100ms;
+}
+
+@media (prefers-color-scheme: dark) {
+    .minimal::part(thumb) {
+        --ax-scrollbar-part-color: rgba(255, 255, 255, 0.4);
+    }
+    .minimal::part(thumb-hover) {
+        --ax-scrollbar-part-color: rgba(255, 255, 255, 0.6);
+    }
+    .minimal::part(thumb-pressed) {
+        --ax-scrollbar-part-color: rgba(255, 255, 255, 0.7);
+    }
+    .minimal::part(button) {
+        --ax-scrollbar-part-glyph-color: rgba(255, 255, 255, 0.5);
+    }
+    .minimal::part(button-hover) {
+        --ax-scrollbar-part-glyph-color: rgba(255, 255, 255, 0.7);
+    }
+    .minimal::part(button-pressed) {
+        --ax-scrollbar-part-glyph-color: rgba(255, 255, 255, 0.9);
+    }
+    .minimal::part(marker) {
+        --ax-scrollbar-part-color: rgba(255, 255, 255, 0.45);
+    }
+    .minimal::part(marker-on-thumb) {
+        --ax-scrollbar-part-color: rgba(0, 0, 0, 0.9);
+    }
+    .minimal::part(marker-hover) {
+        --ax-scrollbar-part-color: rgba(255, 255, 255, 0.8);
+    }
+    .minimal::part(card) {
+        --ax-scrollbar-part-color: rgb(43, 43, 43);
+        color: rgb(240, 240, 240);
+    }
 }
