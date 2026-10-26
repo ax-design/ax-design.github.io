@@ -33,11 +33,11 @@
     "@ax-design/pressure": "^0.2.2",
     "@ax-design/reveal-highlight": "^0.7.2",
     "@ax-design/scroll": "^0.2.1",
-    "@ax-design/scrollbar": "^0.4.2",
+    "@ax-design/scrollbar": "^0.4.3",
     "@ax-design/shape": "^0.3.0",
-    "@ax-design/surface": "^0.4.3",
+    "@ax-design/surface": "^0.4.4",
     "@ax-design/tile": "^0.1.2",
     "@ax-design/tile-group": "^0.2.4",
-    "@ax-design/typed-om": "^0.3.0"
+    "@ax-design/typed-om": "^0.3.1"
   }
 }
