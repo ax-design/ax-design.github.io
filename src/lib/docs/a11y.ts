@@ -330,7 +330,7 @@ ax-navigation-item { cursor: pointer; }`,
 
   scrollbar: example(
     [
-      'Keyboard: The viewport of ax-scroll-view takes focus with Tab, and the arrow, Page Up, Page Down, Home and End keys scroll it. The bars are not in the tab order: markers are for the pointer, so give links or buttons for the same places.',
+      'Keyboard: The viewport of ax-scroll-view takes focus with Tab while nothing inside it can take focus, and the arrow, Page Up, Page Down, Home and End keys scroll it. A view with links, buttons or fields adds no tab stop of its own: focus goes into the content, and the keys scroll from there. The bars are not in the tab order: markers are for the pointer, so give links or buttons for the same places.',
       'Screen readers: The bars and the cards are hidden from assistive technology. Name the view as a region, as in the code, so the content has a name when it takes focus.',
       'High contrast (forced colors): The overlay is not drawn, and the native scrollbars of the browser come back, so the bars stay visible.',
       'Reduced motion: The bars take their end state at once: no glide, no lag of the thumb, and the card does not move. The card closes by itself after a short delay.'

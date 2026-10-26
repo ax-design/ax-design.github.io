@@ -1,20 +1,155 @@
-import type { DocPage } from './types';
+import type { CodeBlock, DocPage } from './types';
+// The looks of the package demo, as they are shipped there. The examples apply them as they are and
+// the listings show them without their comments.
+import cyberCss from './scrollbar-looks/cyberpunk.css?raw';
+import minimalCss from './scrollbar-looks/minimal.css?raw';
+import win11Css from './scrollbar-looks/win11.css?raw';
 
-const text = 'Scrolling stays native: the wheel, the touch and the keys scroll the view, and find in page reaches the content.';
+// A look without its comments and empty lines, cut into listings of at most `lines` lines at a rule
+// boundary: a column of the page holds about forty lines beside a preview.
+function listing(css: string, lines = 26): CodeBlock[] {
+  const bare = css
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/[ \t]+$/gm, '')
+    .replace(/\n{2,}/g, '\n')
+    .trim()
+    .split(/\n(?=\S)/);
+  const blocks: CodeBlock[] = [];
+  let current: string[] = [];
+  let size = 0;
+  for (const rule of bare) {
+    const n = rule.split('\n').length;
+    if (size && size + n > lines) {
+      blocks.push({ language: 'css', source: current.join('\n') });
+      current = [];
+      size = 0;
+    }
+    current.push(rule);
+    size += n;
+  }
+  if (current.length) blocks.push({ language: 'css', source: current.join('\n') });
+  return blocks;
+}
 
-// Four sections with headings, long enough to scroll in the preview box.
-const sections = (headings: string[]) =>
-  headings.map((heading) => `<h2>${heading}</h2><p>${text}</p>`).join('');
+const paragraphs = [
+  'Scrolling stays native: the wheel, the touch and the keys scroll the view, and find in page reaches the content.',
+  'The bars are an overlay. They never take room from the content, and they show while the pointer moves over the view.',
+  'Every part of a bar is a shadow part: you style it with ::part(), or replace it with a kit.'
+];
 
-const headings = ['Introduction', 'Setup', 'Usage', 'Reference'];
+// Sections with a heading each, long enough to scroll in the preview box. `count` paragraphs follow
+// a heading.
+const article = (headings: string[], count = 2) =>
+  headings.map((heading, i) => `<h2>${heading}</h2>` + Array.from({ length: count }, (_, k) => `<p>${paragraphs[(i + k) % paragraphs.length]}</p>`).join('')).join('');
 
-const style = `
+const headings = ['Introduction', 'Setup', 'Usage', 'Styling', 'Markers', 'Reference'];
+
+// The white stage of the Windows 8 looks: the scroll view fills the preview box, and the content
+// keeps clear of the bar with the size the component writes on the view.
+const lightStyle = `
 .stage { position: absolute; inset: 0; background: #fff; color: #1b1b1b; }
-ax-scroll-view { position: absolute; inset: 0; --ax-scrollbar-thickness: 17px; }
-.body { padding: 16px; font: 13px/1.5 system-ui, sans-serif; }
-.body h2 { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
-.body p { margin: 0 0 18px; }
+ax-scroll-view { position: absolute; inset: 0; }
+.body { padding: 16px calc(var(--ax-scrollbar-vertical-size, 0px) + 14px) 16px 16px; font: 13px/1.5 "Segoe UI", system-ui, sans-serif; }
+.body h2 { margin: 0 0 6px; font-size: 18px; font-weight: 300; }
+.body p { margin: 0 0 16px; }
 `;
+
+const light = (attributes = '', headingList = headings, count = 2) =>
+  `<div class="stage"><ax-scroll-view${attributes}><div class="body">${article(headingList, count)}</div></ax-scroll-view></div>`;
+
+// Windows 11: a pale page whose swatches pass under the track, so the acrylic has something to blur.
+const swatches = '<div class="swatches"><span></span><span></span><span></span><span></span><span></span><span></span></div>';
+const win11Preview = `<div class="stage"><ax-scroll-view class="win11" data-variant="default" track-layers="scrollbar-fill acrylic" hide="button:touch track:touch corner:touch" indicator="auto" marker-selector="h2" marker-align="center"><div class="body">
+<h2>Acrylic track</h2><p>The track blurs what scrolls under it. The swatches pass under the bar to show it.</p>${swatches}
+<h2>Fluent</h2><p>One layer is added by configuration. The rest is the default parts, styled with ::part().</p>
+<h2>Variants</h2><p>Default hides the bar until the pointer is over it. Minimal is the thumb alone. Full never hides.</p>${swatches}
+<h2>Markers</h2><p>Dashes on the track mark the headings. Rest the pointer on one to read it.</p>${swatches}
+<h2>Done</h2><p>Scroll a little more.</p>
+</div></ax-scroll-view></div>`;
+
+const win11Style = `
+.stage { position: absolute; inset: 0; background: #f3f3f3; }
+ax-scroll-view { position: absolute; inset: 16px 0 16px 20px; }
+.body { font: 13px/1.5 "Segoe UI Variable", "Segoe UI", system-ui, sans-serif; color: #1b1b1b; }
+.body h2 { margin: 22px 0 4px; font-size: 18px; font-weight: 600; }
+.body h2:first-child { margin-top: 0; }
+.body p { margin: 0 34px 10px 0; }
+.swatches { display: grid; grid-template-columns: repeat(6, 1fr); height: 64px; margin: 4px 0 12px; }
+.swatches span:nth-child(1) { background: #0078d4; }
+.swatches span:nth-child(2) { background: #107c10; }
+.swatches span:nth-child(3) { background: #ffb900; }
+.swatches span:nth-child(4) { background: #d13438; }
+.swatches span:nth-child(5) { background: #8764b8; }
+.swatches span:nth-child(6) { background: #2d2d2d; }
+${win11Css}`;
+
+const cyberPreview = `<div class="stage"><ax-scroll-view class="cyber" snap touch-input hide="button" marker-selector="h2" marker-align="center"><div class="body">
+<h2>Shape</h2><p>Every part takes its outline from the Shape system: a corner shape and a radius, set on the part.</p>
+<h2>Bevel</h2><p>A bevel of radius r cuts r off along both sides of a corner. Two opposite corners are cut, the others stay square.</p>
+<h2>Diamonds</h2><p>The markers are squares with all four corners bevelled at the midpoint of their sides.</p>
+<h2>Glow</h2><p>The card is lit by the elevation layer, in a magenta <b>--elevation-color</b>.</p>
+<h2>Night</h2><p>Scroll on, and rest the pointer on a diamond.</p>
+</div></ax-scroll-view></div>`;
+
+const cyberStyle = `
+.stage { position: absolute; inset: 0; background: #07070f; }
+ax-scroll-view { position: absolute; inset: 16px 0 16px 20px; }
+.body { padding: 0 34px 0 0; font: 12px/1.65 ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace; color: #9fd8de; }
+.body h2 { margin: 22px 0 6px; font-size: 15px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: #3df0ff; text-shadow: 0 0 8px rgba(61, 240, 255, 0.5); }
+.body h2:first-child { margin-top: 0; }
+.body p { margin: 0 0 10px; }
+.body b { color: #ff4fe0; font-weight: 400; }
+${cyberCss}
+.cyber::part(thumb) { --ax-radius: var(--cyber-cut, 4px); }
+.cyber::part(card) { --elevation-color: var(--cyber-glow, rgba(255, 43, 214, 0.35)); }
+`;
+
+// A Windows XP window client: Tahoma on white, a table that is wider than the view so that both
+// bars and the corner show.
+const lunaPreview = (scheme: string) => `<div data-stage class="${scheme}"><ax-scroll-view kit="luna" snap touch-input vertical="always" horizontal="always" marker-selector="h3" marker-align="center"><div class="notes">
+<h3>Version 2.4</h3><p>The list view keeps its place when the window is resized. Selected rows stay selected.</p>
+<h3>Version 2.3</h3><p>Search results can be sorted by date or by name. The choice is remembered.</p>
+<h3>Table of values</h3>
+<pre>name          region    count  unit    owner
+north-depot   eastern    1204  crates  warehouse-a
+south-depot   western     877  crates  warehouse-b
+harbour-store coastal      56  pallets warehouse-c</pre>
+<h3>Version 2.2</h3><p>Fixed a case where the first row hid under the header after a scroll.</p>
+<h3>Version 2.1</h3><p>New option to keep the header row visible while the body scrolls.</p>
+<h3>Earlier versions</h3><p>Earlier notes are kept in the archive.</p>
+</div></ax-scroll-view></div>`;
+
+const lunaStyle = `
+[data-stage] { position: absolute; inset: 0; background: #fff; }
+ax-scroll-view { position: absolute; inset: 12px; --ax-scrollbar-card-delay: 500ms; }
+.notes { padding: 8px calc(var(--ax-scrollbar-vertical-size, 0px) + 6px) calc(var(--ax-scrollbar-horizontal-size, 0px) + 8px) 10px; font: 11px/1.5 Tahoma, Verdana, sans-serif; color: #000; }
+.notes h3 { margin: 12px 0 4px; font: bold 11px Tahoma, Verdana, sans-serif; }
+.notes h3:first-child { margin-top: 0; }
+.notes p { margin: 0 0 8px; }
+.notes pre { margin: 0 0 8px; width: max-content; padding-right: calc(var(--ax-scrollbar-vertical-size, 0px) + 6px); font: 11px/1.4 "Courier New", monospace; }
+`;
+
+// A scheme of the page's own, written as the README of the package does: tones and numbers.
+const mossStyle = `
+.luna-moss {
+  --luna-light: top-left; --luna-diagonal: 1; --luna-glint: 0;
+  --luna-face: #e4e6d4; --luna-disabled: #f0f0e6;
+  --luna-highlight: 1; --luna-shade: 0.72; --luna-gloss: 0.182; --luna-depth: 0.196; --luna-hot: 0.624; --luna-press: 0.675; --luna-etch: 0; --luna-relief: 1;
+  --luna-accent: #a9c98b; --luna-accent-light: #d3e6bf; --luna-accent-deep: #4a8a1f; --luna-glyph: #3f5230;
+}
+`;
+
+// Whether the readout of the accessibility example speaks of the tab stop of a viewport.
+const stop = (view: Element | null) => ((view as (HTMLElement & { viewport?: HTMLElement }) | null)?.viewport?.hasAttribute('tabindex') ? 'a tab stop (tabindex="0")' : 'not a tab stop, focus goes into the content');
+
+// The markers of the script example: a list of objects (and an element), which wins over the selector.
+const rulerStops = [
+  { id: 'start', label: 'Start', position: 0 },
+  { id: 'a', label: 'Result 1 (4 hits)', position: 320, data: { hits: 4 } },
+  { id: 'b', label: 'Result 2 (1 hit)', position: 640, data: { hits: 1 } },
+  { id: 'c', label: 'Result 3 (9 hits)', position: 900, data: { hits: 9 } },
+  { id: 'end', label: 'End', position: 1170 }
+];
 
 const page: DocPage = {
   slug: 'scrollbar',
@@ -23,73 +158,351 @@ const page: DocPage = {
   globalName: 'AxScrollbar',
   tagline: 'Scrollbars you style with CSS, for a container or for the whole page, with markers for the places in the content.',
   intro: [
-    'ax-scroll-view is a scroll container and ax-scrollbar draws the scrollbars of the page. The bars are an overlay over the content, and scrolling stays native: the wheel, touch, the keys, find in page and scrollIntoView work as usual.',
-    'The default look is the Windows 8 (Modern UI) scrollbar. Every part of it, the thumb, the buttons, the track, the markers and the hover card, is a shadow part that you style with ::part(), or replace with a kit.',
-    'Markers are ticks on the track for the places in the content, such as headings or search hits, and a card lists their labels when the pointer comes near.'
+    'ax-scroll-view is a scroll container and ax-scrollbar draws the scrollbars of the page. The bars are an overlay over the content, and scrolling stays native: the wheel, touch, the keys, find in page and scrollIntoView work as usual. The bars take no pointer events of their own: the component finds the bar under the pointer by geometry, so the content under a hidden bar keeps its hover and clicks.',
+    'The default look is the Windows 8 (Modern UI) scrollbar, drawn from the numbers of the Windows 8.1 XAML templates and scaled by one token, the thickness. Every part of it, the thumb, the buttons, the track, the markers and the hover card, is a shadow part. You can extend the component in three ways, and this page has an example of each: style the parts with ::part() (Minimal, Windows 11, Cyber Punk), add a layer by configuration (the acrylic track of Windows 11), or replace the parts with classes of your own, a kit (Windows XP).',
+    'Markers are ticks on the track for the places in the content, such as headings or search hits, and a card lists their labels when the pointer comes near. Move the pointer over a preview below to make its bars show: they fade out after a moment. Every look on this page is a stylesheet of the package demo, so what you see is what the package draws.'
   ],
   setup: "import { register } from '@ax-design/scrollbar';\nregister();",
   examples: [
     {
-      id: 'scroll-view',
-      title: 'Scroll view',
+      id: 'windows-8',
+      title: 'Windows 8, the default',
       description: [
-        'Wrap the content in ax-scroll-view and give it a height. The bars show while there is something to scroll, and fade out after a moment.',
-        'The thickness is a custom property. The vertical attribute decides when the bar shows: auto, always or hidden.'
+        'With no style at all the bars are the Windows 8 scrollbar: a 17px bar, a square thumb, 33px buttons with a chevron, a pale track, flat ticks for markers and a square card. Wrap the content in ax-scroll-view and give the element a height; put padding on the content, not on the element, and keep it clear of the bar with --ax-scrollbar-vertical-size, which the component writes on the view.',
+        'The drawing is sized from --ax-scrollbar-thickness: the thumb and the hovered marker fill the bar, and the buttons, the arrows and the markers are the same numbers scaled by thickness / 17px. Drag the slider to 8px, 17px and 24px and the whole bar follows. The hide attribute leaves parts out: a hidden part takes no room and no input. The markers are the headings, and a hover over one opens the card.'
       ],
-      preview: `<div class="stage"><ax-scroll-view vertical="auto"><div class="body">${sections(headings)}</div></ax-scroll-view></div>`,
-      style,
+      preview: light(' marker-selector="h2" marker-align="center" snap'),
+      style: lightStyle,
       controls: [
         { key: 'thickness', label: 'Thickness', type: 'range', min: 8, max: 24, step: 1, unit: 'px', default: 17, target: { kind: 'css', property: '--ax-scrollbar-thickness', selector: 'ax-scroll-view' } },
-        { key: 'vertical', label: 'Vertical bar', type: 'select', options: ['auto', 'always', 'hidden'], default: 'auto', target: { kind: 'attribute', attribute: 'vertical', selector: 'ax-scroll-view' } }
+        { key: 'hide', label: 'Hide', type: 'select', options: ['button:touch track:touch corner:touch', 'button', 'track', 'button track'], default: 'button:touch track:touch corner:touch', target: { kind: 'attribute', attribute: 'hide', selector: 'ax-scroll-view' } },
+        { key: 'click', label: 'Press on the track', type: 'select', options: ['page', 'jump'], default: 'page', target: { kind: 'attribute', attribute: 'track-click', selector: 'ax-scroll-view' } }
       ],
       code: [
-        { language: 'html', source: '<ax-scroll-view vertical="{{vertical}}" style="height: 420px">\n  <article>...</article>\n</ax-scroll-view>' },
-        { language: 'css', source: 'ax-scroll-view {\n  --ax-scrollbar-thickness: {{thickness}};\n}' }
+        { language: 'html', source: '<ax-scroll-view marker-selector="h2" hide="{{hide}}" track-click="{{click}}" style="height: 420px">\n  <article>\n    <h2>Introduction</h2>\n    ...\n  </article>\n</ax-scroll-view>' },
+        { language: 'css', source: 'ax-scroll-view {\n  --ax-scrollbar-thickness: {{thickness}};\n}\n\nax-scroll-view > article {\n  padding-right: var(--ax-scrollbar-vertical-size);\n}' }
       ]
     },
     {
-      id: 'markers',
-      title: 'Markers',
+      id: 'minimal',
+      title: 'Minimal: ::part() only',
       description: [
-        'With marker-selector, every matching element becomes a marker on the track: here each heading. Its label is its text. Press a marker to scroll it into the view, or hover it to read the labels.',
-        'Markers close to each other share one mark, and the card lists all of them. The alignment decides where a marker scrolls to: its center, or its start edge.'
+        'A whole new look with nothing but CSS on the default parts: a 4px capsule thumb that widens to 10px while the bar is engaged, round markers, no track and no buttons. Each part of the bar is a shadow part, and ::part(thumb) matches the thumb of both bars; the host tokens such as --ax-scrollbar-thickness go on the element or an ancestor, and the look inputs such as --ax-scrollbar-part-color and the shape properties of Surface go on the part.',
+        'The cascade rule: a rule of the page on ::part(x) wins over the part\'s own CSS whatever its specificity, and it replaces the default value of every property it sets, in every state of x. The default theme\'s state rules for that property stop applying, so restate the states that should differ, after the rule, in the order rest, current, on thumb, hover, pressed. That is why the thumb rule below is followed by thumb-engaged, thumb-hover and thumb-pressed. What a rule does not set stays the default\'s.'
       ],
-      preview: `<div class="stage"><ax-scroll-view marker-selector="h2" marker-align="center"><div class="body">${sections(headings)}</div></ax-scroll-view></div>`,
-      style,
+      preview: light(' class="minimal" hide="button" touch-input marker-selector="h2" marker-align="center"'),
+      style: `${lightStyle}\n${minimalCss}`,
       controls: [
-        { key: 'align', label: 'Marker alignment', type: 'select', options: ['center', 'start'], default: 'center', target: { kind: 'attribute', attribute: 'marker-align', selector: 'ax-scroll-view' } }
+        { key: 'thickness', label: 'Bar thickness', type: 'range', min: 8, max: 24, step: 1, unit: 'px', default: 14, target: { kind: 'css', property: '--ax-scrollbar-thickness', selector: 'ax-scroll-view' } },
+        { key: 'hotzone', label: 'Hot zone', type: 'range', min: 0, max: 400, step: 25, unit: '%', default: 200, target: { kind: 'css', property: '--ax-scrollbar-hotzone', selector: 'ax-scroll-view' } }
       ],
       code: [
-        { language: 'html', source: '<ax-scroll-view marker-selector="h2" marker-align="{{align}}" style="height: 420px">\n  <h2>Introduction</h2>\n  ...\n</ax-scroll-view>' },
+        { language: 'html', source: '<ax-scroll-view class="minimal" hide="button" touch-input marker-selector="h2">\n  ...\n</ax-scroll-view>' },
+        ...listing(minimalCss.replace('--ax-scrollbar-thickness: 14px;', '--ax-scrollbar-thickness: {{thickness}};').replace('--ax-scrollbar-hotzone: 200%;', '--ax-scrollbar-hotzone: {{hotzone}};'))
+      ]
+    },
+    {
+      id: 'windows-11',
+      title: 'Windows 11: ::part() and a layer',
+      description: [
+        'The WinUI 3 scrollbar: a 2px line at rest that grows into a 6px thumb, an acrylic track and arrow buttons under the pointer. It is the default parts styled with ::part(), and one layer added by configuration: track-layers="scrollbar-fill acrylic" names the layers the track draws with, in paint order, and the acrylic layer comes from @ax-design/acrylic. Naming layers replaces the list, so scrollbar-fill stays in it. The swatches pass under the track so that you can see the acrylic blur them.',
+        'The three variants differ in attributes, and the stylesheet reads data-variant for what attributes cannot set. Default hides the track and the buttons until the bar is engaged. Minimal is the thumb alone, with touch-input, shown by the pointer at the bar or by scrolling (indicator="near"). Full is the always-expanded bar of Settings, Accessibility (indicator="pinned").'
+      ],
+      preview: win11Preview,
+      style: win11Style,
+      controls: [
+        { key: 'variant', label: 'Variant', type: 'select', options: ['default', 'minimal', 'full'], default: 'default', target: { kind: 'attribute', attribute: 'data-variant', selector: 'ax-scroll-view' } }
+      ],
+      update: (root, values) => {
+        const variants: Record<string, { hide: string; touch: boolean; indicator: string }> = {
+          default: { hide: 'button:touch track:touch corner:touch', touch: false, indicator: 'auto' },
+          minimal: { hide: 'button track corner', touch: true, indicator: 'near' },
+          full: { hide: 'button:touch track:touch corner:touch', touch: false, indicator: 'pinned' }
+        };
+        const variant = variants[values.variant] ?? variants.default;
+        for (const view of root.querySelectorAll('ax-scroll-view')) {
+          view.setAttribute('hide', variant.hide);
+          view.setAttribute('indicator', variant.indicator);
+          view.toggleAttribute('touch-input', variant.touch);
+        }
+      },
+      code: [
+        { language: 'html', source: '<ax-scroll-view class="win11"\n  data-variant="{{variant}}"\n  track-layers="scrollbar-fill acrylic"\n  hide="..." indicator="..." touch-input>\n  ...\n</ax-scroll-view>' },
         {
           language: 'js',
-          source: "const view = document.querySelector('ax-scroll-view');\n\n// Cancel the jump to the marker and scroll to it yourself.\nview.addEventListener('markeractivate', (event) => {\n  event.preventDefault();\n});"
+          source:
+            "import { registerAcrylicLayer } from '@ax-design/acrylic';\nregisterAcrylicLayer();\n\n" +
+            '// What a variant sets as attributes; the rest is CSS.\n' +
+            'const variants = {\n' +
+            "  default: { hide: 'button:touch track:touch corner:touch', indicator: 'auto', touch: false },\n" +
+            "  minimal: { hide: 'button track corner', indicator: 'near', touch: true },\n" +
+            "  full: { hide: 'button:touch track:touch corner:touch', indicator: 'pinned', touch: false }\n" +
+            '};\n\n' +
+            "const view = document.querySelector('.win11');\n" +
+            "const variant = variants['{{variant}}'];\n" +
+            "view.dataset.variant = '{{variant}}';\n" +
+            "view.setAttribute('hide', variant.hide);\n" +
+            "view.setAttribute('indicator', variant.indicator);\n" +
+            "view.toggleAttribute('touch-input', variant.touch);"
+        },
+        {
+          language: 'css',
+          source:
+            '.win11 {\n  --ax-scrollbar-thickness: 12px;\n  --ax-scrollbar-button-length: 15px;\n  --ax-scrollbar-expand-delay: 400ms;\n  --ax-scrollbar-contract-delay: 500ms;\n  /* the acrylic of the track */\n  --acrylic-tint-color: #fcfcfc;\n  --acrylic-tint-opacity: 0.85;\n  --acrylic-blur: 30px;\n}\n\n' +
+            '/* 2px at rest, 6px engaged, hovered or pressed */\n.win11::part(thumb) {\n  --ax-radius: 50%;\n  --ax-scrollbar-part-size: 2px;\n  --ax-scrollbar-part-color: rgba(0, 0, 0, 0.447);\n}\n.win11::part(thumb-engaged),\n.win11::part(thumb-hover),\n.win11::part(thumb-pressed) {\n  --ax-scrollbar-part-size: 6px;\n}\n\n' +
+            '/* invisible until the bar is engaged */\n.win11::part(track) {\n  --ax-radius: 6px;\n  --ax-scrollbar-part-color: transparent;\n  --ax-scrollbar-part-opacity: 0;\n}\n.win11::part(track-engaged) {\n  --ax-scrollbar-part-opacity: 1;\n}'
         }
       ]
     },
     {
-      id: 'parts',
-      title: 'Styled with ::part()',
+      id: 'cyber-punk',
+      title: 'Cyber Punk: the Shape system',
       description: [
-        'Each part of the bar is styled with ::part(). A rule on a part replaces the default value of every property it sets, in every state of that part.',
-        'Here the thumb takes a color and a corner radius. The other parts keep the Windows 8 look.'
+        'Every part takes its outline from the Shape system of @ax-design/shape: a corner shape and a radius, set on the part. Here the thumb, the track, the corner and the card use --ax-corner-shape: bevel, which cuts the radius off along both sides of a corner, and only two opposite corners are cut: the other two are made square with the per-corner radii --ax-top-right-radius and --ax-bottom-left-radius.',
+        'The markers are diamonds: a bevel whose radius is 50% cuts each corner at the midpoint of its sides, at any size, and a part thickness of auto keeps the marker square as it grows. The glow of the card is the elevation layer: --elevation-depth is its reach and --elevation-color its colour, here magenta. No kit and no subclass: the bar is the default parts.'
       ],
-      preview: `<div class="stage"><ax-scroll-view><div class="body">${sections(headings)}</div></ax-scroll-view></div>`,
-      style: `${style}
-ax-scroll-view::part(thumb) {
-  --ax-radius: var(--thumb-radius, 4px);
-  --ax-scrollbar-part-color: var(--thumb-color, rgb(89, 89, 89));
-}
-`,
+      preview: cyberPreview,
+      style: cyberStyle,
       controls: [
-        { key: 'color', label: 'Thumb color', type: 'color', default: 'rgb(89, 89, 89)', target: { kind: 'css', property: '--thumb-color', selector: 'ax-scroll-view' } },
-        { key: 'radius', label: 'Thumb radius', type: 'range', min: 0, max: 8, step: 1, unit: 'px', default: 4, target: { kind: 'css', property: '--thumb-radius', selector: 'ax-scroll-view' } }
+        { key: 'cut', label: 'Cut of the thumb', type: 'range', min: 0, max: 8, step: 1, unit: 'px', default: 4, target: { kind: 'css', property: '--cyber-cut', selector: 'ax-scroll-view' } },
+        { key: 'glow', label: 'Glow of the card', type: 'color', alpha: true, default: 'rgba(255, 43, 214, 0.35)', target: { kind: 'css', property: '--cyber-glow', selector: 'ax-scroll-view' } }
       ],
       code: [
-        { language: 'html', source: '<ax-scroll-view style="height: 420px">...</ax-scroll-view>' },
+        { language: 'html', source: '<ax-scroll-view class="cyber" snap hide="button" marker-selector="h2">\n  ...\n</ax-scroll-view>' },
+        ...listing(cyberCss.replace('--ax-radius: 4px;', '--ax-radius: {{cut}};').replace('--elevation-color: rgba(255, 43, 214, 0.35);', '--elevation-color: {{glow}};'))
+      ]
+    },
+    {
+      id: 'windows-xp',
+      title: 'Windows XP: a kit',
+      description: [
+        'The third way is dependency injection. A kit replaces the parts themselves with classes of your own: each kind has a contract class that draws nothing, and a kit class extends it and carries its look in its own shadow CSS, so nothing of the default look has to be switched off. The Windows XP (Luna) scrollbar ships with the package as such a kit: raised thumb and arrow buttons with grip lines, an etched track, XP info tips and no fades.',
+        'Import it from the subpath, define it once, and pick it with kit="luna". Its colours are a scheme, a class on the scroll view or any ancestor: custom properties inherit into the parts. adoptLunaSchemes() adds the stylesheet of the seven schemes to the document once. Blue, Olive Green and Silver are the schemes of Windows XP.'
+      ],
+      preview: lunaPreview('luna-blue'),
+      style: lunaStyle,
+      controls: [
+        { key: 'scheme', label: 'Scheme', type: 'select', options: ['luna-blue', 'luna-olive', 'luna-silver', 'luna-purple', 'luna-orange', 'luna-pink', 'luna-gold'], default: 'luna-blue', target: { kind: 'attribute', attribute: 'class', selector: '[data-stage]' } }
+      ],
+      code: [
+        {
+          language: 'js',
+          source:
+            "import { register } from '@ax-design/scrollbar';\nimport { defineLunaKit, adoptLunaSchemes } from '@ax-design/scrollbar/kits/luna';\n\nregister();\ndefineLunaKit(); // defines the kit \"luna\"\nadoptLunaSchemes(); // adds the scheme classes to the document"
+        },
+        { language: 'html', source: '<div class="{{scheme}}">\n  <ax-scroll-view kit="luna" snap vertical="always" style="height: 420px">\n    ...\n  </ax-scroll-view>\n</div>' }
+      ]
+    },
+    {
+      id: 'luna-scheme',
+      title: 'Your own Luna scheme',
+      description: [
+        'A scheme is a class of custom properties, so a scheme of your own is a class that sets them and nothing else. The tones are colours: --luna-accent, --luna-accent-light and --luna-accent-deep for the thumb and the buttons, --luna-glyph for the arrows and the grip, --luna-face for the track and the corner, and --luna-disabled. The numbers are contrast, from 0 to 1: --luna-highlight, --luna-shade, --luna-gloss, --luna-depth, --luna-hot, --luna-press and --luna-etch.',
+        'Every colour of the parts is a tone with white and black laid over it by those numbers, so a new scheme needs its tones and the numbers of the scheme it resembles: copy a class of lunaSchemes and change them. This one is a green one. The controls write the tones onto the stage, over the class.'
+      ],
+      preview: lunaPreview('luna-moss'),
+      style: `${lunaStyle}\n${mossStyle}`,
+      controls: [
+        { key: 'accent', label: 'Accent', type: 'color', default: '#a9c98b', target: { kind: 'css', property: '--luna-accent', selector: '[data-stage]' } },
+        { key: 'deep', label: 'Accent, deep', type: 'color', default: '#4a8a1f', target: { kind: 'css', property: '--luna-accent-deep', selector: '[data-stage]' } },
+        { key: 'gloss', label: 'Gloss', type: 'range', min: 0, max: 0.5, step: 0.01, unit: '', default: 0.182, target: { kind: 'css', property: '--luna-gloss', selector: '[data-stage]' } }
+      ],
+      code: [
         {
           language: 'css',
-          source: 'ax-scroll-view::part(thumb) {\n  --ax-radius: {{radius}};\n  --ax-scrollbar-part-color: {{color}};\n}'
+          source:
+            '.luna-moss {\n  --luna-light: top-left; --luna-diagonal: 1; --luna-glint: 0;\n  --luna-face: #e4e6d4; --luna-disabled: #f0f0e6;\n  --luna-highlight: 1; --luna-shade: 0.72; --luna-gloss: {{gloss}};\n  --luna-depth: 0.196; --luna-hot: 0.624; --luna-press: 0.675;\n  --luna-etch: 0; --luna-relief: 1;\n  --luna-accent: {{accent}}; --luna-accent-light: #d3e6bf;\n  --luna-accent-deep: {{deep}}; --luna-glyph: #3f5230;\n}'
+        },
+        { language: 'html', source: '<div class="luna-moss">\n  <ax-scroll-view kit="luna">...</ax-scroll-view>\n</div>' }
+      ]
+    },
+    {
+      id: 'markers',
+      title: 'Markers and the card',
+      description: [
+        'With marker-selector, every matching element becomes a marker on the track: here each heading. Its id is the id of the element and its label is its text. The matches are read again when the content adds or removes nodes; after another kind of change call refreshMarkers(). Press a marker to scroll it into the view, or rest the pointer on it: after --ax-scrollbar-card-delay a card opens with the labels.',
+        'Markers closer than --ax-scrollbar-marker-spacing share one mark, and its card lists all of them, one per line. Raise the spacing and the nearest headings join. marker-align decides where a marker scrolls to and sits: its center or its start edge, and marker-axis puts the markers on the horizontal bar. Style the card on ::part(card), with real CSS for its text.'
+      ],
+      preview: `<div class="stage"><ax-scroll-view marker-selector="h2" marker-align="center" snap><div class="body">${article(['Introduction', 'Setup', 'Install', 'Usage', 'Notes'], 1)}<h2>Tips</h2><h2>Tricks</h2>${article(['Reference'], 3)}</div></ax-scroll-view></div>`,
+      style: lightStyle,
+      controls: [
+        { key: 'align', label: 'Marker alignment', type: 'select', options: ['center', 'start'], default: 'center', target: { kind: 'attribute', attribute: 'marker-align', selector: 'ax-scroll-view' } },
+        { key: 'spacing', label: 'Marker spacing', type: 'range', min: 0, max: 80, step: 2, unit: 'px', default: 6, target: { kind: 'css', property: '--ax-scrollbar-marker-spacing', selector: 'ax-scroll-view' } },
+        { key: 'delay', label: 'Card delay', type: 'range', min: 0, max: 1000, step: 50, unit: 'ms', default: 400, target: { kind: 'css', property: '--ax-scrollbar-card-delay', selector: 'ax-scroll-view' } }
+      ],
+      code: [
+        { language: 'html', source: '<ax-scroll-view marker-selector="h2" marker-align="{{align}}" style="height: 420px">\n  <h2>Introduction</h2>\n  ...\n</ax-scroll-view>' },
+        { language: 'css', source: 'ax-scroll-view {\n  --ax-scrollbar-marker-spacing: {{spacing}};\n  --ax-scrollbar-card-delay: {{delay}};\n}\n\nax-scroll-view::part(card) {\n  --ax-scrollbar-part-color: #fff;\n  --ax-scrollbar-part-border-color: #ccc;\n  --ax-border-width: 1px;\n  --elevation-depth: 8;\n  color: #222;\n  font: 12px/1.4 system-ui;\n  padding: 6px 10px;\n}' }
+      ]
+    },
+    {
+      id: 'markers-property',
+      title: 'Markers from script',
+      description: [
+        'The markers property takes elements, a NodeList, marker objects, or a mix, and it wins over marker-selector while it holds a list, even an empty one; null gives control back to the selector. A marker object has an id, a label, a position in scroll coordinates (or an element, whose start edge is the position), an axis and data of your own for a kit\'s card. Use it for places that are not elements, such as search hits.',
+        'The component dispatches markerenter, markerleave and markeractivate on the element. They bubble, and detail has the marker of the mark and all the markers that share it. Cancel markeractivate with preventDefault() to do the jump yourself. The line under the view shows the last event.'
+      ],
+      preview: `<div class="stage"><ax-scroll-view class="ruler" marker-selector="h2"><div class="body"><h2 style="top: 0">Heading A</h2><h2 style="top: 410px">Heading B</h2><h2 style="top: 800px">Heading C</h2></div></ax-scroll-view><output class="log">no marker event yet</output></div>`,
+      style: `${lightStyle}
+ax-scroll-view { inset: 0 0 28px 0; }
+.body { position: relative; height: 1200px; padding: 0; background: repeating-linear-gradient(#f2f2f2 0 100px, #fff 100px 200px); }
+.body h2 { position: absolute; left: 16px; margin: 0; }
+.log { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; padding: 0 12px; display: flex; align-items: center; background: #1b1b1b; color: #fff; font: 12px "Segoe UI", system-ui, sans-serif; }
+`,
+      controls: [
+        { key: 'source', label: 'Markers from', type: 'select', options: ['markers property', 'marker-selector'], default: 'markers property', target: { kind: 'attribute', attribute: 'data-source', selector: 'ax-scroll-view' } }
+      ],
+      setup: (root) => {
+        const view = root.querySelector('ax-scroll-view') as HTMLElement & { markers: unknown };
+        const log = root.querySelector('.log') as HTMLElement;
+        const show = (event: Event) => {
+          const { marker, markers } = (event as CustomEvent<{ marker: { label: string }; markers: unknown[] }>).detail;
+          log.textContent = `${event.type}: ${marker.label}${markers.length > 1 ? ` (+${markers.length - 1})` : ''}`;
+        };
+        const events = ['markerenter', 'markerleave', 'markeractivate'];
+        for (const name of events) view.addEventListener(name, show);
+        return () => {
+          for (const name of events) view.removeEventListener(name, show);
+        };
+      },
+      update: (root, values) => {
+        const view = root.querySelector('ax-scroll-view') as HTMLElement & { markers: unknown };
+        view.markers = values.source === 'markers property' ? rulerStops : null;
+      },
+      code: [
+        {
+          language: 'js',
+          source:
+            "const view = document.querySelector('ax-scroll-view');\n\n" +
+            "// '{{source}}' is in charge.\n" +
+            'view.markers = [\n' +
+            "  { id: 'start', label: 'Start', position: 0 },\n" +
+            "  { id: 'a', label: 'Result 1 (4 hits)', position: 320, data: { hits: 4 } },\n" +
+            "  { id: 'setup', label: 'Setup', element: document.getElementById('setup') },\n" +
+            "  document.getElementById('summary')\n" +
+            '];\n' +
+            'view.markers = null; // back to marker-selector'
+        },
+        {
+          language: 'js',
+          source:
+            "view.addEventListener('markeractivate', (event) => {\n  // Cancel the jump and scroll to it yourself.\n  event.preventDefault();\n  const { marker, markers } = event.detail;\n  view.scrollTo({ top: marker.position, behavior: 'smooth' });\n});"
+        }
+      ]
+    },
+    {
+      id: 'touch',
+      title: 'Touch',
+      description: [
+        'Without touch-input, the default, the touch indicator is a panning indicator: a thumb alone that shows the position, the bars take no touch input and the page scrolls under a finger as usual. With touch-input, a finger that comes down on a bar or in its hot zone belongs to the bar, and decides after 5px: steeply along the bar it drags, relative to where it is; across it nothing more happens. A quick tap glides to the tapped place, or activates the marker under it.',
+        'The hovered marker and its card stay for --ax-scrollbar-touch-idle-delay after the finger lifts. Style the touch indicator on its own with the attribute the component writes, ax-scroll-view[last-indicator="touch"]::part(thumb), which stays set while the bars fade out. Try this with a finger: with a pointer the example behaves as the mouse indicator does.'
+      ],
+      preview: light(' touch-input marker-selector="h2" indicator="auto"'),
+      style: lightStyle,
+      controls: [
+        { key: 'touch', label: 'Touch input', type: 'toggle', default: true, target: { kind: 'attribute', attribute: 'touch-input', selector: 'ax-scroll-view' } },
+        { key: 'indicator', label: 'Indicator', type: 'select', options: ['auto', 'near', 'pinned'], default: 'auto', target: { kind: 'attribute', attribute: 'indicator', selector: 'ax-scroll-view' } },
+        { key: 'idle', label: 'Touch idle delay', type: 'range', min: 100, max: 3000, step: 100, unit: 'ms', default: 500, target: { kind: 'css', property: '--ax-scrollbar-touch-idle-delay', selector: 'ax-scroll-view' } }
+      ],
+      code: [
+        { language: 'html', source: '<ax-scroll-view {{touch}} indicator="{{indicator}}" marker-selector="h2">\n  ...\n</ax-scroll-view>' },
+        { language: 'css', source: 'ax-scroll-view {\n  --ax-scrollbar-touch-idle-delay: {{idle}};\n}\n\n/* the panning indicator: a thin thumb */\nax-scroll-view[last-indicator="touch"]::part(thumb) {\n  --ax-scrollbar-part-size: 2px;\n}' }
+      ]
+    },
+    {
+      id: 'focus',
+      title: 'Focus and assistive technology',
+      description: [
+        'The bars are for the pointer. They and the cards are aria-hidden, have no role and are not in the tab order, so the accessibility tree shows only the content; give links or buttons for the same destinations as the markers. The element has no role or label of its own: add them as for any element, as role="region" and aria-label below.',
+        'The viewport is a real scroll container, and takes focus (tabindex="0") only while nothing inside it can. A text-only region stays scrollable by keys, and a region with links, buttons or fields adds no tab stop of its own: focus goes into the content and the arrow and page keys scroll from there. The choice follows changes of the content and of the attributes that decide focus: disable the button and the second view becomes a tab stop.',
+        'With forced colors (forced-colors: active) the overlay is hidden and the native scrollbars come back; so does printing. With prefers-reduced-motion: reduce there is no glide and no thumb lag, parts change look at once, and the default card drops its movement and closes by itself. The Accessibility column of this page shows both.'
+      ],
+      preview: `<div class="stage"><div class="pane"><ax-scroll-view role="region" aria-label="Text only"><div class="body"><h2>Text only</h2>${article(['A'], 3)}</div></ax-scroll-view><output class="one"></output></div><div class="pane"><ax-scroll-view role="region" aria-label="With a button"><div class="body"><h2>With a button</h2><p><button>Open</button></p>${article(['B'], 2)}</div></ax-scroll-view><output class="two"></output></div></div>`,
+      style: `${lightStyle}
+.stage { display: grid; grid-template-rows: 1fr 1fr; }
+.pane { position: relative; border-bottom: 1px solid #ddd; }
+.pane ax-scroll-view { inset: 0 0 24px 0; }
+output { position: absolute; left: 0; right: 0; bottom: 0; height: 24px; padding: 0 12px; display: flex; align-items: center; background: #1b1b1b; color: #fff; font: 11px "Segoe UI", system-ui, sans-serif; }
+.body h2 { font-size: 15px; }
+.body p { margin-bottom: 10px; }
+`,
+      controls: [{ key: 'disabled', label: 'Disable the button', type: 'toggle', default: false, target: { kind: 'attribute', attribute: 'disabled', selector: 'button' } }],
+      setup: (root) => {
+        const views = root.querySelectorAll('ax-scroll-view');
+        const report = () => {
+          (root.querySelector('.one') as HTMLElement).textContent = `Text only: ${stop(views[0])}`;
+          (root.querySelector('.two') as HTMLElement).textContent = `With a button: ${stop(views[1])}`;
+        };
+        report();
+        const observer = new MutationObserver(() => requestAnimationFrame(report));
+        for (const view of views) {
+          const viewport = (view as HTMLElement & { viewport?: HTMLElement }).viewport;
+          if (viewport) observer.observe(viewport, { attributes: true, attributeFilter: ['tabindex'] });
+        }
+        return () => observer.disconnect();
+      },
+      code: [
+        { language: 'html', source: '<ax-scroll-view role="region" aria-label="Release notes" style="height: 420px">\n  <article>...</article>\n</ax-scroll-view>' },
+        {
+          language: 'css',
+          source:
+            '/* Forced colors and print bring the native bars back, so keep\n   no extra room for the overlay then. */\n@media (forced-colors: active) {\n  ax-scroll-view > article {\n    padding-right: 0;\n  }\n}\n\n/* Reduced motion: the component drops its own motion; drop yours. */\n@media (prefers-reduced-motion: reduce) {\n  ax-scroll-view::part(card) {\n    transition: none;\n  }\n}'
+        }
+      ]
+    },
+    {
+      id: 'own-kit',
+      title: 'Writing your own kit',
+      description: [
+        'A kit is a named set of part classes: defineScrollbarKit(name, kit) takes a class for any of thumb, button, track, trackPiece, corner, marker and card, and a hide default. Each class extends the contract class of its kind, which draws nothing (AxScrollbarThumb and the others), or the default class of the kind (AxScrollbarDefaultThumb), and carries its look in its own shadow root as static styles. The bars keep what they decide: where a part sits along the bar, and how long it is. The kinds a kit leaves out are the default classes.',
+        'A class reads its state in the CSS as attributes of the host: :host([hover]), :host([pressed]), :host([axis="horizontal"]), :host([direction="start"]), :host([disabled]) and :host([rtl]), or in script as partState with stateChanged(). The thumb below is one class, and the colour and the inset are custom properties that inherit into it. An author\'s ::part() rules still win over a kit\'s own CSS.',
+        'The type check: a class that does not extend the contract class of its kind throws a TypeError, before anything is defined, so a bad kit leaves nothing behind; defining a name twice throws too. In TypeScript the fields of ScrollbarKit are typed as PartClass, so a wrong class does not compile. The line under the view is the error the page got when it defined a kit with a thumb that is no thumb.'
+      ],
+      preview: `<div class="stage"><ax-scroll-view kit="slab" marker-selector="h2"><div class="body">${article(['Slab', 'Kit', 'Thumb'], 2)}</div></ax-scroll-view><output class="log"></output></div>`,
+      style: `${lightStyle}
+ax-scroll-view { inset: 0 0 40px 0; }
+.log { position: absolute; left: 0; right: 0; bottom: 0; height: 40px; padding: 0 12px; display: flex; align-items: center; background: #1b1b1b; color: #fff; font: 11px/1.3 "Segoe UI", system-ui, sans-serif; }
+`,
+      controls: [
+        { key: 'color', label: 'Thumb colour', type: 'color', default: 'rgb(136, 136, 136)', target: { kind: 'css', property: '--slab-color', selector: 'ax-scroll-view' } },
+        { key: 'inset', label: 'Thumb inset', type: 'range', min: 0, max: 7, step: 1, unit: 'px', default: 3, target: { kind: 'css', property: '--slab-inset', selector: 'ax-scroll-view' } }
+      ],
+      setup: (root) => {
+        const log = root.querySelector('.log') as HTMLElement;
+        let gone = false;
+        import('@ax-design/scrollbar').then(({ AxScrollbarThumb, defineScrollbarKit, hasScrollbarKit }) => {
+          if (gone) return;
+          if (!hasScrollbarKit('slab')) {
+            class SlabThumb extends AxScrollbarThumb {
+              static styles = `
+                :host { background: var(--slab-color, #888); margin: 0 var(--slab-inset, 3px); }
+                :host([axis="horizontal"]) { margin: var(--slab-inset, 3px) 0; }
+                :host([pressed]) { background: rgb(0, 120, 215); }
+              `;
+            }
+            defineScrollbarKit('slab', { thumb: SlabThumb, hide: '' });
+          }
+          try {
+            defineScrollbarKit('slab-bad', { thumb: class {} as never });
+          } catch (error) {
+            log.textContent = `${(error as Error).name}: ${(error as Error).message}`;
+          }
+        });
+        return () => {
+          gone = true;
+        };
+      },
+      code: [
+        {
+          language: 'js',
+          source:
+            "import { AxScrollbarThumb, defineScrollbarKit } from '@ax-design/scrollbar';\n\nclass SlabThumb extends AxScrollbarThumb {\n  static styles = `\n    :host { background: {{color}}; margin: 0 {{inset}}; }\n    :host([axis=\"horizontal\"]) { margin: {{inset}} 0; }\n    :host([pressed]) { background: rgb(0, 120, 215); }\n  `;\n}\n\ndefineScrollbarKit('slab', { thumb: SlabThumb, hide: '' });"
+        },
+        { language: 'html', source: '<ax-scroll-view kit="slab" style="height: 420px">...</ax-scroll-view>' },
+        {
+          language: 'js',
+          source:
+            "import { isPartClass } from '@ax-design/scrollbar';\n\nisPartClass(SlabThumb, 'thumb'); // true\n\n// The type check: not a thumb.\ndefineScrollbarKit('bad', { thumb: class {} });\n// TypeError, and nothing is defined"
         }
       ]
     }
@@ -97,29 +510,66 @@ ax-scroll-view::part(thumb) {
   reference: [
     { name: 'vertical', kind: 'attribute', type: 'auto | always | hidden', default: 'auto', description: 'auto: the bar shows while there is something to scroll. always: it always shows, disabled when nothing scrolls. hidden: it never shows.' },
     { name: 'horizontal', kind: 'attribute', type: 'auto | always | hidden', default: 'auto', description: 'As vertical, for the horizontal bar.' },
-    { name: 'hide', kind: 'attribute', type: 'list of parts', default: 'button:touch track:touch corner:touch', description: 'The parts a look leaves out: thumb, button, track, track-piece, corner, marker, card. Add :mouse or :touch to hide a part for one indicator only. Even an empty value overrides the default.' },
-    { name: 'indicator', kind: 'attribute', type: 'auto | near | pinned', default: 'auto', description: 'auto: the bars show on every move over the scroller. near: only for a pointer at a bar, or while scrolling. pinned: the bars always show.' },
-    { name: 'track-click', kind: 'attribute', type: 'page | jump', default: 'page', description: 'A press on the track pages toward the pointer, or with jump scrolls to the pointer.' },
-    { name: 'touch-input', kind: 'attribute', type: 'true | false', default: 'false', description: 'A finger on a bar drags it and a tap on the track glides to the tapped place. Without it touch only shows a panning indicator.' },
-    { name: 'suspended', kind: 'attribute', type: 'true | false', default: 'false', description: 'Fades the bars out and makes them ignore input, for a lightbox over the page.' },
-    { name: 'kit', kind: 'attribute', type: 'kit name', description: 'Builds the parts with the kit of that name, made with defineScrollbarKit().' },
-    { name: 'marker-selector', kind: 'attribute', type: 'CSS selector', description: 'Makes a marker for each matching element, labelled with its text.' },
+    { name: 'hide', kind: 'attribute', type: 'list of parts', default: 'button:touch track:touch corner:touch', description: 'The parts a look leaves out: thumb, button, track (with its pieces), track-piece, corner, marker, card. A hidden part takes no room and no input. Add :mouse or :touch to hide a part for one indicator only. Even an empty value overrides the default, and a kit gives its own default.' },
+    { name: 'indicator', kind: 'attribute', type: 'auto | near | pinned', default: 'auto', description: 'auto: the bars show on every move over the scroller. near: only for a pointer at a bar, or while scrolling (always so on ax-scrollbar). pinned: the bars always show.' },
+    { name: 'track-click', kind: 'attribute', type: 'page | jump', default: 'page', description: 'A press on the track pages toward the pointer, repeating while held, or with jump scrolls to the pointer.' },
+    { name: 'touch-input', kind: 'attribute', type: 'boolean', default: 'false', description: 'A finger on a bar drags it and a tap on the track glides to the tapped place. Without it touch only shows a panning indicator.' },
+    { name: 'snap', kind: 'attribute', type: 'boolean', default: 'false', description: 'Thumb edges and markers on whole device pixels, for looks that reproduce a desktop control. Leave it off for vector looks.' },
+    { name: 'suspended', kind: 'attribute', type: 'boolean', default: 'false', description: 'Fades the bars out and makes them ignore input, for a lightbox over the page. Remove it and they show again.' },
+    { name: 'kit', kind: 'attribute', type: 'kit name', description: 'Builds the parts with the kit of that name, made with defineScrollbarKit() or defineLunaKit(). A change of kit rebuilds the bars, and a kit may be defined after the element.' },
+    { name: 'marker-selector', kind: 'attribute', type: 'CSS selector', description: 'Makes a marker for each matching element, with the id of the element and its text as the label.' },
+    { name: 'marker-axis', kind: 'attribute', type: 'vertical | horizontal', default: 'vertical', description: 'The axis of the markers made from elements.' },
     { name: 'marker-align', kind: 'attribute', type: 'center | start', default: 'center', description: 'Where a marker scrolls to, and where it sits on the track.' },
-    { name: '--ax-scrollbar-thickness', kind: 'property', type: '<length>', default: '17px', description: 'The thickness of a bar.' },
+    { name: 'thumb-layers', kind: 'attribute', type: 'layer names', description: 'The layers a kind of part draws with, in paint order. Likewise button-layers, track-layers, track-piece-layers, corner-layers, marker-layers and card-layers. Defaults: scrollbar-fill, scrollbar-fill scrollbar-glyph for a button, scrollbar-fill elevation for a card. Naming layers replaces the list.' },
+    { name: 'indicator-state', kind: 'attribute', type: 'none | mouse | touch', description: 'Written by the component, for you to select on: the indicator that shows.' },
+    { name: 'last-indicator', kind: 'attribute', type: 'mouse | touch', description: 'Written by the component: the indicator shown, or shown last while the bars fade out. Style per indicator with this, so the look stays during the fade.' },
+    { name: 'vertical-state', kind: 'attribute', type: 'list of states', description: 'Written by the component, also horizontal-state: a list of visible, disabled, hover, near, engaged and pressed. Select with ~=.' },
+    { name: '--ax-scrollbar-thickness', kind: 'property', type: '<length>', default: '17px', description: 'The thickness of a bar. The default look is sized from it: the thumb and the hovered marker fill the bar, the rest scales with thickness / 17px.' },
+    { name: '--ax-scrollbar-padding', kind: 'property', type: '<length>', default: '0px', description: 'Space between the edges of the bar and its buttons and track.' },
+    { name: '--ax-scrollbar-thumb-min-length', kind: 'property', type: '<length>', default: '48px', description: 'The shortest thumb (17px while the touch indicator shows).' },
+    { name: '--ax-scrollbar-button-length', kind: 'property', type: '<length> | auto', default: '33/17 of the thickness', description: 'The length of a button along the axis; auto is a square. Not registered: unset, it is the proportion.' },
+    { name: '--ax-scrollbar-hotzone', kind: 'property', type: '<length> | <percentage>', default: '0px', description: 'The depth of the hot zone inside the outer edge of a bar; percentages are of the thickness. A bar with a hot zone shows when the pointer comes near it, and takes the near state.' },
     { name: '--ax-scrollbar-line', kind: 'property', type: '<length>', default: '40px', description: 'The scroll of a button press. A track page is the view minus one line.' },
     { name: '--ax-scrollbar-idle-delay', kind: 'property', type: '<time>', default: '3s', description: 'How long the mouse indicator lingers before it fades out.' },
-    { name: '--ax-scrollbar-hotzone', kind: 'property', type: '<length> | <percentage>', default: '0px', description: 'The depth of the hot zone inside the outer edge of a bar. A bar with a hot zone shows when the pointer comes near it.' },
-    { name: '--ax-scrollbar-vertical-size', kind: 'property', type: '<length>', default: '0px', description: 'Written by the component on the host, read-only: the thickness of the vertical bar, 0px while it is not shown. Use it to keep the content clear of the bar.' },
-    { name: '--ax-scrollbar-z-index', kind: 'property', type: '<integer>', default: '2147483000', description: 'The stacking of ax-scrollbar. Read it with var(); a page with modals can put the bars under them.' },
-    { name: '::part(thumb)', kind: 'property', type: 'Shadow part', description: 'The part you drag. The other parts are button, track, track-piece, corner, marker, card and scrollbar-vertical or scrollbar-horizontal, with states such as thumb-hover and thumb-pressed.' },
-    { name: '--ax-scrollbar-part-color', kind: 'property', type: '<color>', default: 'transparent', description: 'The fill color of a part. Set it on ::part(), where it is not inherited.' },
-    { name: 'markers', kind: 'property', type: 'ScrollMarker[] | null', default: 'null', description: 'Markers set from script, which win over marker-selector while they hold a list. null gives control back to the selector.' },
-    { name: 'refresh()', kind: 'method', type: '() => void', description: 'Lays the bars out on the next frame. Call it after you change a token from script.' },
+    { name: '--ax-scrollbar-touch-idle-delay', kind: 'property', type: '<time>', default: '500ms', description: 'How long the touch indicator, its hovered marker and its card linger.' },
+    { name: '--ax-scrollbar-scroll-smoothing', kind: 'property', type: '<time>', default: '50ms', description: 'The glide of the scrolls the bars start. A wheel, touch, key or script scroll stops it.' },
+    { name: '--ax-scrollbar-thumb-smoothing', kind: 'property', type: '<time>', default: '100ms', description: 'The lag of the drawn thumb, track pieces and markers behind the scroll.' },
+    { name: '--ax-scrollbar-repeat-delay', kind: 'property', type: '<time>', default: '250ms', description: 'The wait before a held press repeats. --ax-scrollbar-repeat-interval (50ms) is the time between repeats.' },
+    { name: '--ax-scrollbar-expand-delay', kind: 'property', type: '<time>', default: '0s', description: 'How long the bar must be engaged before parts take engaged. --ax-scrollbar-contract-delay (0s) is how long it must be idle before they leave it.' },
+    { name: '--ax-scrollbar-state-smoothing', kind: 'property', type: '<time>', default: '0s', description: 'Colour and size change on hover, press and engaged. A time constant: 63% of the way after one.' },
+    { name: '--ax-scrollbar-fade-smoothing', kind: 'property', type: '<time>', default: '75ms', description: 'The fade of the parts when the bars show or hide.' },
+    { name: '--ax-scrollbar-fade-in-duration', kind: 'property', type: '<time>', default: '250ms', description: 'A linear fade in, and --ax-scrollbar-fade-out-duration (167ms) out; a card fades with them. 0s leaves it to the fade smoothing.' },
+    { name: '--ax-scrollbar-slide-smoothing', kind: 'property', type: '<time>', default: '160ms', description: 'The slide of parts in from the outer edge.' },
+    { name: '--ax-scrollbar-slide-distance', kind: 'property', type: '<length>', default: '0px', description: 'How far a hidden part sits toward the outer edge; negative slides from the content side.' },
+    { name: '--ax-scrollbar-marker-spacing', kind: 'property', type: '<length>', default: '6px', description: 'Markers closer than this share one mark.' },
+    { name: '--ax-scrollbar-marker-reach', kind: 'property', type: '<length>', default: '12px', description: 'How far from the center of a marker the pointer still hits it.' },
+    { name: '--ax-scrollbar-card-gap', kind: 'property', type: '<length>', default: '12px', description: 'The distance between a card and the bar.' },
+    { name: '--ax-scrollbar-card-delay', kind: 'property', type: '<time>', default: '400ms', description: 'The wait on a marker before the first card opens.' },
+    { name: '--ax-scrollbar-card-slide-duration', kind: 'property', type: '<time>', default: '367ms', description: 'The slide of an opening card. --ax-scrollbar-card-slide-distance (12px) is how far it slides; 0px for none.' },
+    { name: '--ax-scrollbar-vertical-size', kind: 'property', type: '<length>', default: '0px', description: 'Written by the component on the host, read-only, with --ax-scrollbar-horizontal-size: the thickness of the bar that is shown, 0px while it is not. Use it to keep the content clear of the bar.' },
+    { name: '--ax-scrollbar-z-index', kind: 'property', type: '<integer>', default: '2147483000', description: 'The stacking of ax-scrollbar. Not registered, read with var(); a page with modals can put the bars under them.' },
+    { name: '::part(thumb)', kind: 'property', type: 'shadow part', description: 'The part you drag. The others are scrollbar, scrollbar-vertical, scrollbar-horizontal, button (-start, -end), track, track-piece (-start, -end), corner, marker, card and card-content, and viewport and content on ax-scroll-view. ::part(thumb) matches both axes, ::part(thumb-vertical) one, and a list matches a part with all the names: ::part(marker-on-thumb marker-hover).' },
+    { name: '::part(thumb-hover)', kind: 'property', type: 'state part', description: 'States of every kind, as <kind>-hover, -pressed, -engaged and -disabled, plus marker-current, marker-on-thumb and for the card card-enter, card-open, card-exit, card-forward, card-backward, card-first and card-swap. Also set as attributes on the part element: hover, pressed, engaged, disabled, rtl, on-thumb, current, axis, direction.' },
+    { name: '--ax-scrollbar-part-color', kind: 'property', type: '<color>', default: 'transparent', description: 'The fill colour of a part. Set it on ::part(), where it is registered, typed and not inherited. --ax-scrollbar-part-border-color (transparent) is its border and --ax-scrollbar-part-glyph-color (transparent) the arrow of a button.' },
+    { name: '--ax-scrollbar-part-size', kind: 'property', type: '<length>', default: '0px', description: 'The size across the bar: the thickness of the thumb, the width of a marker. --ax-scrollbar-part-thickness (auto, a dot) is the size of a marker along the bar.' },
+    { name: '--ax-scrollbar-part-opacity', kind: 'property', type: '<number>', default: '1', description: 'The opacity of a part while the bars are shown.' },
+    { name: '--ax-scrollbar-part-align', kind: 'property', type: '<number>', default: '0.5', description: 'Where the thumb sits across the bar: 0 the inner edge, 1 the outer edge. Not animated.' },
+    { name: '--ax-scrollbar-part-fill-clip', kind: 'property', type: 'border-box | padding-box', default: 'border-box', description: 'Whether the fill stops at the inner edge of the border.' },
+    { name: '--ax-scrollbar-part-lines', kind: 'property', type: '<number>', default: '2', description: 'The lines a label of the card may take.' },
+    { name: '--ax-scrollbar-glyph-shape', kind: 'property', type: 'chevron | triangle', description: 'The arrow of a button, set on ::part(button) with --ax-scrollbar-part-glyph-scale (1), --ax-scrollbar-glyph-width, -height, -thickness, -offset and -corner-radius.' },
+    { name: 'markers', kind: 'property', type: 'ScrollMarker[] | null', default: 'null', description: 'Markers set from script: elements, a NodeList, marker objects (id, label, axis, position, element, data), or a mix. They win over marker-selector while they hold a list; null gives control back to the selector.' },
+    { name: 'viewport', kind: 'property', type: 'HTMLElement', description: 'ax-scroll-view only: the element that really scrolls. The view has the scroll API of an element, scrollTop, scrollLeft, scrollHeight, scrollWidth, scrollTo(), scrollBy() and scroll(), acting on it, and dispatches scroll and scrollend itself.' },
+    { name: 'refresh()', kind: 'method', type: '() => void', description: 'Lays the bars out on the next frame. A change of a token applies without it; call it for other changes you made from script.' },
     { name: 'refreshMarkers()', kind: 'method', type: '() => void', description: 'Collects and measures the markers again on the next frame, after a change the component cannot see.' },
-    { name: 'defineScrollbarKit()', kind: 'method', type: '(name: string, kit: ScrollbarKit) => void', description: 'Defines a kit that replaces some parts with classes of your own. A kit is used by name with the kit attribute.' },
-    { name: 'markeractivate', kind: 'event', type: 'CustomEvent', description: 'A press on a marker released without moving. Cancelable: preventDefault() stops the jump to the marker. detail has marker and markers.' },
-    { name: 'markerenter', kind: 'event', type: 'CustomEvent', description: 'The pointer moves onto a marker.' },
-    { name: 'markerleave', kind: 'event', type: 'CustomEvent', description: 'The pointer leaves the last marker it was on.' }
+    { name: 'register()', kind: 'method', type: '() => void', description: 'Defines ax-scroll-view, ax-scrollbar, the default parts, the scrollbar-fill, scrollbar-glyph and elevation layers and ax-surface. Safe to call more than once.' },
+    { name: 'defineScrollbarKit()', kind: 'method', type: '(name: string, kit: ScrollbarKit) => void', description: 'Defines a kit by name, used with the kit attribute. A class that does not extend the contract class of its kind throws a TypeError; defining a name twice throws. hasScrollbarKit(name) looks one up.' },
+    { name: 'AxScrollbarThumb', kind: 'method', type: 'contract class', description: 'Contract classes draw nothing: AxScrollbarThumb, AxScrollbarButton, AxScrollbarTrack, AxScrollbarTrackPiece, AxScrollbarCorner, AxScrollbarMarker and AxScrollbarCard. Default classes are AxScrollbarDefault plus the kind, the Windows 8 look. AxScrollbarPart is the base of all, and isPartClass(cls, kind) tests a class.' },
+    { name: 'static styles', kind: 'property', type: 'string', description: 'On a part class: CSS in the shadow root of the part, reading its state as :host([hover]), :host([pressed]), :host([axis="vertical"]), :host([direction="start"]), :host([disabled]) and :host([rtl]). partState and stateChanged(prev, next) are the same in script.' },
+    { name: 'defineLunaKit()', kind: 'method', type: '() => void', description: 'From @ax-design/scrollbar/kits/luna: defines the kit "luna", the Windows XP scrollbar. adoptLunaSchemes(root = document) adopts the stylesheet of the schemes once into a document or a shadow root, and lunaSchemes is that stylesheet as a string.' },
+    { name: '.luna-blue', kind: 'property', type: 'scheme class', description: 'The schemes: luna-blue, luna-olive, luna-silver, luna-purple, luna-orange, luna-pink and luna-gold, on the scroll view or any ancestor. A scheme sets the tones --luna-accent, -accent-light, -accent-deep, --luna-glyph, --luna-face and --luna-disabled, the numbers --luna-highlight, -shade, -gloss, -depth, -hot, -press and -etch, --luna-light (top-left or top), and --luna-diagonal and --luna-glint (0 or 1).' },
+    { name: 'markeractivate', kind: 'event', type: 'CustomEvent', description: 'A press on a marker released with under 4px of movement. Cancelable: preventDefault() stops the jump to the marker. detail is { marker, markers }.' },
+    { name: 'markerenter', kind: 'event', type: 'CustomEvent', description: 'The pointer moves onto a marker. detail is { marker, markers }, the markers sharing the mark.' },
+    { name: 'markerleave', kind: 'event', type: 'CustomEvent', description: 'The pointer leaves the last marker it was on; moving straight to another fires markerenter only.' }
   ]
 };
 

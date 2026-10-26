@@ -17,7 +17,7 @@ function lift() {
 }
 
 async function load(): Promise<void> {
-  const [reveal, acrylic, elevation, pressure, surface, tile, tiles, scroll, scrollbar, navigation] = await Promise.all([
+  const [reveal, acrylic, elevation, pressure, surface, tile, tiles, scroll, scrollbar, luna, navigation] = await Promise.all([
     import('@ax-design/reveal-highlight'),
     import('@ax-design/acrylic'),
     import('@ax-design/elevation'),
@@ -27,6 +27,7 @@ async function load(): Promise<void> {
     import('@ax-design/tile-group'),
     import('@ax-design/scroll'),
     import('@ax-design/scrollbar'),
+    import('@ax-design/scrollbar/kits/luna'),
     import('@ax-design/navigation')
   ]);
   // Layers first, then the elements that use them.
@@ -42,5 +43,9 @@ async function load(): Promise<void> {
   tiles.register();
   scroll.register();
   scrollbar.register();
+  // The Windows XP kit of the Scrollbar page (kit="luna") and the stylesheet of its colour schemes,
+  // adopted into the document once.
+  if (!scrollbar.hasScrollbarKit('luna')) luna.defineLunaKit();
+  luna.adoptLunaSchemes();
   (navigation as { register?: () => void }).register?.();
 }

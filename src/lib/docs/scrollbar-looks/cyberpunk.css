@@ -1,0 +1,173 @@
+/* Cyber Punk scrollbar on the DEFAULT parts: no kit, no subclass. It exists to show the Shape system:
+   every part takes its corner shape from --ax-corner-shape and its cut from --ax-radius (set on the
+   part), and the default look draws the fill and the border on that outline. A bevel of radius r cuts
+   r off along both sides of each corner, and only the top-left and bottom-right corners are cut: the
+   others are set square with the per-corner radius properties (--ax-{corner}-radius, on the part). No
+   arrow buttons. Colours: a near-black ground with a cyan scale for the bar and a magenta scale for the
+   markers. Each part is styled on the part with ::part(); the bar's tokens stay on the host. The elements
+   carry hide="button": the arrow buttons are there (hide="") for whoever wants them. */
+
+.cyber {
+    /* Bar: 16px, the thumb 3px from the edge. */
+    --ax-scrollbar-thickness: 16px;
+    --ax-scrollbar-padding: 3px;
+
+    /* Thumb: a long bar with two opposite corners cut. Cyan at rest, white-hot cyan hovered, magenta
+       while dragged; the border goes from none to magenta to white. */
+    --ax-scrollbar-thumb-min-length: 40px;
+
+    /* Buttons (hidden by hide="button"; shown with hide=""): squares cut like the thumb, cyan arrows that
+       turn magenta when pressed. */
+    --ax-scrollbar-button-length: 16px;
+
+    /* Motion: quick and hard-edged. */
+    --ax-scrollbar-state-smoothing: 40ms;
+    --ax-scrollbar-slide-distance: 6px;
+    --ax-scrollbar-fade-in-duration: 0s;
+    --ax-scrollbar-fade-out-duration: 0s;
+
+    /* The bar shows for a pointer within twice its width. */
+    --ax-scrollbar-hotzone: 200%;
+
+    /* Card: a near-black plate with a cut corner, a magenta edge and a magenta glow. */
+    --ax-scrollbar-card-delay: 150ms;
+    --ax-scrollbar-card-slide-duration: 250ms;
+    --ax-scrollbar-card-slide-distance: 8px;
+}
+
+.cyber::part(thumb),
+.cyber::part(button),
+.cyber::part(track),
+.cyber::part(corner),
+.cyber::part(marker),
+.cyber::part(card) {
+    --ax-scrollbar-part-fill-clip: border-box;
+}
+
+/* The track is a faint cyan glass, with two cut corners. */
+.cyber::part(track) {
+    --ax-scrollbar-part-color: rgba(0, 229, 255, 0.08);
+    --ax-radius: 5px;
+    --ax-corner-shape: bevel;
+    --ax-top-right-radius: 0px;
+    --ax-bottom-left-radius: 0px;
+}
+
+/* Thumb: a long bar with two opposite corners cut. Cyan at rest, white-hot cyan hovered, magenta
+   while dragged; the border goes from none to magenta to white. */
+.cyber::part(thumb) {
+    --ax-scrollbar-part-size: 8px;
+    --ax-radius: 4px;
+    --ax-corner-shape: bevel;
+    --ax-top-right-radius: 0px;
+    --ax-bottom-left-radius: 0px;
+    --ax-border-width: 1px;
+    --ax-scrollbar-part-color: #12a9c6;
+    --ax-scrollbar-part-border-color: rgba(0, 229, 255, 0);
+}
+.cyber::part(thumb-hover) {
+    --ax-scrollbar-part-size: 10px;
+    --ax-scrollbar-part-color: #3df0ff;
+    --ax-scrollbar-part-border-color: #b8fbff;
+}
+.cyber::part(thumb-pressed) {
+    --ax-scrollbar-part-size: 10px;
+    --ax-scrollbar-part-color: #ff2bd6;
+    --ax-scrollbar-part-border-color: #ffd0f6;
+}
+
+/* Buttons: squares cut like the thumb. The arrow: a 6 x 4 chevron with 1.6px arms, centred in the button. */
+.cyber::part(button) {
+    --ax-radius: 3px;
+    --ax-corner-shape: bevel;
+    --ax-top-right-radius: 0px;
+    --ax-bottom-left-radius: 0px;
+    --ax-border-width: 1px;
+    --ax-scrollbar-part-color: rgba(0, 229, 255, 0.1);
+    --ax-scrollbar-part-border-color: rgba(0, 229, 255, 0.4);
+    --ax-scrollbar-part-glyph-color: #12a9c6;
+    --ax-scrollbar-glyph-width: 6px;
+    --ax-scrollbar-glyph-height: 4px;
+    --ax-scrollbar-glyph-thickness: 1.6px;
+    --ax-scrollbar-glyph-offset: auto;
+}
+.cyber::part(button-hover) {
+    --ax-scrollbar-part-color: rgba(0, 229, 255, 0.28);
+    --ax-scrollbar-part-border-color: #3df0ff;
+    --ax-scrollbar-part-glyph-color: #b8fbff;
+}
+.cyber::part(button-pressed) {
+    --ax-scrollbar-part-color: #ff2bd6;
+    --ax-scrollbar-part-border-color: #ffd0f6;
+    --ax-scrollbar-part-glyph-color: #1a0014;
+}
+
+/* Corner: the track's cut, with the cyan glass colour. */
+.cyber::part(corner) {
+    --ax-radius: 5px;
+    --ax-corner-shape: bevel;
+    --ax-top-right-radius: 0px;
+    --ax-bottom-left-radius: 0px;
+    --ax-scrollbar-part-color: rgba(0, 229, 255, 0.1);
+}
+
+/* Markers: diamonds. A bevel whose radius is half the marker's side cuts each corner at the
+   midpoint of its sides, and 50% is half of the shorter side at every size. The thickness is
+   auto, so it follows the size and the marker stays a square turned on its corner when it
+   grows. Magenta on the track, darker on the thumb (where the size is not wider than the
+   thumb: 8px at rest and when current, 10px hovered, as the thumb is), a size larger when current
+   and larger still hovered. */
+.cyber::part(marker) {
+    --ax-scrollbar-part-size: 7px;
+    --ax-scrollbar-part-thickness: auto;
+    --ax-radius: 50%;
+    --ax-corner-shape: bevel;
+    --ax-scrollbar-part-color: #c4309f;
+    /* The engaged look of the original (the marker state model: the bar is engaged while the thumb or a
+       marker is hovered, the thumb is dragged, or the pointer is in the hot zone): idle the diamonds are dim,
+       the section on screen is stronger, and the whole set comes to full while the bar is engaged. A hovered
+       diamond is engaged, so it is at full. On the thumb they are always full. */
+    --ax-scrollbar-part-opacity: 0.5;
+}
+.cyber::part(marker-engaged) {
+    --ax-scrollbar-part-opacity: 1;
+}
+.cyber::part(marker-current) {
+    --ax-scrollbar-part-size: 8px;
+    --ax-scrollbar-part-color: #ff4fe0;
+    --ax-scrollbar-part-opacity: 0.8;
+}
+.cyber::part(marker-on-thumb) {
+    --ax-scrollbar-part-color: #04222b;
+    --ax-scrollbar-part-opacity: 1;
+}
+.cyber::part(marker-hover) {
+    --ax-scrollbar-part-size: 10px;
+    --ax-scrollbar-part-color: #fff;
+}
+.cyber::part(marker-on-thumb marker-hover) {
+    --ax-scrollbar-part-color: #fff;
+}
+
+/* Card: the plate, the magenta edge and the glow (the magenta elevation colour; the depth stays the
+   elevation's). Real CSS for its text and box. */
+.cyber::part(card) {
+    --ax-scrollbar-part-color: #0c0a1f;
+    --ax-scrollbar-part-border-color: #ff2bd6;
+    --ax-border-width: 1px;
+    --ax-radius: 8px;
+    --ax-corner-shape: bevel;
+    --ax-top-right-radius: 0px;
+    --ax-bottom-left-radius: 0px;
+    --elevation-depth: 8;
+    color: #b8fbff;
+    font-family: "Share Tech Mono", ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    max-width: 240px;
+    transition: opacity 150ms linear, transform 250ms cubic-bezier(0.1, 0.9, 0.2, 1);
+    padding: 7px 13px 8px;                /* 6 12 7 inside the 1px border (the card's padding includes its border) */
+    --elevation-color: rgba(255, 43, 214, 0.35);
+}
+.cyber::part(card-exit) {
+    transition-duration: 100ms;
+}

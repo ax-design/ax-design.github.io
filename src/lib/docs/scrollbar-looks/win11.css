@@ -1,0 +1,347 @@
+/* Windows 11 (WinUI 3, Light theme) scrollbar on the DEFAULT parts: no kit, no subclass. The default
+   look of the parts draws it, and each part is styled on the part with ::part(): the bar's tokens
+   stay on the host, the look inputs and the shape go on the part of each state, and one layer is
+   added by configuration: the track has `track-layers="scrollbar-fill acrylic"`,
+   because WinUI's track fill IS the in-app acrylic (ScrollBarTrackFill = AcrylicInAppFillColorDefaultBrush).
+   The elements also carry hide="button:touch track:touch corner:touch" and, by default, no touch-input (the touch
+   indicator is the panning thumb alone, and takes no input; the Minimal variant sets touch-input), and the variant
+   select in the stage sets the variant (see below).
+
+   SOURCES, all MIT, microsoft/microsoft-ui-xaml, main:
+   [SB]  controls/dev/CommonStyles/ScrollBar_themeresources.xaml (the Light dictionary, the template)
+   [CT]  controls/dev/CommonStyles/Common_themeresources_any.xaml (Light: the Fluent colour tokens)
+   [AB]  controls/dev/Materials/Acrylic/AcrylicBrush_themeresources.xaml (Light) and AcrylicBrush.h
+   [TT]  controls/dev/CommonStyles/ToolTip_themeresources.xaml
+   [AS]  controls/dev/AnnotatedScrollBar/AnnotatedScrollBar_themeresources.xaml and AnnotatedScrollBar.xaml, .cpp
+   [CR]  controls/dev/CommonStyles/CornerRadius_themeresources.xaml
+   [DS]  dxaml/xcp/components/graphics/inc/DropShadowRecipe.h, dxaml/xcp/dxaml/lib/ToolTip_Partial.cpp
+   [TM]  dxaml/test/resources/masters/Controls_Button_ButtonIntegrationTests_ValidateAccentButtonUIElementTree.Light.master.xml
+
+   COLOUR TOKENS (Light, [CT]); a Color is #AARRGGBB, written here as rgba():
+     ControlStrongFillColorDefault   #72000000 = rgba(0, 0, 0, 0.447)
+     TextFillColorSecondary          #9E000000 = rgba(0, 0, 0, 0.620)
+     TextFillColorPrimary            #E4000000 = rgba(0, 0, 0, 0.894)
+     SurfaceStrokeColorFlyout        #0F000000 = rgba(0, 0, 0, 0.059)
+     SubtleFillColorTransparent      #00FFFFFF
+     TextOnAccentFillColorPrimary    #FFFFFF
+     AccentFillColorDefault          SystemAccentColorDark1 = #005A9E: the Windows default accent (#0078D4)
+                                     with its Dark1 shade, as the WinUI test master [TM] resolves it
+     AccentFillColorSecondary / Tertiary: the same colour at Opacity 0.9 / 0.8 ([CT] brushes)
+
+   GEOMETRY ([SB] template, vertical bar; the horizontal one is the same turned). The numbers in
+   the template are measured on the thumb's box, whose Rectangle strokes it 6px (ScrollBarThumbStrokeThickness)
+   in a transparent brush: the fill is the box deflated by half of it, 3px on every side.
+     bar                    ScrollBarSize 12 -> thickness 12px, no padding
+     thumb, collapsed       ScrollBarVerticalThumbMinWidth 8 - 6 = 2px, centred (TranslateTransform X = ScrollBarThumbOffset 2)
+     thumb, expanded        ScrollBarSize 12 - 6 = 6px, centred (X = 0)
+     thumb, length          MinHeight ScrollBarVerticalThumbMinHeight 30 - 6 = 24px
+     thumb, ends            3px in from the thumb's box (the same stroke): the buttons are 12 + 3 = 15px long here
+     track                  a Rectangle over all five rows, buttons included, RadiusX/Y = ScrollBarCornerRadius 3 x 2 = 6px,
+                            a pill of the 12px bar; here the track part reaches it under the 15px buttons (see ::part(track-vertical))
+     arrow                  FontIcon, ScrollBarButtonArrowIconFontSize 8, the Segoe Fluent Icons caret (U+EDDC, U+EDDA ...):
+                            drawn here as the default glyph layer's triangle, rounded. The font is not in the repository: the
+                            size (7 x 4, corners of 1px) is an owner design: rounded triangle; the Segoe Fluent glyph was not measurable.
+                            Its centre is 8px from the outer end of the button: Padding ScrollBarVerticalDecreaseMargin 0,4,0,0
+                            in a 12px button (the glyph box 6.5..9.5px from the outer end), so 5.5px from the track end of the 15px one.
+     arrow, pressed         ScrollBarButtonArrowScalePressed 0.875 */
+
+.win11 {
+    /* Bar and parts: the geometry above. */
+    --ax-scrollbar-thickness: 12px;                       /* [SB] ScrollBarSize */
+    --ax-scrollbar-padding: 0px;
+    --ax-scrollbar-thumb-min-length: 24px;                /* [SB] ScrollBarVerticalThumbMinHeight 30 - ScrollBarThumbStrokeThickness 6 */
+    --ax-scrollbar-button-length: 15px;                   /* [SB] ScrollBarSize 12 + the 3px inset of the thumb */
+
+    /* The track's acrylic: AcrylicInAppFillColorDefaultBrush [AB, Light]: TintColor #FCFCFC, TintOpacity 0.0,
+       TintLuminosityOpacity 0.85, FallbackColor #F9F9F9; AcrylicBrush.h: blur radius 30, saturation 1.25,
+       noise opacity 0.02. The layer has no luminosity blend: the tint is the luminosity colour at its opacity,
+       which for a backdrop with little colour is the same. */
+    --acrylic-tint-color: #fcfcfc;
+    --acrylic-tint-opacity: 0.85;
+    --acrylic-fallback-color: #f9f9f9;
+    --acrylic-blur: 30px;
+    --acrylic-saturate: 125%;
+    --acrylic-brightness: 100%;
+    --acrylic-noise-opacity: 0.02;
+
+    /* Timing and motion of the bar: the expand and contract delays, the fades and the smoothing of
+       the states. */
+    --ax-scrollbar-expand-delay: 400ms;                   /* [SB] ScrollBarExpandBeginTime 00:00:00.40 */
+    --ax-scrollbar-contract-delay: 500ms;                 /* [SB] ScrollBarContractBeginTime 00:00:00.50 */
+    --ax-scrollbar-fade-in-duration: 83ms;                /* [SB] ScrollBarOpacityChangeDuration 00:00:00.083 */
+    --ax-scrollbar-fade-out-duration: 83ms;
+    --ax-scrollbar-fade-smoothing: 0s;
+    /* The size is a 167ms spline (ScrollBarExpandDuration, ScrollBarContractDuration, KeySpline 0,0,0,1).
+       The exponential approach with a time constant of 35ms is its fit: both are at 45% after 17ms and
+       at 95% after about 105ms. Not a WinUI value: the shape is. */
+    --ax-scrollbar-state-smoothing: 35ms;
+    --ax-scrollbar-slide-distance: 0px;                   /* the bar does not slide, it fades */
+    --ax-scrollbar-idle-delay: 2s;                        /* [SB] ScrollBarContractDelay 00:00:02 (not used in this XAML; the ScrollViewer's) */
+    --ax-scrollbar-hotzone: 100%;                         /* the bar itself: it expands under the pointer, not near it */
+
+    /* Card: the ToolTip [TT] as the AnnotatedScrollBar's detail tooltip [AS]. */
+    --ax-scrollbar-card-delay: 0s;                        /* [AS] the tooltip opens as the pointer moves (SetToolTipIsOpen) */
+    --ax-scrollbar-card-slide-duration: 0ms;              /* the tooltip does not move */
+    --ax-scrollbar-card-slide-distance: 0px;
+}
+
+.win11::part(thumb),
+.win11::part(button),
+.win11::part(track),
+.win11::part(corner),
+.win11::part(marker),
+.win11::part(card) {
+    --ax-scrollbar-part-fill-clip: border-box;
+}
+
+/* Thumb: 2px collapsed and 6px expanded, in every state. Its border is transparent, its colour
+   ControlStrongFillColorDefault in every state. */
+.win11::part(thumb) {
+    --ax-radius: 50%;                                     /* [SB] ScrollBarCornerRadius 3, x 8 for the thumb: a pill at any size */
+    --ax-border-width: 0px;
+    --ax-scrollbar-part-size: 2px;                        /* [SB] collapsed: ScrollBarVerticalThumbMinWidth 8 - 6 */
+    --ax-scrollbar-part-color: rgba(0, 0, 0, 0.447);      /* ScrollBarThumbFill, ...PointerOver, ...Pressed, ScrollBarThumbBackground and ScrollBarPanningThumbBackground all name it */
+}
+.win11::part(thumb-engaged) {
+    --ax-scrollbar-part-size: 6px;                        /* [SB] Expanded: ScrollBarSize 12 - 6 */
+}
+/* Hovered and pressed the thumb has no size of its own, only the bar's: it is as wide as when expanded. A
+   part's size is a length, so the expanded width is written out here, and not as a keyword. Its colour is the
+   one of the rule above in every state. */
+.win11::part(thumb-hover) {
+    --ax-scrollbar-part-size: 6px;
+}
+.win11::part(thumb-pressed) {
+    --ax-scrollbar-part-size: 6px;
+}
+
+/* The track's fill is the acrylic layer (below), so the fill layer draws nothing. The track and the buttons
+   are there from the start but transparent (Opacity 0): they appear when the bar expands, in
+   ScrollBarOpacityChangeDuration (83ms, linear) after ScrollBarExpandBeginTime (400ms), and go in the same
+   time after ScrollBarContractBeginTime (500ms). The thumb is shown (Opacity 1) as soon as the indicator is. */
+.win11::part(track) {
+    --ax-radius: 6px;                                     /* [SB] ScrollBarCornerRadius 3, x 2 for the track */
+    --ax-border-width: 0px;                               /* [SB] ScrollBarTrackBorderThemeThickness 0 */
+    --ax-scrollbar-part-color: transparent;
+    --ax-scrollbar-part-opacity: 0;
+}
+.win11::part(track-engaged) {
+    --ax-scrollbar-part-opacity: 1;
+}
+/* The track spans the whole bar: it reaches 15px past the track area at both ends, under the buttons. */
+.win11::part(track-vertical) {
+    top: -15px;
+    bottom: -15px;
+}
+.win11::part(track-horizontal) {
+    left: -15px;
+    right: -15px;
+}
+/* The corner draws nothing. */
+.win11::part(corner) {
+    --ax-scrollbar-part-color: transparent;
+}
+
+/* The buttons are SubtleFillColorTransparent in every state (ScrollBarButtonBackground, ...PointerOver, ...Pressed). The arrows:
+   ScrollBarButtonArrowForeground = ControlStrongFillColorDefault; PointerOver and Pressed = TextFillColorSecondary.
+   Pressed also scales it to 0.875, at once (a discrete key frame). */
+.win11::part(button) {
+    --ax-border-width: 0px;
+    --ax-scrollbar-part-color: transparent;
+    --ax-scrollbar-part-glyph-color: rgba(0, 0, 0, 0.447);
+    --ax-scrollbar-part-opacity: 0;
+    --ax-scrollbar-glyph-shape: triangle;
+    --ax-scrollbar-glyph-width: 7px;                 /* owner design: rounded triangle; the Segoe Fluent glyph was not measurable */
+    --ax-scrollbar-glyph-height: 4px;
+    --ax-scrollbar-glyph-corner-radius: 1px;
+    --ax-scrollbar-glyph-offset: 5.5px;              /* [SB] ScrollBarVerticalDecreaseMargin 0,4,0,0 */
+}
+.win11::part(button-engaged) {
+    --ax-scrollbar-part-opacity: 1;
+}
+.win11::part(button-hover) {
+    --ax-scrollbar-part-glyph-color: rgba(0, 0, 0, 0.62);
+}
+.win11::part(button-pressed) {
+    --ax-scrollbar-part-glyph-color: rgba(0, 0, 0, 0.62);
+    --ax-scrollbar-part-glyph-scale: 0.875;               /* [SB] ScrollBarButtonArrowScalePressed */
+}
+
+/* Markers (our design, owner revision B9.1) after the AnnotatedScrollBar [AS], whose line is a ThumbHeight 3
+   (ThumbCornerRadius 1.5) pill in AccentFillColorDefault, read at our scale: a dash across the bar, radius
+   1px, in AccentFillColorDefault at full opacity in every state on the track; the state shows in the size,
+   not in fading. Collapsed bar: 4 x 2. Engaged: 6 x 2, the current one 8 x 2, hovered 10 x 3, pressed 8 x 3.
+   On the thumb they are white (TextOnAccentFillColorPrimary), exactly as wide as the expanded thumb (6px)
+   so they cut across it cleanly, 3px tall while hovered, and hidden while the bar is collapsed: see below. */
+.win11::part(marker) {
+    --ax-radius: 1px;
+    --ax-scrollbar-part-thickness: 2px;
+    --ax-scrollbar-part-size: 4px;
+    --ax-scrollbar-part-color: #005a9e;                   /* AccentFillColorDefault, every state on the track */
+}
+.win11::part(marker-engaged) {
+    --ax-scrollbar-part-size: 6px;
+}
+.win11::part(marker-current) {
+    --ax-scrollbar-part-size: 8px;
+}
+.win11::part(marker-on-thumb) {
+    --ax-scrollbar-part-color: #fff;                      /* TextOnAccentFillColorPrimary */
+    --ax-scrollbar-part-size: 6px;                        /* the expanded thumb: ScrollBarSize 12 - 6 */
+}
+.win11::part(marker-hover) {
+    --ax-scrollbar-part-size: 10px;
+    --ax-scrollbar-part-thickness: 3px;
+}
+.win11::part(marker-on-thumb marker-hover) {
+    --ax-scrollbar-part-color: #fff;
+    --ax-scrollbar-part-size: 6px;
+    --ax-scrollbar-part-thickness: 3px;
+}
+.win11::part(marker-pressed) {
+    --ax-scrollbar-part-size: 8px;
+    --ax-scrollbar-part-thickness: 3px;
+}
+
+/* Card: the ToolTip [TT] as the AnnotatedScrollBar's detail tooltip [AS]. */
+.win11::part(card) {
+    --ax-scrollbar-part-color: #f9f9f9;                   /* [TT] ToolTipBackgroundBrush = AcrylicInAppFillColorDefault: its FallbackColor [AB]; a card has no backdrop to blur here */
+    --ax-scrollbar-part-border-color: rgba(0, 0, 0, 0.059);   /* [TT] ToolTipBorderBrush = SurfaceStrokeColorFlyout */
+    --ax-border-width: 1px;                               /* [TT] ToolTipBorderThemeThickness */
+    --ax-radius: 4px;                                     /* [TT] CornerRadius = ControlCornerRadius [CR] */
+    --elevation-depth: 8;
+    color: rgba(0, 0, 0, 0.894);                          /* [TT] ToolTipForeground = TextFillColorPrimary */
+    font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;   /* [TT] ContentControlThemeFontFamily */
+    font-size: 12px;                                      /* [TT] ToolTipContentThemeFontSize */
+    padding: 7px 10px 9px;                                /* [TT] ToolTipBorderPadding 9,6,9,8 (left, top, right, bottom), inside the 1px border: the card's padding includes its border */
+    max-width: 360px;                                     /* [AS] AnnotatedScrollBarTooltipMaxWidth */
+    --elevation-color: rgba(0, 0, 0, 0.137);              /* [DS] ToolTip: ThemeShadow, Translation.Z 16: elevation 8, Light: opacity min(0.08 + 0.06, 0.14) = 0.14 -> alpha 35/255, blur 8, offset 4 (the default card's 0 4px 8px) */
+}
+
+/* Collapsed bar (not the Full variant, whose thumb is never a bare line; neither bar engaged: the pointer is not on a bar, its thumb or a marker): the markers on the
+   thumb are hidden, the indicator is a bare line. */
+.win11:not([data-variant="full"]):not([vertical-state~="engaged"]):not([horizontal-state~="engaged"])::part(marker-on-thumb) {
+    --ax-scrollbar-part-opacity: 0;
+}
+
+/* The variant and touch blocks below set their inputs on the same parts with a higher specificity than the
+   rules above (the attribute of the host). So a block restates every state of a part whose value it changes,
+   in the order of the states (rest, engaged, current, on thumb, hover, on thumb and hover, pressed): a block
+   never leaves a state to the rules above it. */
+
+/* Minimal: the Fluent overlay scrollbar of Chromium and Edge in its minimal mode (IsFluentOverlayScrollbarMinimalMode),
+   BSD, chromium/chromium main. A thumb alone: no track, no buttons (the elements set hide="buttons track corner"),
+   shown by a scroll or a pointer at the bar (indicator="near": Fluent's MouseMoveDistanceToTriggerFadeIn is 0), thin
+   until the pointer is on the bar, then the thumb thickens.
+   [NT]  ui/native_theme/native_theme_fluent.h and .cc
+   [ST]  third_party/blink/renderer/core/scroll/scrollbar_theme_fluent.cc
+   [AC]  cc/input/scrollbar_animation_controller.cc and single_scrollbar_animation_controller_thinning.cc
+   [OC]  ui/native_theme/overlay_scrollbar_constants.h and .cc
+   [LS]  cc/trees/layer_tree_settings.cc
+   [CP]  ui/color/color_provider_utils.cc (Light) and fluent_ui_color_mixer.cc
+   Default and Full are WinUI ([SB] above); Minimal is not: the thumb is anchored to the viewport side, 4px thin,
+   grows in 100ms with no delay, and darkens when hovered. */
+.win11[data-variant="minimal"] {
+    --ax-scrollbar-thickness: 15px;                       /* [NT] kScrollbarThickness 15 */
+    --ax-scrollbar-padding: 3px;                          /* [ST] ThumbRect: the 9px thumb is centred in the 15px track, 3px each side; [NT] GetVerticalScrollbarThumbSize 9 x 17 */
+    --ax-scrollbar-thumb-min-length: 17px;                /* [NT] GetVerticalScrollbarThumbSize 9 x 17 */
+    --ax-scrollbar-hotzone: 100%;                         /* [AC] MouseMoveDistanceToTriggerExpand and ...FadeIn are 0 for Fluent: the bar itself */
+    --ax-scrollbar-expand-delay: 0s;                      /* [AC] the thinning animation starts as the pointer comes onto the bar */
+    --ax-scrollbar-contract-delay: 0s;
+    /* [LS] scrollbar_thinning_duration 100ms (Fluent), linear on the thickness scale: a time constant of 33ms is 95% in 100ms, its closest exponential */
+    --ax-scrollbar-state-smoothing: 33ms;
+    --ax-scrollbar-fade-in-duration: 100ms;               /* [OC] GetOverlayScrollbarFadeDuration 100ms (Fluent); the same duration both ways ([AC] AnimationProgressAtTime) */
+    --ax-scrollbar-fade-out-duration: 100ms;
+    --ax-scrollbar-idle-delay: 750ms;                     /* [OC] GetOverlayScrollbarFadeDelay 750ms (Fluent) */
+}
+.win11[data-variant="minimal"]::part(thumb) {
+    --ax-scrollbar-part-align: 1;                         /* [ST] ShrinkMainThreadedMinimalModeThumbRect: the thin thumb sits at the viewport side (x + width * (1 - idle_thickness_scale)) */
+    --ax-scrollbar-part-size: 4px;                        /* [OC] kOverlayScrollbarIdleThicknessScale 0.4 x 9 = 3.6, ToEnclosingRect: 4 */
+    --ax-radius: 50%;                                     /* [NT] kScrollbarPartsRadius 999: a pill */
+    --ax-scrollbar-part-color: rgba(0, 0, 0, 0.447);      /* [CP] kColorWebNativeControlScrollbarThumbOverlayMinimalMode, Light: black, alpha 0x72 */
+}
+.win11[data-variant="minimal"]::part(thumb-engaged) {
+    --ax-scrollbar-part-size: 9px;                        /* [NT] thumb width 9, the scale 1 of the thinning animation */
+}
+.win11[data-variant="minimal"]::part(thumb-hover) {
+    --ax-scrollbar-part-size: 9px;                        /* the near width: a hovered thumb is engaged */
+    --ax-scrollbar-part-color: #636363;                   /* [CP] ...ScrollbarThumbHovered = ...ArrowForegroundPressed, Light #636363 (fluent_ui_color_mixer.cc) */
+}
+.win11[data-variant="minimal"]::part(thumb-pressed) {
+    --ax-scrollbar-part-size: 9px;
+    --ax-scrollbar-part-color: #636363;                   /* [CP] ...ScrollbarThumbPressed = ...ThumbHovered */
+}
+/* The thumb's width once thick: the markers on the thumb are as wide, the pressed one keeps its own 8px. */
+.win11[data-variant="minimal"]::part(marker-on-thumb) {
+    --ax-scrollbar-part-size: 9px;
+}
+.win11[data-variant="minimal"]::part(marker-on-thumb marker-hover) {
+    --ax-scrollbar-part-size: 9px;
+}
+.win11[data-variant="minimal"]::part(marker-pressed) {
+    --ax-scrollbar-part-size: 8px;
+}
+
+/* Full: Settings > Accessibility > Always show scrollbars: the bar is Expanded without animation
+   ([SB] ExpandedWithoutAnimation: the track and the buttons Opacity 1, the thumb 12 - 6 = 6px, at once) and
+   never contracts or fades (the elements set indicator="pinned"). The thumb is never a bare line, so its markers stay. */
+.win11[data-variant="full"] {
+    --ax-scrollbar-expand-delay: 0s;
+    --ax-scrollbar-contract-delay: 0s;
+}
+.win11[data-variant="full"]::part(thumb) {
+    --ax-scrollbar-part-size: 6px;
+}
+.win11[data-variant="full"]::part(track) {
+    --ax-scrollbar-part-opacity: 1;
+}
+.win11[data-variant="full"]::part(button) {
+    --ax-scrollbar-part-opacity: 1;
+}
+/* The markers keep the state sizes of the rules above (the rest size is the expanded thumb's 6px). */
+.win11[data-variant="full"]::part(marker) {
+    --ax-scrollbar-part-size: 6px;
+}
+.win11[data-variant="full"]::part(marker-engaged) {
+    --ax-scrollbar-part-size: 6px;
+}
+.win11[data-variant="full"]::part(marker-current) {
+    --ax-scrollbar-part-size: 8px;
+}
+.win11[data-variant="full"]::part(marker-on-thumb) {
+    --ax-scrollbar-part-size: 6px;
+    --ax-scrollbar-part-opacity: 1;
+}
+.win11[data-variant="full"]::part(marker-hover) {
+    --ax-scrollbar-part-size: 10px;
+}
+.win11[data-variant="full"]::part(marker-on-thumb marker-hover) {
+    --ax-scrollbar-part-size: 6px;
+}
+.win11[data-variant="full"]::part(marker-pressed) {
+    --ax-scrollbar-part-size: 8px;
+}
+
+/* Touch: the panning indicator, [SB] VerticalPanningRoot: a 2px thumb (Width 2, MinHeight 32), square (no corner
+   radius of its own), in ControlStrongFillColorDefault, on no track. Margin 2,0,2,0 and HorizontalAlignment Right
+   put it 3px from the edge of the bar: the 6px bar the thumb is centred in here (the bar takes no input then). */
+.win11[last-indicator="touch"] {
+    --ax-scrollbar-thickness: 6px;
+    --ax-scrollbar-thumb-min-length: 32px;
+}
+.win11[last-indicator="touch"]::part(thumb) {
+    --ax-scrollbar-part-size: 2px;
+    --ax-radius: 0px;
+}
+.win11[last-indicator="touch"]::part(thumb-engaged) {
+    --ax-scrollbar-part-size: 2px;
+}
+.win11[last-indicator="touch"]::part(thumb-hover) {
+    --ax-scrollbar-part-size: 2px;
+}
+.win11[last-indicator="touch"]::part(thumb-pressed) {
+    --ax-scrollbar-part-size: 2px;
+}
+.win11[last-indicator="touch"]::part(marker-on-thumb) {
+    --ax-scrollbar-part-opacity: 0;
+}

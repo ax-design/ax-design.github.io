@@ -1,0 +1,106 @@
+/* Minimal: a thin overlay scrollbar on the default parts, styled with ::part(). A 4px capsule thumb
+   that widens to 10px while the bar is engaged, round markers, no track, arrow buttons that are
+   hidden (hide="button") and transparent. Dark ink on a light page and light ink on a dark one.
+   The default look is Windows 8, so this file says everything a part takes from it: an outer rule
+   replaces the default value of what it sets in every state, and the states that differ are
+   written again, in the order of the cascade (rest, hover, pressed). */
+
+.minimal {
+    --ax-scrollbar-thickness: 14px;
+    --ax-scrollbar-padding: 2px;
+    --ax-scrollbar-thumb-min-length: 32px;
+    --ax-scrollbar-button-length: auto;
+    --ax-scrollbar-hotzone: 200%;
+    /* States ease in 100ms, the bars fade by a time constant of 75ms and slide in 3px. */
+    --ax-scrollbar-state-smoothing: 100ms;
+    --ax-scrollbar-fade-in-duration: 0s;
+    --ax-scrollbar-fade-out-duration: 0s;
+    --ax-scrollbar-slide-distance: 3px;
+    --ax-scrollbar-card-delay: 0s;
+    --ax-scrollbar-card-slide-duration: 250ms;
+    --ax-scrollbar-card-slide-distance: 8px;
+}
+
+.minimal::part(thumb),
+.minimal::part(button),
+.minimal::part(track),
+.minimal::part(corner),
+.minimal::part(marker),
+.minimal::part(card) {
+    --ax-scrollbar-part-fill-clip: border-box;
+}
+
+/* Thumb: thin at rest, wide while the bar is engaged, hovered or pressed. */
+.minimal::part(thumb) {
+    --ax-radius: 50%;
+    --ax-scrollbar-part-size: 4px;
+    --ax-scrollbar-part-color: rgba(0, 0, 0, 0.4);
+    --ax-scrollbar-part-border-color: transparent;
+}
+.minimal::part(thumb-engaged) {
+    --ax-scrollbar-part-size: 10px;
+}
+.minimal::part(thumb-hover) {
+    --ax-scrollbar-part-size: 10px;
+    --ax-scrollbar-part-color: rgba(0, 0, 0, 0.6);
+}
+.minimal::part(thumb-pressed) {
+    --ax-scrollbar-part-size: 10px;
+    --ax-scrollbar-part-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Buttons: no fill, an arrow of half the bar's width. */
+.minimal::part(button) {
+    --ax-scrollbar-part-color: transparent;
+    --ax-scrollbar-part-glyph-color: rgba(0, 0, 0, 0.5);
+    --ax-scrollbar-glyph-width: 50%;
+    --ax-scrollbar-glyph-height: 25%;
+    --ax-scrollbar-glyph-thickness: 12.5%;
+    --ax-scrollbar-glyph-offset: auto;
+}
+.minimal::part(button-hover) {
+    --ax-scrollbar-part-glyph-color: rgba(0, 0, 0, 0.7);
+}
+.minimal::part(button-pressed) {
+    --ax-scrollbar-part-glyph-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Track and corner draw nothing. */
+.minimal::part(track),
+.minimal::part(corner) {
+    --ax-scrollbar-part-color: transparent;
+}
+
+/* Markers: dots that grow under the pointer; white on the thumb. */
+.minimal::part(marker) {
+    --ax-radius: 50%;
+    --ax-scrollbar-part-size: 4px;
+    --ax-scrollbar-part-thickness: auto;
+    --ax-scrollbar-part-color: rgba(0, 0, 0, 0.45);
+}
+.minimal::part(marker-on-thumb) {
+    --ax-scrollbar-part-color: rgba(255, 255, 255, 0.9);
+}
+.minimal::part(marker-hover) {
+    --ax-scrollbar-part-size: 7px;
+    --ax-scrollbar-part-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Card: a white plate with a shadow, in the page's font. It fades in 150ms and out in 100ms. */
+.minimal::part(card) {
+    --ax-radius: 4px;
+    --ax-border-width: 0px;
+    --ax-scrollbar-part-color: rgb(255, 255, 255);
+    --ax-scrollbar-part-border-color: transparent;
+    --elevation-depth: 8;
+    --elevation-color: initial;
+    color: rgb(34, 34, 34);
+    font-family: inherit;
+    font-size: 12px;
+    padding: 6px 10px;
+    max-width: 240px;
+    transition: opacity 150ms linear, transform 250ms cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+.minimal::part(card-exit) {
+    transition-duration: 100ms;
+}
