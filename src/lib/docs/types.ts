@@ -52,6 +52,8 @@ export interface Example {
 export interface CodeBlock {
     language: 'html' | 'css' | 'js';
     source: string;
+    // Shown only while the control with this key has this value, for a code that depends on a select.
+    when?: { key: string; value: string };
 }
 
 export type Control = RangeControl | ToggleControl | SelectControl | ColorControl | TextControl;
@@ -90,6 +92,9 @@ export interface SelectControl extends BaseControl {
     type: 'select';
     options: string[];
     default: string;
+    // What a choice gives to the other controls (by key) when the reader makes it, so that a choice
+    // such as a style comes with its own defaults.
+    sets?: Record<string, Record<string, string | number | boolean>>;
 }
 
 export interface ColorControl extends BaseControl {

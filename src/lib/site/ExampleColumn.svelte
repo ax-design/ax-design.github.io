@@ -46,6 +46,21 @@
     }
   }
 
+  // A select may give values to the other controls when the reader changes it (its styles come with
+  // their own defaults). What each select held last is kept here, so the first run only reads it.
+  const held: Record<string, string> = {};
+  $effect(() => {
+    for (const c of example.controls) {
+      if (c.type !== "select" || !c.sets) continue;
+      const value = String(values[c.key]);
+      const before = held[c.key];
+      held[c.key] = value;
+      const sets = c.sets[value];
+      if (before !== undefined && before !== value && sets)
+        untrack(() => Object.assign(values, sets));
+    }
+  });
+
   let box: HTMLElement | undefined = $state();
 
   // Write every control into the preview.
@@ -93,13 +108,20 @@
   });
 
   const code = $derived(
-    example.code.map((block) => ({
-      language: block.language,
-      source: block.source.replace(/\{\{(\w+)\}\}/g, (_, key: string) => {
+    example.code
+      .filter((block) => {
+        if (!block.when) return true;
+        const { key, value } = block.when;
         const c = example.controls.find((control) => control.key === key);
-        return c ? text(c, values[key]) : "";
-      }),
-    })),
+        return !!c && text(c, values[key]) === value;
+      })
+      .map((block) => ({
+        language: block.language,
+        source: block.source.replace(/\{\{(\w+)\}\}/g, (_, key: string) => {
+          const c = example.controls.find((control) => control.key === key);
+          return c ? text(c, values[key]) : "";
+        }),
+      })),
   );
 
   // div and the attribute outrank the box's own rules, so an example can restyle its box.

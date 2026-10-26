@@ -106,7 +106,7 @@ ${cyberCss}
 
 // A Windows XP window client: Tahoma on white, a table that is wider than the view so that both
 // bars and the corner show.
-const lunaPreview = (scheme: string) => `<div data-stage class="${scheme}"><ax-scroll-view kit="luna" snap touch="bar" vertical="always" horizontal="always" marker-selector="h3" marker-align="center"><div class="notes">
+const lunaPreview = (scheme: string, attributes = '') => `<div data-stage${attributes} class="${scheme}"><ax-scroll-view kit="luna" snap touch="bar" vertical="always" horizontal="always" marker-selector="h3" marker-align="center"><div class="notes">
 <h3>Version 2.4</h3><p>The list view keeps its place when the window is resized. Selected rows stay selected.</p>
 <h3>Version 2.3</h3><p>Search results can be sorted by date or by name. The choice is remembered.</p>
 <h3>Table of values</h3>
@@ -129,13 +129,20 @@ ax-scroll-view { position: absolute; inset: 0; --ax-scrollbar-card-delay: 500ms;
 .notes pre { margin: 0 0 8px; width: max-content; padding-right: calc(var(--ax-scrollbar-vertical-size, 0px) + 6px); font: 11px/1.4 "Courier New", monospace; }
 `;
 
-// A scheme of the page's own, written as the README of the package does: tones and numbers.
-const mossStyle = `
-.luna-moss {
+// A scheme of the page's own, written as the README of the package does. Its Style picks the numbers:
+// Blue's with the light from the top left, or Silver's with the light from above, and the colour is
+// --luna-accent-light alone, from which the accent, the deep tone and the arrows follow.
+const customStyle = `
+.luna-custom { --luna-disabled: #f0f0e6; }
+.luna-custom[data-style="Luna"] {
   --luna-light: top-left; --luna-diagonal: 1; --luna-glint: 0;
-  --luna-face: #e4e6d4; --luna-disabled: #f0f0e6;
-  --luna-highlight: 1; --luna-shade: 0.72; --luna-gloss: 0.182; --luna-depth: 0.196; --luna-hot: 0.624; --luna-press: 0.675; --luna-etch: 0; --luna-relief: 1;
-  --luna-accent: #a9c98b; --luna-accent-light: #d3e6bf; --luna-accent-deep: #4a8a1f; --luna-glyph: #3f5230;
+  --luna-face: #e4e6d4;
+  --luna-highlight: 1; --luna-shade: 0.72; --luna-hot: 0.624; --luna-press: 0.675; --luna-etch: 0; --luna-relief: 1;
+}
+.luna-custom[data-style="Metallic"] {
+  --luna-light: top; --luna-diagonal: 0; --luna-glint: 0;
+  --luna-face: #e0dfe3; --luna-text: #0e1010;
+  --luna-highlight: 0.731; --luna-shade: 0.913; --luna-hot: 1; --luna-press: 0; --luna-etch: 1; --luna-relief: 0.686;
 }
 `;
 
@@ -343,23 +350,42 @@ const page: DocPage = {
       id: 'luna-scheme',
       title: 'Custom Luna scheme',
       description: [
-        'A scheme is a class of custom properties, so a scheme of your own is a class that sets them. The tones are colours. --luna-accent, --luna-accent-light and --luna-accent-deep colour the thumb and the buttons, --luna-glyph the arrows and the grip, --luna-face the track and the corner, and --luna-disabled the disabled parts. The numbers are contrast values from 0 to 1, namely --luna-highlight, --luna-shade, --luna-gloss, --luna-depth, --luna-hot, --luna-press and --luna-etch.',
-        'Every colour of the parts is a tone with white and black laid over it by those numbers, so a new scheme needs its tones and the numbers of the scheme it resembles. Copy a class of lunaSchemes and change them. This one is green. The controls write onto the stage, over the class. The face of the thumb and the buttons is mostly --luna-accent-light, so that is the colour to change first. Gloss and depth set how much white and black the faces get.'
+        'A scheme is a class of custom properties, so a scheme of your own is a class that sets them. --luna-accent-light is the colour of the thumb and the buttons at rest, and one colour recolours the whole scheme. The accent, the deep tone and the arrows are --luna-accent, --luna-accent-deep and --luna-glyph. A scheme that does not set them gets them from that colour. They keep its hue, and the arrows and the grip lines are a dark tone of it on a light colour and white on a dark one.',
+        'The kit has two constructions. A Luna scheme is lit from the top left and takes the numbers of Blue. A Metallic scheme sets --luna-light to top and takes the numbers of Silver, a strong --luna-gloss and --luna-depth and a dark etched ring from --luna-etch. The numbers are contrast values from 0 to 1 and every colour of the parts is a tone with white and black laid over it by them. Choose a Style, then a colour, and change the gloss and the depth. The controls write onto the stage, over the class.'
       ],
-      preview: lunaPreview('luna-moss'),
-      style: `${lunaStyle}\n${mossStyle}`,
+      preview: lunaPreview('luna-custom', ' data-style="Luna"'),
+      style: `${lunaStyle}\n${customStyle}`,
       controls: [
+        {
+          key: 'style',
+          label: 'Style',
+          type: 'select',
+          options: ['Luna', 'Metallic'],
+          default: 'Luna',
+          target: { kind: 'attribute', attribute: 'data-style', selector: '[data-stage]' },
+          sets: {
+            Luna: { light: '#d3e6bf', gloss: 0.18, depth: 0.2 },
+            Metallic: { light: '#d5dde8', gloss: 1, depth: 1 }
+          }
+        },
         { key: 'light', label: 'Light accent', type: 'color', default: '#d3e6bf', target: { kind: 'css', property: '--luna-accent-light', selector: '[data-stage]' } },
-        { key: 'gloss', label: 'Gloss', type: 'range', min: 0, max: 0.5, step: 0.01, unit: '', default: 0.182, target: { kind: 'css', property: '--luna-gloss', selector: '[data-stage]' } },
-        { key: 'depth', label: 'Depth', type: 'range', min: 0, max: 1, step: 0.01, unit: '', default: 0.196, target: { kind: 'css', property: '--luna-depth', selector: '[data-stage]' } }
+        { key: 'gloss', label: 'Gloss', type: 'range', min: 0, max: 1, step: 0.01, unit: '', default: 0.18, target: { kind: 'css', property: '--luna-gloss', selector: '[data-stage]' } },
+        { key: 'depth', label: 'Depth', type: 'range', min: 0, max: 1, step: 0.01, unit: '', default: 0.2, target: { kind: 'css', property: '--luna-depth', selector: '[data-stage]' } }
       ],
       code: [
         {
           language: 'css',
+          when: { key: 'style', value: 'Luna' },
           source:
-            '.luna-moss {\n  --luna-light: top-left; --luna-diagonal: 1; --luna-glint: 0;\n  --luna-face: #e4e6d4; --luna-disabled: #f0f0e6;\n  --luna-highlight: 1; --luna-shade: 0.72; --luna-gloss: {{gloss}};\n  --luna-depth: {{depth}}; --luna-hot: 0.624; --luna-press: 0.675;\n  --luna-etch: 0; --luna-relief: 1;\n  --luna-accent: #a9c98b; --luna-accent-light: {{light}};\n  --luna-accent-deep: #4a8a1f; --luna-glyph: #3f5230;\n}'
+            '.luna-custom {\n  --luna-light: top-left; --luna-diagonal: 1; --luna-glint: 0;\n  --luna-face: #e4e6d4; --luna-disabled: #f0f0e6;\n  --luna-highlight: 1; --luna-shade: 0.72; --luna-gloss: {{gloss}};\n  --luna-depth: {{depth}}; --luna-hot: 0.624; --luna-press: 0.675;\n  --luna-etch: 0; --luna-relief: 1;\n  /* the accent, the deep tone and the arrows follow from this */\n  --luna-accent-light: {{light}};\n}'
         },
-        { language: 'html', source: '<div class="luna-moss">\n  <ax-scroll-view kit="luna" touch="bar">...</ax-scroll-view>\n</div>' }
+        {
+          language: 'css',
+          when: { key: 'style', value: 'Metallic' },
+          source:
+            '.luna-custom {\n  --luna-light: top; --luna-diagonal: 0; --luna-glint: 0;\n  --luna-face: #e0dfe3; --luna-text: #0e1010; --luna-disabled: #f0f0e6;\n  --luna-highlight: 0.731; --luna-shade: 0.913; --luna-gloss: {{gloss}};\n  --luna-depth: {{depth}}; --luna-hot: 1; --luna-press: 0;\n  --luna-etch: 1; --luna-relief: 0.686;\n  /* the accent, the deep tone and the arrows follow from this */\n  --luna-accent-light: {{light}};\n}'
+        },
+        { language: 'html', source: '<div class="luna-custom">\n  <ax-scroll-view kit="luna" snap touch="bar">...</ax-scroll-view>\n</div>' }
       ]
     },
     {
@@ -610,7 +636,8 @@ ax-scroll-view { inset: 0 0 40px 0; }
     { name: 'AxScrollbarThumb', kind: 'method', type: 'contract class', description: 'Contract classes draw nothing: AxScrollbarThumb, AxScrollbarButton, AxScrollbarTrack, AxScrollbarTrackPiece, AxScrollbarCorner, AxScrollbarMarker and AxScrollbarCard. Default classes are AxScrollbarDefault plus the kind, the Windows 8 look. AxScrollbarPart is the base of all, and isPartClass(cls, kind) tests a class.' },
     { name: 'static styles', kind: 'property', type: 'string', description: 'On a part class: CSS in the shadow root of the part, reading its state as :host([hover]), :host([pressed]), :host([axis="vertical"]), :host([direction="start"]), :host([disabled]) and :host([rtl]). partState and stateChanged(prev, next) are the same in script.' },
     { name: 'defineLunaKit()', kind: 'method', type: '() => void', description: 'From @ax-design/scrollbar/kits/luna: defines the kit "luna", the Windows XP scrollbar. adoptLunaSchemes(root = document) adopts the stylesheet of the schemes once into a document or a shadow root, and lunaSchemes is that stylesheet as a string.' },
-    { name: '.luna-blue', kind: 'property', type: 'scheme class', description: 'The schemes: luna-blue, luna-olive, luna-silver, luna-purple, luna-orange, luna-pink and luna-gold, on the scroll view or any ancestor. A scheme sets the tones --luna-accent, -accent-light, -accent-deep, --luna-glyph, --luna-face and --luna-disabled, the numbers --luna-highlight, -shade, -gloss, -depth, -hot, -press and -etch, --luna-light (top-left or top), and --luna-diagonal and --luna-glint (0 or 1).' },
+    { name: '.luna-blue', kind: 'property', type: 'scheme class', description: 'The schemes: luna-blue, luna-olive, luna-silver, luna-purple, luna-orange, luna-pink and luna-gold, on the scroll view or any ancestor. A scheme sets the tones --luna-accent-light, --luna-face and --luna-disabled, the numbers --luna-highlight, -shade, -gloss, -depth, -hot, -press and -etch, --luna-light (top-left, or top for a metallic scheme), and --luna-diagonal and --luna-glint (0 or 1). --luna-accent, -accent-deep and --luna-glyph may be auto, which is what they are when a scheme leaves them out, and are then derived from --luna-accent-light.' },
+    { name: '--ax-scrollbar-thumb-nudge', kind: 'property', type: '<length>', description: 'Set on the thumb while snap is set. The distance that something drawn inside the thumb adds to its place along the bar to land on whole device pixels, which the grip lines of the Luna kit use at a zoom of 110%, 125% or 150%.' },
     { name: 'markeractivate', kind: 'event', type: 'CustomEvent', description: 'A press on a marker released with under 4px of movement. Cancelable: preventDefault() stops the jump to the marker. detail is { marker, markers }.' },
     { name: 'markerenter', kind: 'event', type: 'CustomEvent', description: 'The pointer moves onto a marker. detail is { marker, markers }, the markers sharing the mark.' },
     { name: 'markerleave', kind: 'event', type: 'CustomEvent', description: 'The pointer leaves the last marker it was on; moving straight to another fires markerenter only.' }
